@@ -1,6 +1,8 @@
+import './Footer.css';
+
 function Footer() {
     return (
-        <footer>
+        <footer className="site-footer">
             <div className="container">
                 <div className="footer-content">
                     <div className="footer-column">

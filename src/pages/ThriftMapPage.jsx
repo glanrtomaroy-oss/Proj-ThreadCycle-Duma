@@ -6,13 +6,13 @@ function ThriftMapPage({ user }) {
   const [activePrice, setActivePrice] = useState("all");
   const [comments, setComments] = useState({});
   const [newComments, setNewComments] = useState({});
-  const [selectedShop, setSelectedShop] = useState(null);
-  const [userLocation, setUserLocation] = useState(null);
-  const [mapLoaded, setMapLoaded] = useState(false);
-  const mapRef = useRef(null);
-  const mapInstanceRef = useRef(null);
-  const markersRef = useRef([]);
-  const googleScriptRef = useRef(null);
+  // const [selectedShop, setSelectedShop] = useState(null);
+  // const [userLocation, setUserLocation] = useState(null);
+  // const [mapLoaded, setMapLoaded] = useState(false);
+  // const mapRef = useRef(null);
+  // const mapInstanceRef = useRef(null);
+  // const markersRef = useRef([]);
+  // const googleScriptRef = useRef(null);
 
   // Thrift shops data with coordinates for Dumaguete City
   const thriftShops = [
