@@ -1,3 +1,8 @@
+import thriftshop from './assets/thriftshop.webp';
+import fabric from './assets/fabric.jpg';
+import tutorial from './assets/tutorial.jpg';
+
+
 function HomePage({ setActivePage }) {
   return (
     <>
@@ -42,7 +47,7 @@ function HomePage({ setActivePage }) {
             <div className="feature-card">
               <div 
                 className="feature-img" 
-                style={{ backgroundImage: "url(fabric.jpg)" }}
+                style={{ backgroundImage: `url(${fabric})` }}
               ></div>
               <div className="feature-content">
                 <h3>Scrap Estimator</h3>
@@ -60,7 +65,7 @@ function HomePage({ setActivePage }) {
             <div className="feature-card">
               <div 
                 className="feature-img" 
-                style={{ backgroundImage: "url(tutorial.jpg)" }}
+                style={{ backgroundImage: `url(${tutorial})` }}
               ></div>
               <div className="feature-content">
                 <h3>DIY Tutorial Hub</h3>
@@ -78,7 +83,7 @@ function HomePage({ setActivePage }) {
             <div className="feature-card">
               <div 
                 className="feature-img" 
-                style={{ backgroundImage: "url(thriftshop.webp)" }}
+                style={{ backgroundImage: `url(${thriftshop})` }}
               ></div>
               <div className="feature-content">
                 <h3>Thrift Shop Map</h3>

@@ -1,6 +1,12 @@
 import './App.css';
 import { useState } from 'react';
-import { HomePage, ScrapEstimatorPage, TutorialsPage, ThriftMapPage, AboutPage, LoginPage, AdminPage } from './Pages';
+import HomePage from './HomePage';
+import ScrapEstimatorPage from './ScrapEstimatorPage';
+import TutorialsPage from './TutorialsPage';
+import ThriftMapPage from './ThriftMapPage';
+import AboutPage from './AboutPage';
+import  LoginPage from './LoginPage';
+import  AdminPage from './AdminPage';
 
 function App() {
   const [activePage, setActivePage] = useState("home");
@@ -54,7 +60,7 @@ function App() {
           <nav className="navbar">
             <div className="logo">
               <div className="logo-image">
-                <img src="/logofinal.png" alt="ThreadCycle Duma Logo" />
+                <img src="/logo.png" alt="ThreadCycle Duma Logo" />
                 <i className="fas fa-recycle"></i>
               </div>
               <span>ThreadCycle Duma</span>
