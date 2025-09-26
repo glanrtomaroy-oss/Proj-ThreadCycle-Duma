@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+// import { safeEncodeForBase64, getGoogleMaps } from '../utils';
 
 function ThriftMapPage({ user }) {
   const [activeCategory, setActiveCategory] = useState("all");
@@ -65,219 +66,287 @@ function ThriftMapPage({ user }) {
     }
   ];
 
-  // Initialize Google Maps - FIXED VERSION
-  useEffect(() => {
-    let isMounted = true;
+  // Initialize Google Maps - FIXED VERSION (COMMENTED OUT)
+  // useEffect(() => {
+  //   let isMounted = true;
 
-    const initializeMap = () => {
-      if (!isMounted || !mapRef.current || !window.google) return;
+  //   const initializeMap = () => {
+  //     const googleMaps = getGoogleMaps();
+  //     if (!isMounted || !mapRef.current || !googleMaps) return;
 
-      try {
-        // Clear existing map instance
-        if (mapInstanceRef.current) {
-          mapInstanceRef.current = null;
-        }
+  //     try {
+  //       // Clear existing map instance
+  //       if (mapInstanceRef.current) {
+  //         mapInstanceRef.current = null;
+  //       }
 
-        // Default center: Dumaguete City
-        const dumagueteCenter = { lat: 9.3057, lng: 123.3055 };
-        
-        mapInstanceRef.current = new window.google.maps.Map(mapRef.current, {
-          zoom: 14,
-          center: dumagueteCenter,
-          styles: [
-            {
-              featureType: "poi",
-              elementType: "labels",
-              stylers: [{ visibility: "on" }]
-            }
-          ]
-        });
+  //       // Default center: Dumaguete City
+  //       const dumagueteCenter = { lat: 9.3057, lng: 123.3055 };
 
-        // Add markers for thrift shops
-        addMarkersToMap();
+  //       mapInstanceRef.current = new googleMaps.Map(mapRef.current, {
+  //         zoom: 14,
+  //         center: dumagueteCenter,
+  //         styles: [
+  //           {
+  //             featureType: "poi",
+  //             elementType: "labels",
+  //             stylers: [{ visibility: "on" }]
+  //           }
+  //         ],
+  //         mapTypeId: googleMaps.MapTypeId.ROADMAP
+  //       });
 
-        // Get user's location if permitted
-        getUserLocation();
+  //       // Add markers for thrift shops
+  //       addMarkersToMap();
 
-        setMapLoaded(true);
-      } catch (error) {
-        console.error('Error initializing map:', error);
-      }
-    };
+  //       // Get user's location if permitted
+  //       getUserLocation();
 
-    const addMarkersToMap = () => {
-      if (!mapInstanceRef.current) return;
+  //       setMapLoaded(true);
+  //     } catch (error) {
+  //       console.error('Error initializing map:', error);
+  //       setMapLoaded(false);
+  //     }
+  //   };
 
-      // Clear existing markers
-      markersRef.current.forEach(marker => marker.setMap(null));
-      markersRef.current = [];
+  //   const addMarkersToMap = () => {
+  //     if (!mapInstanceRef.current) return;
 
-      thriftShops.forEach(shop => {
-        const marker = new window.google.maps.Marker({
-          position: { lat: shop.lat, lng: shop.lng },
-          map: mapInstanceRef.current,
-          title: shop.name,
-          icon: {
-            url: 'data:image/svg+xml;base64,' + btoa(`
-              <svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
-                <circle cx="16" cy="16" r="15" fill="#e74c3c" stroke="#fff" stroke-width="2"/>
-                <text x="16" y="21" text-anchor="middle" fill="white" font-size="12">🛍️</text>
-              </svg>
-            `),
-            scaledSize: new window.google.maps.Size(32, 32)
-          }
-        });
+  //     // Clear existing markers
+  //     markersRef.current.forEach(marker => marker.setMap(null));
+  //     markersRef.current = [];
 
-        const infoWindow = new window.google.maps.InfoWindow({
-          content: `
-            <div class="map-info-window">
-              <h3>${shop.name}</h3>
-              <p><strong>Category:</strong> ${shop.category}</p>
-              <p><strong>Price Range:</strong> ${shop.priceRange}</p>
-              <p><strong>Address:</strong> ${shop.address}</p>
-              <p><strong>Hours:</strong> ${shop.hours}</p>
-              <button onclick="window.selectShopFromMap && window.selectShopFromMap(${shop.id})" 
-                style="background: #3498db; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer;">
-                View Details
-              </button>
-            </div>
-          `
-        });
+  //     thriftShops.forEach(shop => {
+  //       const googleMaps = getGoogleMaps();
+  //       if (!googleMaps || !mapInstanceRef.current || !isMounted) return;
 
-        marker.addListener('click', () => {
-          infoWindow.open(mapInstanceRef.current, marker);
-          setSelectedShop(shop);
-        });
+  //       try {
+  //         const marker = new googleMaps.Marker({
+  //           position: { lat: shop.lat, lng: shop.lng },
+  //           map: mapInstanceRef.current,
+  //           title: shop.name,
+  //           icon: {
+  //             url: 'data:image/svg+xml;base64,' + safeEncodeForBase64(
+  //               `<svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+  //                 <circle cx="16" cy="16" r="15" fill="#e74c3c" stroke="#fff" stroke-width="2"/>
+  //                 <text x="16" y="21" text-anchor="middle" fill="white" font-size="12">🛍️</text>
+  //               </svg>`
+  //             ),
+  //             scaledSize: new googleMaps.Size(32, 32)
+  //           }
+  //         });
 
-        markersRef.current.push(marker);
-      });
-    };
+  //         const infoWindow = new googleMaps.InfoWindow({
+  //           content: `
+  //             <div class="map-info-window">
+  //               <h3>${shop.name}</h3>
+  //               <p><strong>Category:</strong> ${shop.category}</p>
+  //               <p><strong>Price Range:</strong> ${shop.priceRange}</p>
+  //               <p><strong>Address:</strong> ${shop.address}</p>
+  //               <p><strong>Hours:</strong> ${shop.hours}</p>
+  //               <button onclick="window.selectShopFromMap && window.selectShopFromMap(${shop.id})" 
+  //                 style="background: #3498db; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer;">
+  //                 View Details
+  //               </button>
+  //             </div>
+  //           `
+  //         });
 
-    const getUserLocation = () => {
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-          (position) => {
-            if (!isMounted) return;
-            
-            const userLoc = {
-              lat: position.coords.latitude,
-              lng: position.coords.longitude
-            };
-            setUserLocation(userLoc);
-            
-            // Add user location marker
-            if (mapInstanceRef.current) {
-              const userMarker = new window.google.maps.Marker({
-                position: userLoc,
-                map: mapInstanceRef.current,
-                title: "Your Location",
-                icon: {
-                  url: 'data:image/svg+xml;base64,' + btoa(`
-                    <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                      <circle cx="12" cy="12" r="10" fill="#3498db" stroke="#fff" stroke-width="2"/>
-                      <circle cx="12" cy="12" r="4" fill="#fff"/>
-                    </svg>
-                  `),
-                  scaledSize: new window.google.maps.Size(24, 24)
-                }
-              });
-              markersRef.current.push(userMarker);
-            }
-          },
-          (error) => {
-            console.log('Geolocation error:', error);
-          }
-        );
-      }
-    };
+  //         marker.addListener('click', () => {
+  //           infoWindow.open(mapInstanceRef.current, marker);
+  //           setSelectedShop(shop);
+  //         });
 
-    // Make function available globally for info window buttons
-    window.selectShopFromMap = (shopId) => {
-      const shop = thriftShops.find(s => s.id === shopId);
-      setSelectedShop(shop);
-      // Scroll to the shop card
-      document.getElementById(`shop-${shopId}`)?.scrollIntoView({ behavior: 'smooth' });
-    };
+  //         markersRef.current.push(marker);
+  //       } catch (error) {
+  //         console.error('Error creating marker for shop:', shop.name, error);
+  //       }
+  //     });
+  //   };
 
-    const loadGoogleMaps = () => {
-      if (window.google) {
-        // Google Maps already loaded, just initialize
-        initializeMap();
-        return;
-      }
+  //   const getUserLocation = () => {
+  //     if (navigator.geolocation) {
+  //       navigator.geolocation.getCurrentPosition(
+  //         (position) => {
+  //           if (!isMounted) return;
 
-      // Remove existing script if any
-      if (googleScriptRef.current) {
-        document.head.removeChild(googleScriptRef.current);
-      }
+  //           const userLoc = {
+  //             lat: position.coords.latitude,
+  //             lng: position.coords.longitude
+  //           };
+  //           setUserLocation(userLoc);
 
-      // Load Google Maps script
-      const script = document.createElement('script');
-      script.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyA2AzoFntvCoC3dMdW9HSw3kgfuNOYENyI&libraries=places`;
-      script.async = true;
-      script.defer = true;
-      script.onload = () => {
-        if (isMounted) {
-          initializeMap();
-        }
-      };
-      script.onerror = () => {
-        console.error('Failed to load Google Maps script');
-        if (isMounted) {
-          setMapLoaded(false);
-        }
-      };
-      
-      document.head.appendChild(script);
-      googleScriptRef.current = script;
-    };
+  //           // Add user location marker
+  //           if (mapInstanceRef.current) {
+  //             const googleMaps = getGoogleMaps();
+  //             if (googleMaps) {
+  //               const userMarker = new googleMaps.Marker({
+  //                 position: userLoc,
+  //                 map: mapInstanceRef.current,
+  //                 title: "Your Location",
+  //                 icon: {
+  //                   url: 'data:image/svg+xml;base64,' + safeEncodeForBase64(`
+  //                     <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  //                       <circle cx="12" cy="12" r="10" fill="#3498db" stroke="#fff" stroke-width="2"/>
+  //                       <circle cx="12" cy="12" r="4" fill="#fff"/>
+  //                     </svg>
+  //                   `),
+  //                   scaledSize: new googleMaps.Size(24, 24)
+  //                 }
+  //               });
+  //               markersRef.current.push(userMarker);
+  //             }
+  //           }
+  //         },
+  //         (error) => {
+  //           console.log('Geolocation error:', error);
+  //         }
+  //       );
+  //     }
+  //   };
 
-    // Only initialize if mapRef is available
-    if (mapRef.current) {
-      loadGoogleMaps();
-    }
+  //   // Make function available globally for info window buttons
+  //   window.selectShopFromMap = (shopId) => {
+  //     const shop = thriftShops.find(s => s.id === shopId);
+  //     setSelectedShop(shop);
+  //     // Scroll to the shop card
+  //     document.getElementById(`shop-${shopId}`)?.scrollIntoView({ behavior: 'smooth' });
+  //   };
 
-    // Cleanup function - FIXED
-    return () => {
-      isMounted = false;
-      
-      // Clean up markers
-      markersRef.current.forEach(marker => marker.setMap(null));
-      markersRef.current = [];
-      
-      // Clean up global function
-      if (window.selectShopFromMap) {
-        delete window.selectShopFromMap;
-      }
-      
-      // Reset map state
-      mapInstanceRef.current = null;
-      setMapLoaded(false);
-    };
-  }, []); // Empty dependency array - only run once
+  //   const loadGoogleMaps = () => {
+  //     if (window.google?.maps) {
+  //       // Google Maps already loaded, just initialize
+  //       initializeMap();
+  //       return;
+  //     }
+
+  //     // Check if script already exists
+  //     const existingScript = document.querySelector('script[src*="maps.googleapis.com"]');
+  //     if (existingScript) {
+  //       // Wait for it to load then initialize
+  //       const checkInterval = setInterval(() => {
+  //         if (window.google?.maps) {
+  //           clearInterval(checkInterval);
+  //           if (isMounted) initializeMap();
+  //         }
+  //       }, 100);
+  //       return;
+  //     }
+
+  //     // Remove existing script reference safely
+  //     if (googleScriptRef.current && googleScriptRef.current.parentNode === document.head) {
+  //       try {
+  //         document.head.removeChild(googleScriptRef.current);
+  //       } catch (e) {
+  //         // Script might already be removed
+  //         console.warn('Could not remove script node:', e);
+  //       }
+  //     }
+
+  //     // Load Google Maps script
+  //     const script = document.createElement('script');
+  //     script.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyA2AzoFntvCoC3dMdW9HSw3kgfuNOYENyI&libraries=places&loading=async`;
+  //     script.async = true;
+  //     script.defer = true;
+  //     script.onload = () => {
+  //       if (isMounted) {
+  //         try {
+  //           initializeMap();
+  //         } catch (error) {
+  //           console.error('Error after map script loaded:', error);
+  //           if (isMounted) setMapLoaded(false);
+  //         }
+  //       }
+  //     };
+  //     script.onerror = () => {
+  //       console.error('Failed to load Google Maps script');
+  //       if (isMounted) {
+  //         setMapLoaded(false);
+  //       }
+  //     };
+
+  //     document.head.appendChild(script);
+  //     googleScriptRef.current = script;
+  //   };
+
+  //   // Only initialize if mapRef is available
+  //   if (mapRef.current) {
+  //     loadGoogleMaps();
+  //   }
+
+  //   // Cleanup function - FIXED
+  //   return () => {
+  //     isMounted = false;
+
+  //     try {
+  //       // Clean up markers
+  //       markersRef.current.forEach(marker => {
+  //         try {
+  //           if (marker && typeof marker.setMap === 'function') {
+  //             marker.setMap(null);
+  //           }
+  //         } catch (error) {
+  //           console.warn('Error removing marker:', error);
+  //         }
+  //       });
+  //       markersRef.current = [];
+
+  //       // Clean up global function
+  //       if (window.selectShopFromMap) {
+  //         delete window.selectShopFromMap;
+  //       }
+
+  //       // Clean up script if it exists
+  //       if (googleScriptRef.current && googleScriptRef.current.parentNode === document.head) {
+  //         try {
+  //           document.head.removeChild(googleScriptRef.current);
+  //         } catch (e) {
+  //           console.warn('Script already removed:', e);
+  //         }
+  //       }
+
+  //       // Reset map state
+  //       mapInstanceRef.current = null;
+  //       setMapLoaded(false);
+  //     } catch (error) {
+  //       console.error('Error in cleanup:', error);
+  //     }
+  //   };
+  // }, []); // Empty dependency array - only run once
 
   // Filter shops based on active filters
   const filteredShops = thriftShops.filter(shop => {
+    if (!shop || (typeof shop !== 'object')) return false;
     const categoryMatch = activeCategory === "all" || shop.category === activeCategory;
     const priceMatch = activePrice === "all" || shop.price === activePrice;
     return categoryMatch && priceMatch;
   });
 
-  // Update map markers when filters change - FIXED
-  useEffect(() => {
-    if (!mapInstanceRef.current || !window.google || !mapLoaded) return;
+  // Update map markers when filters change - FIXED (COMMENTED OUT)
+  // useEffect(() => {
+  //   const googleMaps = getGoogleMaps();
+  //   if (!mapInstanceRef.current || !googleMaps || !mapLoaded) return;
 
-    markersRef.current.forEach(marker => {
-      const shop = thriftShops.find(s => 
-        s.lat === marker.position.lat() && s.lng === marker.position.lng()
-      );
-      
-      if (shop) {
-        const shouldShow = filteredShops.some(filteredShop => filteredShop.id === shop.id);
-        marker.setMap(shouldShow ? mapInstanceRef.current : null);
-      }
-    });
-  }, [filteredShops, mapLoaded]);
+  //   markersRef.current.forEach(marker => {
+  //     try {
+  //       const position = marker.getPosition();
+  //       if (!position) return;
+
+  //       const lat = position.lat();
+  //       const lng = position.lng();
+  //       const shop = thriftShops.find(s => 
+  //         Math.abs(s.lat - lat) < 0.001 && Math.abs(s.lng - lng) < 0.001
+  //       );
+
+  //       if (shop) {
+  //         const shouldShow = filteredShops.some(filteredShop => filteredShop.id === shop.id);
+  //         marker.setMap(shouldShow ? mapInstanceRef.current : null);
+  //       }
+  //     } catch (error) {
+  //       console.error('Error updating marker visibility:', error);
+  //     }
+  //   });
+  // }, [filteredShops, mapLoaded]);
 
   const handleCategoryFilter = (category) => {
     setActiveCategory(category);
@@ -290,7 +359,7 @@ function ThriftMapPage({ user }) {
   const handleCommentChange = (shopId, comment) => {
     // FIX: Only allow comment changes if user is logged in
     if (!user) return;
-    
+
     setNewComments(prev => ({
       ...prev,
       [shopId]: comment
@@ -299,7 +368,7 @@ function ThriftMapPage({ user }) {
 
   const handleCommentSubmit = (shopId) => {
     const comment = newComments[shopId]?.trim();
-    
+
     if (!comment) {
       alert("Please enter a comment before sending.");
       return;
@@ -335,22 +404,22 @@ function ThriftMapPage({ user }) {
     }
   };
 
-  const handleDirections = (shop) => {
-    if (userLocation && shop.lat && shop.lng) {
-      const url = `https://www.google.com/maps/dir/?api=1&origin=${userLocation.lat},${userLocation.lng}&destination=${shop.lat},${shop.lng}&travelmode=driving`;
-      window.open(url, '_blank');
-    } else {
-      const url = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(shop.address)}`;
-      window.open(url, '_blank');
-    }
-  };
+  // const handleDirections = (shop) => {
+  //   if (userLocation && shop.lat && shop.lng) {
+  //     const url = `https://www.google.com/maps/dir/?api=1&origin=${userLocation.lat},${userLocation.lng}&destination=${shop.lat},${shop.lng}&travelmode=driving`;
+  //     window.open(url, '_blank');
+  //   } else {
+  //     const url = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(shop.address)}`;
+  //     window.open(url, '_blank');
+  //   }
+  // };
 
-  const centerMapOnShop = (shop) => {
-    if (mapInstanceRef.current && shop.lat && shop.lng) {
-      mapInstanceRef.current.setCenter({ lat: shop.lat, lng: shop.lng });
-      mapInstanceRef.current.setZoom(16);
-    }
-  };
+  // const centerMapOnShop = (shop) => {
+  //   if (mapInstanceRef.current && shop.lat && shop.lng) {
+  //     mapInstanceRef.current.setCenter({ lat: shop.lat, lng: shop.lng });
+  //     mapInstanceRef.current.setZoom(16);
+  //   }
+  // };
 
   return (
     <>
@@ -380,12 +449,13 @@ function ThriftMapPage({ user }) {
 
           {/* Interactive Map Container */}
           <div className="map-container">
-            <div 
-              ref={mapRef} 
+            {/* COMMENTED OUT GOOGLE MAP CONTAINER */}
+            {/* <div
+              ref={mapRef}
               className="google-map"
-              style={{ 
-                height: '400px', 
-                width: '100%', 
+              style={{
+                height: '400px',
+                width: '100%',
                 borderRadius: '8px',
                 border: '2px solid #e1e5e9',
                 background: mapLoaded ? 'transparent' : '#f8f9fa',
@@ -397,13 +467,33 @@ function ThriftMapPage({ user }) {
             >
               {!mapLoaded && (
                 <div className="map-loading">
-                  <i className="fas fa-spinner fa-spin" style={{fontSize: '24px', marginRight: '10px'}}></i>
+                  <i className="fas fa-spinner fa-spin" style={{ fontSize: '24px', marginRight: '10px' }}></i>
                   Loading Map...
                 </div>
               )}
+            </div> */}
+
+            {/* PLACEHOLDER FOR COMMENTED OUT MAP */}
+            <div style={{
+              height: '400px',
+              width: '100%',
+              borderRadius: '8px',
+              border: '2px solid #e1e5e9',
+              background: '#f8f9fa',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: '#6c757d'
+            }}>
+              <div>
+                <i className="fas fa-map" style={{ fontSize: '48px', marginBottom: '20px', opacity: 0.3 }}></i>
+                <p>Google Maps disabled</p>
+                <p style={{ fontSize: '14px', opacity: 0.7 }}>Interactive map functionality is currently commented out</p>
+              </div>
             </div>
-            <div className="map-controls">
-              <button 
+            {/* COMMENTED OUT MAP CONTROLS */}
+            {/* <div className="map-controls">
+              <button
                 className="btn btn-outline"
                 onClick={() => {
                   if (userLocation && mapInstanceRef.current) {
@@ -415,7 +505,7 @@ function ThriftMapPage({ user }) {
               >
                 <i className="fas fa-location-arrow"></i> Center on My Location
               </button>
-              <button 
+              <button
                 className="btn btn-outline"
                 onClick={() => {
                   if (mapInstanceRef.current) {
@@ -427,7 +517,7 @@ function ThriftMapPage({ user }) {
               >
                 <i className="fas fa-globe-asia"></i> Center on Dumaguete
               </button>
-            </div>
+            </div> */}
           </div>
 
           {/* Map Filters */}
@@ -435,25 +525,25 @@ function ThriftMapPage({ user }) {
             <div className="filter-group">
               <h3>Filter by Category</h3>
               <div className="filter-options">
-                <button 
+                <button
                   className={`filter-btn ${activeCategory === "all" ? "active" : ""}`}
                   onClick={() => handleCategoryFilter("all")}
                 >
                   All Shops
                 </button>
-                <button 
+                <button
                   className={`filter-btn ${activeCategory === "clothing" ? "active" : ""}`}
                   onClick={() => handleCategoryFilter("clothing")}
                 >
                   Clothing
                 </button>
-                <button 
+                <button
                   className={`filter-btn ${activeCategory === "shoes" ? "active" : ""}`}
                   onClick={() => handleCategoryFilter("shoes")}
                 >
                   Shoes
                 </button>
-                <button 
+                <button
                   className={`filter-btn ${activeCategory === "accessories" ? "active" : ""}`}
                   onClick={() => handleCategoryFilter("accessories")}
                 >
@@ -464,25 +554,25 @@ function ThriftMapPage({ user }) {
             <div className="filter-group">
               <h3>Price Range</h3>
               <div className="filter-options">
-                <button 
+                <button
                   className={`filter-btn ${activePrice === "all" ? "active" : ""}`}
                   onClick={() => handlePriceFilter("all")}
                 >
                   Any Price
                 </button>
-                <button 
+                <button
                   className={`filter-btn ${activePrice === "low" ? "active" : ""}`}
                   onClick={() => handlePriceFilter("low")}
                 >
                   ₱50 - ₱200
                 </button>
-                <button 
+                <button
                   className={`filter-btn ${activePrice === "medium" ? "active" : ""}`}
                   onClick={() => handlePriceFilter("medium")}
                 >
                   ₱200 - ₱500
                 </button>
-                <button 
+                <button
                   className={`filter-btn ${activePrice === "high" ? "active" : ""}`}
                   onClick={() => handlePriceFilter("high")}
                 >
@@ -495,7 +585,7 @@ function ThriftMapPage({ user }) {
           {/* Thrift Shops List */}
           <div className="thrift-shops-list">
             <h3>Thrift Shops in Dumaguete ({filteredShops.length})</h3>
-            
+
             {filteredShops.map(shop => (
               <div key={shop.id} id={`shop-${shop.id}`} className="thrift-shop-card" data-category={shop.category} data-price={shop.price}>
                 <div className="shop-image" style={{ backgroundImage: `url('${shop.image}')` }}></div>
@@ -513,13 +603,13 @@ function ThriftMapPage({ user }) {
                   <p className="shop-hours">
                     <i className="fas fa-clock"></i> {shop.hours}
                   </p>
-                  
+
                   <div className="comments-section">
                     <h4>
                       Comments ({comments[shop.id]?.length || 0})
                       {!user && <span className="login-required-tag"> - Login Required</span>}
                     </h4>
-                    
+
                     {/* Comments List - Protected */}
                     <div className="comments-list">
                       {user ? (
@@ -538,7 +628,7 @@ function ThriftMapPage({ user }) {
                           <p>Please log in to view comments</p>
                         </div>
                       )}
-                      
+
                       {user && comments[shop.id]?.length === 0 && (
                         <div className="no-comments-message">
                           <p>No comments yet. Be the first to comment!</p>
@@ -557,7 +647,7 @@ function ThriftMapPage({ user }) {
                           onKeyPress={(e) => handleKeyPress(e, shop.id)}
                           rows="2"
                         />
-                        <button 
+                        <button
                           className="comment-send-btn"
                           onClick={() => handleCommentSubmit(shop.id)}
                           title="Send comment"
@@ -578,21 +668,22 @@ function ThriftMapPage({ user }) {
                     )}
                   </div>
                 </div>
-                <div className="shop-actions">
-                  <button 
+                {/* COMMENTED OUT SHOP ACTIONS FOR GOOGLE MAPS */}
+                {/* <div className="shop-actions">
+                  <button
                     className="btn btn-outline"
                     onClick={() => centerMapOnShop(shop)}
                     disabled={!mapLoaded}
                   >
                     <i className="fas fa-map-pin"></i> Show on Map
                   </button>
-                  <button 
+                  <button
                     className="btn btn-primary"
                     onClick={() => handleDirections(shop)}
                   >
                     <i className="fas fa-directions"></i> Get Directions
                   </button>
-                </div>
+                </div> */}
               </div>
             ))}
 

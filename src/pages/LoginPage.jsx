@@ -1,6 +1,8 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
-function LoginPage({ setActivePage, setUser }) {
+function LoginPage({ setUser }) {
+  const navigate = useNavigate();
   const [isLogin, setIsLogin] = useState(true);
   const [formData, setFormData] = useState({
     username: '',
@@ -53,16 +55,16 @@ function LoginPage({ setActivePage, setUser }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    
+
     if (validateForm()) {
       if (isLogin) {
         console.log('Logging in:', { email: formData.email, password: formData.password });
         setUser({ username: formData.username || formData.email.split('@')[0] });
-        setActivePage('home'); // ✅ Go back to home after login
+        navigate('/'); // ✅ Go back to home after login
       } else {
         console.log('Registering:', formData);
         setUser({ username: formData.username });
-        setActivePage('home'); // ✅ Go back to home after signup
+        navigate('/'); // ✅ Go back to home after signup
       }
     }
   };

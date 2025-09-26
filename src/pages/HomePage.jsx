@@ -1,9 +1,9 @@
-import thriftshop from './assets/thriftshop.webp';
-import fabric from './assets/fabric.jpg';
-import tutorial from './assets/tutorial.jpg';
+import thriftshop from '../assets/thriftshop.webp';
+import fabric from '../assets/fabric.jpg';
+import tutorial from '../assets/tutorial.jpg';
+import { Link } from 'react-router-dom';
 
-
-function HomePage({ setActivePage }) {
+function HomePage({ user }) {
   return (
     <>
       {/* Hero Section */}
@@ -45,55 +45,55 @@ function HomePage({ setActivePage }) {
           <div className="features-grid">
             {/* Scrap Estimator */}
             <div className="feature-card">
-              <div 
-                className="feature-img" 
+              <div
+                className="feature-img"
                 style={{ backgroundImage: `url(${fabric})` }}
               ></div>
               <div className="feature-content">
                 <h3>Scrap Estimator</h3>
                 <p>Calculate and track leftover fabric scraps from your projects to minimize waste.</p>
-                <button 
-                  className="btn btn-outline" 
-                  onClick={() => setActivePage("scrap-estimator")}
+                <Link
+                  className="btn btn-outline"
+                  to="/scrap-estimator"
                 >
                   Learn More
-                </button>
+                </Link>
               </div>
             </div>
 
             {/* DIY Tutorials */}
             <div className="feature-card">
-              <div 
-                className="feature-img" 
+              <div
+                className="feature-img"
                 style={{ backgroundImage: `url(${tutorial})` }}
               ></div>
               <div className="feature-content">
                 <h3>DIY Tutorial Hub</h3>
                 <p>Access step-by-step guides for repairing and upcycling clothes at various difficulty levels.</p>
-                <button 
-                  className="btn btn-outline" 
-                  onClick={() => setActivePage("tutorials")}
+                <Link
+                  className="btn btn-outline"
+                  to="/tutorials"
                 >
                   Learn More
-                </button>
+                </Link>
               </div>
             </div>
 
             {/* Thrift Shop Map */}
             <div className="feature-card">
-              <div 
-                className="feature-img" 
+              <div
+                className="feature-img"
                 style={{ backgroundImage: `url(${thriftshop})` }}
               ></div>
               <div className="feature-content">
                 <h3>Thrift Shop Map</h3>
                 <p>Discover local ukay-ukay stores with detailed information and user reviews.</p>
-                <button 
-                  className="btn btn-outline" 
-                  onClick={() => setActivePage("thrift-map")}
+                <Link
+                  className="btn btn-outline"
+                  to="/thrift-map"
                 >
                   Learn More
-                </button>
+                </Link>
               </div>
             </div>
           </div>

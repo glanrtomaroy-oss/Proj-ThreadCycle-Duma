@@ -41,7 +41,7 @@ function AboutPage() {
             <div className="about-image">
               <div className="image-placeholder">
                 <i className="fas fa-leaf"></i>
-                    <img src="aboutpic.jpg" alt="Sustainable Fashion Community" />
+                    <img src="./src/assets/aboutpic.jpg" alt="Sustainable Fashion Community" />
               </div>
             </div>
           </div>
