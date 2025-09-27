@@ -129,8 +129,15 @@ function TutorialsPage({ user }) {
   return (
     <>
       {/* Hero Section for Tutorials */}
-      <section className="bg-gradient-to-r from-[#7a8450] to-[rgba(38,70,83,0.8)] bg-cover bg-center text-white py-20 text-center bg-[url('https://images.unsplash.com/photo-1558769132-cb1aea458c5e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1500&q=80')]" id="tutorials">
-        <div className="w-full max-w-6xl mx-auto px-4">
+      <section
+        id="tutorials"
+        className="relative bg-[url('https://images.unsplash.com/photo-1558769132-cb1aea458c5e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1500&q=80')] bg-cover bg-center bg-no-repeat"
+      >
+        {/* Gradient overlay */}
+        <div className="absolute inset-0 bg-gradient-to-r from-[#7a8450]/70 to-[rgba(38,70,83,0.8)]"></div>
+
+        {/* Content */}
+        <div className="relative w-full max-w-6xl mx-auto px-4 text-white py-20 text-center">
           <h1 className="text-4xl font-bold mb-5">DIY Tutorials & Guides</h1>
           <p className="text-xl max-w-3xl mx-auto mb-8">
             Learn how to repair, repurpose, and upcycle your clothing with our step-by-step tutorials
@@ -143,6 +150,7 @@ function TutorialsPage({ user }) {
           )}
         </div>
       </section>
+
 
       {/* Tutorials Section */}
       <section className="py-10 pb-20">
@@ -158,35 +166,35 @@ function TutorialsPage({ user }) {
               <h3 className="mb-2 text-lg font-medium text-gray-800">Category</h3>
               <div className="flex flex-wrap gap-2">
                 <button
-                  className={`px-4 py-2 bg-gray-100 border border-gray-300 rounded-full cursor-pointer transition-all ${activeFilter === "all" ? "bg-[#4c5f0d] text-white border-[#4c5f0d]" : "hover:bg-[#4c5f0d] hover:text-white hover:border-[#4c5f0d]"
+                  className={`px-4 py-2 bg-[var(--light)] border border-[var(--light-gray)] rounded-full cursor-pointer transition-all ${activeFilter === "all" ? "bg-[var(--primary)] text-white border-[var(--primary)]" : "hover:bg-[var(--primary)] hover:text-white hover:border-[var(--primary)]"
                     }`}
                   onClick={() => handleFilterClick("all")}
                 >
                   All Categories
                 </button>
                 <button
-                  className={`px-4 py-2 bg-gray-100 border border-gray-300 rounded-full cursor-pointer transition-all ${activeFilter === "repair" ? "bg-[#4c5f0d] text-white border-[#4c5f0d]" : "hover:bg-[#4c5f0d] hover:text-white hover:border-[#4c5f0d]"
+                  className={`px-4 py-2 bg-[var(--light)] border border-[var(--light-gray)] rounded-full cursor-pointer transition-all ${activeFilter === "repair" ? "bg-[var(--primary)] text-white border-[var(--primary)]" : "hover:bg-[var(--primary)] hover:text-white hover:border-[var(--primary)]"
                     }`}
                   onClick={() => handleFilterClick("repair")}
                 >
                   Repair
                 </button>
                 <button
-                  className={`px-4 py-2 bg-gray-100 border border-gray-300 rounded-full cursor-pointer transition-all ${activeFilter === "upcycle" ? "bg-[#4c5f0d] text-white border-[#4c5f0d]" : "hover:bg-[#4c5f0d] hover:text-white hover:border-[#4c5f0d]"
+                  className={`px-4 py-2 bg-[var(--light)] border border-[var(--light-gray)] rounded-full cursor-pointer transition-all ${activeFilter === "upcycle" ? "bg-[var(--primary)] text-white border-[var(--primary)]" : "hover:bg-[var(--primary)] hover:text-white hover:border-[var(--primary)]"
                     }`}
                   onClick={() => handleFilterClick("upcycle")}
                 >
                   Upcycling
                 </button>
                 <button
-                  className={`px-4 py-2 bg-gray-100 border border-gray-300 rounded-full cursor-pointer transition-all ${activeFilter === "customization" ? "bg-[#4c5f0d] text-white border-[#4c5f0d]" : "hover:bg-[#4c5f0d] hover:text-white hover:border-[#4c5f0d]"
+                  className={`px-4 py-2 bg-[var(--light)] border border-[var(--light-gray)] rounded-full cursor-pointer transition-all ${activeFilter === "customization" ? "bg-[var(--primary)] text-white border-[var(--primary)]" : "hover:bg-[var(--primary)] hover:text-white hover:border-[var(--primary)]"
                     }`}
                   onClick={() => handleFilterClick("customization")}
                 >
                   Customization
                 </button>
                 <button
-                  className={`px-4 py-2 bg-gray-100 border border-gray-300 rounded-full cursor-pointer transition-all ${activeFilter === "accessories" ? "bg-[#4c5f0d] text-white border-[#4c5f0d]" : "hover:bg-[#4c5f0d] hover:text-white hover:border-[#4c5f0d]"
+                  className={`px-4 py-2 bg-[var(--light)] border border-[var(--light-gray)] rounded-full cursor-pointer transition-all ${activeFilter === "accessories" ? "bg-[var(--primary)] text-white border-[var(--primary)]" : "hover:bg-[var(--primary)] hover:text-white hover:border-[var(--primary)]"
                     }`}
                   onClick={() => handleFilterClick("accessories")}
                 >
@@ -198,28 +206,28 @@ function TutorialsPage({ user }) {
               <h3 className="mb-2 text-lg font-medium text-gray-800">Difficulty Level</h3>
               <div className="flex flex-wrap gap-2">
                 <button
-                  className={`px-4 py-2 bg-gray-100 border border-gray-300 rounded-full cursor-pointer transition-all ${activeDifficulty === "all" ? "bg-[#4c5f0d] text-white border-[#4c5f0d]" : "hover:bg-[#4c5f0d] hover:text-white hover:border-[#4c5f0d]"
+                  className={`px-4 py-2 bg-[var(--light)] border border-[var(--light-gray)] rounded-full cursor-pointer transition-all ${activeDifficulty === "all" ? "bg-[var(--primary)] text-white border-[var(--primary)]" : "hover:bg-[var(--primary)] hover:text-white hover:border-[var(--primary)]"
                     }`}
                   onClick={() => handleDifficultyClick("all")}
                 >
                   All Levels
                 </button>
                 <button
-                  className={`px-4 py-2 bg-gray-100 border border-gray-300 rounded-full cursor-pointer transition-all ${activeDifficulty === "beginner" ? "bg-[#4c5f0d] text-white border-[#4c5f0d]" : "hover:bg-[#4c5f0d] hover:text-white hover:border-[#4c5f0d]"
+                  className={`px-4 py-2 bg-[var(--light)] border border-[var(--light-gray)] rounded-full cursor-pointer transition-all ${activeDifficulty === "beginner" ? "bg-[var(--primary)] text-white border-[var(--primary)]" : "hover:bg-[var(--primary)] hover:text-white hover:border-[var(--primary)]"
                     }`}
                   onClick={() => handleDifficultyClick("beginner")}
                 >
                   Beginner
                 </button>
                 <button
-                  className={`px-4 py-2 bg-gray-100 border border-gray-300 rounded-full cursor-pointer transition-all ${activeDifficulty === "intermediate" ? "bg-[#4c5f0d] text-white border-[#4c5f0d]" : "hover:bg-[#4c5f0d] hover:text-white hover:border-[#4c5f0d]"
+                  className={`px-4 py-2 bg-[var(--light)] border border-[var(--light-gray)] rounded-full cursor-pointer transition-all ${activeDifficulty === "intermediate" ? "bg-[var(--primary)] text-white border-[var(--primary)]" : "hover:bg-[var(--primary)] hover:text-white hover:border-[var(--primary)]"
                     }`}
                   onClick={() => handleDifficultyClick("intermediate")}
                 >
                   Intermediate
                 </button>
                 <button
-                  className={`px-4 py-2 bg-gray-100 border border-gray-300 rounded-full cursor-pointer transition-all ${activeDifficulty === "advanced" ? "bg-[#4c5f0d] text-white border-[#4c5f0d]" : "hover:bg-[#4c5f0d] hover:text-white hover:border-[#4c5f0d]"
+                  className={`px-4 py-2 bg-[var(--light)] border border-[var(--light-gray)] rounded-full cursor-pointer transition-all ${activeDifficulty === "advanced" ? "bg-[var(--primary)] text-white border-[var(--primary)]" : "hover:bg-[var(--primary)] hover:text-white hover:border-[var(--primary)]"
                     }`}
                   onClick={() => handleDifficultyClick("advanced")}
                 >
@@ -230,17 +238,18 @@ function TutorialsPage({ user }) {
           </div>
 
           {/* Tutorials Grid */}
-          <div className="tutorials-grid">
+          <div className="grid gap-7.5 grid-cols-[repeat(auto-fill,minmax(300px,1fr))]">
             {filteredTutorials.map(tutorial => (
               <div
                 key={tutorial.id}
-                className="tutorial-card"
+                className="bg-white rounded-lg overflow-hidden shadow-[0_5px_15px_rgba(0,0,0,0.1)] transition-transform duration-300 cursor-pointer hover:-translate-y-[5px]"
                 data-category={tutorial.category}
                 data-difficulty={tutorial.difficulty}
               >
-                <div className="tutorial-video">
-                  <div className="video-container">
+                <div className="relative h-[200px]">
+                  <div className="w-[100%] h-[100%] relative">
                     <iframe
+                      className="rounded-t-[10px] rounded-b-0"
                       width="100%"
                       height="200"
                       src={`https://www.youtube.com/embed/${tutorial.youtubeId}`}
@@ -250,30 +259,30 @@ function TutorialsPage({ user }) {
                       allowFullScreen
                     ></iframe>
                   </div>
-                  <span className={`difficulty-badge difficulty-${tutorial.difficulty}`}>
+                  <span className={`absolute top-[15px] right-[15px] px-2.5 py-1.5 rounded-[20px] text-[0.8rem] font-medium  text-white z-10 difficulty-${tutorial.difficulty}`}>
                     {tutorial.difficulty.charAt(0).toUpperCase() + tutorial.difficulty.slice(1)}
                   </span>
                 </div>
 
-                <div className="tutorial-content">
+                <div className="p-[20px]">
                   <div className="tutorial-meta">
                     <span className="tutorial-category">
                       {tutorial.category.charAt(0).toUpperCase() + tutorial.category.slice(1)}
                     </span>
                     <span><i className="far fa-clock"></i> {tutorial.duration}</span>
                   </div>
-                  <h3>{tutorial.title}</h3>
-                  <p>{tutorial.description}</p>
+                  <h3 className="mb-2.5 text-[var(--dark)]text-[1.3rem]">{tutorial.title}</h3>
+                  <p className="text-[var(--gray)] mb-[15px] text-[.95rem] leading-[1.5]">{tutorial.description}</p>
 
                   {/* Comments Section - Protected */}
-                  <div className="comments-section">
+                  {/* <div className="comments-section">
                     <h4>
                       Comments ({comments[tutorial.id]?.length || 0})
                       {!user && <span className="login-required-tag"> - Login Required</span>}
-                    </h4>
+                    </h4> */}
 
                     {/* Comments List - Protected */}
-                    <div className="comments-list">
+                    {/* <div className="comments-list">
                       {user ? (
                         comments[tutorial.id]?.map(comment => (
                           <div key={comment.id} className="comment">
@@ -296,10 +305,10 @@ function TutorialsPage({ user }) {
                           <p>No comments yet. Be the first to comment!</p>
                         </div>
                       )}
-                    </div>
+                    </div> */}
 
                     {/* Comment Input - Protected */}
-                    {user ? (
+                    {/* {user ? (
                       <div className="comment-input-container">
                         <textarea
                           className="comment-input"
@@ -327,8 +336,8 @@ function TutorialsPage({ user }) {
                           </div>
                         </div>
                       </div>
-                    )}
-                  </div>
+                    )} */}
+                  {/* </div> */}
                 </div>
               </div>
             ))}

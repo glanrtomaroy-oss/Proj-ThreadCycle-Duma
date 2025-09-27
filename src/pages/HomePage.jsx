@@ -5,8 +5,11 @@ function HomePage({ setActivePage }) {
   return (
     <>
       {/* Hero Section */}
-      <section className="bg-gradient-to-r from-[#7a8450] to-[rgba(38,70,83,0.8)] bg-cover bg-center text-white py-20 text-center bg-[url('https://images.unsplash.com/photo-1558769132-cb1aea458c5e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1500&q=80')]" id="home">
-        <div className="w-full max-w-6xl mx-auto px-4">
+      <section className="relative bg-[url('https://images.unsplash.com/photo-1558769132-cb1aea458c5e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1500&q=80')] bg-cover bg-center bg-no-repeat" id="home">
+
+      <div className="absolute inset-0 bg-gradient-to-r from-[#7a8450]/70 to-[rgba(38,70,83,0.8)]"></div>
+
+        <div className="relative w-full max-w-6xl mx-auto px-4 text-white py-20 text-center">
           <h1 className="text-4xl font-bold mb-5">Promoting Sustainable Fashion in Dumaguete City</h1>
           <p className="text-xl max-w-3xl mx-auto mb-8">
             Track your fabric usage, learn upcycling techniques, and discover local thrift shops with ThreadCycle Duma

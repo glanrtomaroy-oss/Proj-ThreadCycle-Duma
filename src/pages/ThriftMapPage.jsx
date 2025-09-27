@@ -355,8 +355,12 @@ function ThriftMapPage({ user }) {
   return (
     <>
       {/* Hero Section for Thrift Map */}
-      <section className="bg-gradient-to-r from-[#7a8450] to-[rgba(38,70,83,0.8)] bg-cover bg-center text-white py-20 text-center bg-[url('https://images.unsplash.com/photo-1558769132-cb1aea458c5e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1500&q=80')]" id="thrift-map">
-        <div className="w-full max-w-6xl mx-auto px-4">
+      <section className="relative bg-[url('https://images.unsplash.com/photo-1558769132-cb1aea458c5e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1500&q=80')] bg-cover bg-center bg-no-repeat">
+
+      {/* Gradient overlay */}
+      <div className="absolute inset-0 bg-gradient-to-r from-[#7a8450]/70 to-[rgba(38,70,83,0.8)]"></div>
+
+        <div className="relative w-full max-w-6xl mx-auto px-4 text-white py-20 text-center">
           <h1 className="text-4xl font-bold mb-5">Thrift Shop Map</h1>
           <p className="text-xl max-w-3xl mx-auto mb-8">
             Discover local ukay-ukay stores in Dumaguete City with interactive maps, details, price ranges, and user reviews
@@ -379,32 +383,25 @@ function ThriftMapPage({ user }) {
           </div>
 
           {/* Interactive Map Container */}
-          <div className="map-container">
+          <div className="bg-white rounded-lg overflow-hidden shadow-lg mb-10 h-[400px] flex items-center justify-center relative">
             <div
               ref={mapRef}
-              className="google-map"
-              style={{
-                height: '400px',
-                width: '100%',
-                borderRadius: '8px',
-                border: '2px solid #e1e5e9',
-                background: mapLoaded ? 'transparent' : '#f8f9fa',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                color: '#6c757d'
-              }}
+              className={`
+                h-[400px] w-full rounded-lg border-2 border-[#e1e5e9] shadow-md
+                flex items-center justify-center text-[#6c757d]
+                ${mapLoaded ? 'bg-transparent' : 'bg-[#f8f9fa]'}
+              `}
             >
               {!mapLoaded && (
-                <div className="map-loading">
-                  <i className="fas fa-spinner fa-spin" style={{ fontSize: '24px', marginRight: '10px' }}></i>
-                  Loading Map...
+                <div className="flex items-center gap-2">
+                  <i className="fas fa-spinner fa-spin text-[24px]"></i>
+                  <span>Loading Map...</span>
                 </div>
               )}
             </div>
-            <div className="map-controls">
+            <div className="flex gap-2.5 mt-[10px] justify-center">
               <button
-                className="btn btn-outline"
+                className="px-4 py-2 rounded font-medium cursor-pointer transition-all duration-300 bg-transparent border border-[var(--primary)] border-2 text-[var(--primary)] mr-2.5"
                 onClick={() => {
                   if (userLocation && mapInstanceRef.current) {
                     mapInstanceRef.current.setCenter(userLocation);
@@ -416,7 +413,7 @@ function ThriftMapPage({ user }) {
                 <i className="fas fa-location-arrow"></i> Center on My Location
               </button>
               <button
-                className="btn btn-outline"
+                className="px-4 py-2 rounded font-medium cursor-pointer transition-all duration-300 bg-transparent border border-[var(--primary)] border-2 text-[var(--primary)] mr-2.5"
                 onClick={() => {
                   if (mapInstanceRef.current) {
                     mapInstanceRef.current.setCenter({ lat: 9.3057, lng: 123.3055 });
@@ -436,28 +433,28 @@ function ThriftMapPage({ user }) {
               <h3 className="mb-2 text-lg font-medium text-gray-800">Filter by Category</h3>
               <div className="flex flex-wrap gap-2">
                 <button
-                  className={`px-4 py-2 bg-gray-100 border border-gray-300 rounded-full cursor-pointer transition-all ${activeCategory === "all" ? "bg-[#4c5f0d] text-white border-[#4c5f0d]" : "hover:bg-[#4c5f0d] hover:text-white hover:border-[#4c5f0d]"
+                  className={`px-4 py-2 bg-[var(--light)] border border-[var(--light-gray)] rounded-full cursor-pointer transition-all ${activeCategory === "all" ? "bg-[var(--primary)] text-white border-[var(--primary)]" : "hover:bg-[var(--primary)] hover:text-white hover:border-[var(--primary)]"
                     }`}
                   onClick={() => handleCategoryFilter("all")}
                 >
                   All Shops
                 </button>
                 <button
-                  className={`px-4 py-2 bg-gray-100 border border-gray-300 rounded-full cursor-pointer transition-all ${activeCategory === "clothing" ? "bg-[#4c5f0d] text-white border-[#4c5f0d]" : "hover:bg-[#4c5f0d] hover:text-white hover:border-[#4c5f0d]"
+                  className={`px-4 py-2 bg-[var(--light)] border border-[var(--light-gray)] rounded-full cursor-pointer transition-all ${activeCategory === "clothing" ? "bg-[var(--primary)] text-white border-[var(--primary)]" : "hover:bg-[var(--primary)] hover:text-white hover:border-[var(--primary)]"
                     }`}
                   onClick={() => handleCategoryFilter("clothing")}
                 >
                   Clothing
                 </button>
                 <button
-                  className={`px-4 py-2 bg-gray-100 border border-gray-300 rounded-full cursor-pointer transition-all ${activeCategory === "shoes" ? "bg-[#4c5f0d] text-white border-[#4c5f0d]" : "hover:bg-[#4c5f0d] hover:text-white hover:border-[#4c5f0d]"
+                  className={`px-4 py-2 bg-[var(--light)] border border-[var(--light-gray)] rounded-full cursor-pointer transition-all ${activeCategory === "shoes" ? "bg-[var(--primary)] text-white border-[var(--primary)]" : "hover:bg-[var(--primary)] hover:text-white hover:border-[var(--primary)]"
                     }`}
                   onClick={() => handleCategoryFilter("shoes")}
                 >
                   Shoes
                 </button>
                 <button
-                  className={`px-4 py-2 bg-gray-100 border border-gray-300 rounded-full cursor-pointer transition-all ${activeCategory === "accessories" ? "bg-[#4c5f0d] text-white border-[#4c5f0d]" : "hover:bg-[#4c5f0d] hover:text-white hover:border-[#4c5f0d]"
+                  className={`px-4 py-2 bg-[var(--light)] border border-[var(--light-gray)] rounded-full cursor-pointer transition-all ${activeCategory === "accessories" ? "bg-[var(--primary)] text-white border-[var(--primary)]" : "hover:bg-[var(--primary)] hover:text-white hover:border-[var(--primary)]"
                     }`}
                   onClick={() => handleCategoryFilter("accessories")}
                 >
@@ -469,28 +466,28 @@ function ThriftMapPage({ user }) {
               <h3 className="mb-2 text-lg font-medium text-gray-800">Price Range</h3>
               <div className="flex flex-wrap gap-2">
                 <button
-                  className={`px-4 py-2 bg-gray-100 border border-gray-300 rounded-full cursor-pointer transition-all ${activePrice === "all" ? "bg-[#4c5f0d] text-white border-[#4c5f0d]" : "hover:bg-[#4c5f0d] hover:text-white hover:border-[#4c5f0d]"
+                  className={`px-4 py-2 bg-[var(--light)] border border-[var(--light-gray)] rounded-full cursor-pointer transition-all ${activePrice === "all" ? "bg-[var(--primary)] text-white border-[var(--primary)]" : "hover:bg-[var(--primary)] hover:text-white hover:border-[var(--primary)]"
                     }`}
                   onClick={() => handlePriceFilter("all")}
                 >
                   Any Price
                 </button>
                 <button
-                  className={`px-4 py-2 bg-gray-100 border border-gray-300 rounded-full cursor-pointer transition-all ${activePrice === "low" ? "bg-[#4c5f0d] text-white border-[#4c5f0d]" : "hover:bg-[#4c5f0d] hover:text-white hover:border-[#4c5f0d]"
+                  className={`px-4 py-2 bg-[var(--light)] border border-[var(--light-gray)] rounded-full cursor-pointer transition-all ${activePrice === "low" ? "bg-[var(--primary)] text-white border-[var(--primary)]" : "hover:bg-[var(--primary)] hover:text-white hover:border-[var(--primary)]"
                     }`}
                   onClick={() => handlePriceFilter("low")}
                 >
                   ₱50 - ₱200
                 </button>
                 <button
-                  className={`px-4 py-2 bg-gray-100 border border-gray-300 rounded-full cursor-pointer transition-all ${activePrice === "medium" ? "bg-[#4c5f0d] text-white border-[#4c5f0d]" : "hover:bg-[#4c5f0d] hover:text-white hover:border-[#4c5f0d]"
+                  className={`px-4 py-2 bg-[var(--light)] border border-[var(--light-gray)] rounded-full cursor-pointer transition-all ${activePrice === "medium" ? "bg-[var(--primary)] text-white border-[var(--primary)]" : "hover:bg-[var(--primary)] hover:text-white hover:border-[var(--primary)]"
                     }`}
                   onClick={() => handlePriceFilter("medium")}
                 >
                   ₱200 - ₱500
                 </button>
                 <button
-                  className={`px-4 py-2 bg-gray-100 border border-gray-300 rounded-full cursor-pointer transition-all ${activePrice === "high" ? "bg-[#4c5f0d] text-white border-[#4c5f0d]" : "hover:bg-[#4c5f0d] hover:text-white hover:border-[#4c5f0d]"
+                  className={`px-4 py-2 bg-[var(--light)] border border-[var(--light-gray)] rounded-full cursor-pointer transition-all ${activePrice === "high" ? "bg-[var(--primary)] text-white border-[var(--primary)]" : "hover:bg-[var(--primary)] hover:text-white hover:border-[var(--primary)]"
                     }`}
                   onClick={() => handlePriceFilter("high")}
                 >
@@ -501,54 +498,57 @@ function ThriftMapPage({ user }) {
           </div>
 
           {/* Thrift Shops List */}
-          <div className="thrift-shops-list">
-            <h3>Thrift Shops in Dumaguete ({filteredShops.length})</h3>
+          <div>
+            <h3 className="mb-5 text-[var(--dark)] text-2xl">Thrift Shops in Dumaguete ({filteredShops.length})</h3>
 
             {filteredShops.map(shop => (
-              <div key={shop.id} id={`shop-${shop.id}`} className="thrift-shop-card" data-category={shop.category} data-price={shop.price}>
-                <div className="shop-image" style={{ backgroundImage: `url('${shop.image}')` }}></div>
-                <div className="shop-info">
-                  <h4>{shop.name}</h4>
-                  <div className="shop-meta">
-                    <span className="shop-category">
+              <div key={shop.id} id={`shop-${shop.id}`} className="bg-white rounded-lg overflow-hidden shadow-[0_5px_15px_rgba(0,0,0,0.1)] mb-7.5 flex transition-transform duration-300 hover:-translate-y-[5px]"
+              data-category={shop.category} data-price={shop.price}>
+                <div className="w-[250px] bg-cover bg-center" style={{ backgroundImage: `url('${shop.image}')` }}></div>
+                <div className="p-5 flex flex-col flex-1">
+                  <h4 className="mb-2.5 ext-[var(--dark)] text-xl">{shop.name}</h4>
+                  <div className="flex gap-[15px] mb-2.5">
+                    <span className="bg-[var(--light)] px-2 py-[3px] rounded text-[0.9rem]">
                       {shop.category.charAt(0).toUpperCase() + shop.category.slice(1)}
                     </span>
-                    <span className="shop-price">{shop.priceRange}</span>
+                    <span className="bg-[var(--light)] px-2 py-[3px] rounded text-[0.9rem]">{shop.priceRange}</span>
                   </div>
-                  <p className="shop-address">
-                    <i className="fas fa-map-marker-alt"></i> {shop.address}
+                  <p className="mb-2 text-[var(--gray)] text-[.95rem]">
+                    <i className=" mr-2 text-[var(--primary)]"></i> {shop.address}
                   </p>
-                  <p className="shop-hours">
-                    <i className="fas fa-clock"></i> {shop.hours}
+                  <p className="mb-2 text-[var(--gray)] text-[.95rem]">
+                    <i className="mr-2 text-[var(--primary)]"></i> {shop.hours}
                   </p>
 
-                  <div className="comments-section">
-                    <h4>
+                  <div className="mt-5 border-t border-[#ecf0f1] pt-[15px]">
+                    <h4 className="text-[#2c3e50] mb-[15px] text-[1.1rem]"
+                    >
                       Comments ({comments[shop.id]?.length || 0})
-                      {!user && <span className="login-required-tag"> - Login Required</span>}
+                      {!user && <span className=""> - Login Required</span>}
                     </h4>
 
                     {/* Comments List - Protected */}
-                    <div className="comments-list">
+                    <div className="mx-h-[150px] overflow-y-auto mb-[15px] grid gap-5">
                       {user ? (
                         comments[shop.id]?.map(comment => (
-                          <div key={comment.id} className="comment">
-                            <div className="comment-header">
-                              <strong>{comment.user}</strong>
-                              <span className="comment-time">{comment.timestamp}</span>
+                          <div key={comment.id} className="bg-[#f8f9fa] p-2.5 rounded-lg mb-2.5">
+                            <div className="flex justify-btween items-center mb-[5px]">
+                              <strong className="text-[#2c3e50] text-[0.9rem]"
+                              >{comment.user}</strong>
+                              <span className="text-[#7f8c8d] text-[.8rem]">{comment.timestamp}</span>
                             </div>
-                            <p className="comment-text">{comment.text}</p>
+                            <p className="text-[#34495e] text-[.9rem] leading-[1.4] m-0">{comment.text}</p>
                           </div>
                         ))
                       ) : (
-                        <div className="no-comments-message">
+                        <div className="?">
                           <i className="fas fa-lock"></i>
                           <p>Please log in to view comments</p>
                         </div>
                       )}
 
                       {user && comments[shop.id]?.length === 0 && (
-                        <div className="no-comments-message">
+                        <div className="?">
                           <p>No comments yet. Be the first to comment!</p>
                         </div>
                       )}
@@ -556,7 +556,7 @@ function ThriftMapPage({ user }) {
 
                     {/* Comment Input - Protected */}
                     {user ? (
-                      <div className="comment-input-container">
+                      <div className="flex gap-2.5 items-end">
                         <textarea
                           className="comment-input"
                           placeholder="Share your experience or ask a question..."
@@ -566,7 +566,7 @@ function ThriftMapPage({ user }) {
                           rows="2"
                         />
                         <button
-                          className="comment-send-btn"
+                          className="bg-[#4c5f0d] border-none rounded-full w-10 h-10 flex items-center justify-center cursor-pointer text-white transition-all duration-300 ease-in-out hover:bg-[#2c3e50] hover:scale-105 active:scale-95"
                           onClick={() => handleCommentSubmit(shop.id)}
                           title="Send comment"
                         >
@@ -574,7 +574,7 @@ function ThriftMapPage({ user }) {
                         </button>
                       </div>
                     ) : (
-                      <div className="login-prompt">
+                      <div className="login-prompt?">
                         <div className="login-prompt-content">
                           <i className="fas fa-user-lock"></i>
                           <div>
@@ -586,16 +586,16 @@ function ThriftMapPage({ user }) {
                     )}
                   </div>
                 </div>
-                <div className="shop-actions">
+                <div className="p-5 flex flex-col justify-center gap-2.5 min-w-[150px]">
                   <button
-                    className="btn btn-outline"
+                    className="px-4 py-2 rounded font-medium cursor-pointer transition-all duration-300 bg-transparent border border-[var(--primary)] border-2 text-[var(--primary)] mr-2.5 hover:bg-[var(--primary)] hover:text-white"
                     onClick={() => centerMapOnShop(shop)}
                     disabled={!mapLoaded}
                   >
                     <i className="fas fa-map-pin"></i> Show on Map
                   </button>
                   <button
-                    className="btn btn-primary"
+                    className="px-4 py-2 rounded font-medium cursor-pointer transition-all duration-300 mr-2.5 border-none bg-[var(--primary)] text-white hover:bg-[#23867b]"
                     onClick={() => handleDirections(shop)}
                   >
                     <i className="fas fa-directions"></i> Get Directions
