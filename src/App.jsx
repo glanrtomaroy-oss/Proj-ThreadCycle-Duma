@@ -1,12 +1,12 @@
 import './App.css';
 import { useState } from 'react';
-import HomePage from './HomePage';
-import ScrapEstimatorPage from './ScrapEstimatorPage';
-import TutorialsPage from './TutorialsPage';
-import ThriftMapPage from './ThriftMapPage';
-import AboutPage from './AboutPage';
-import  LoginPage from './LoginPage';
-import  AdminPage from './AdminPage';
+import HomePage from './pages/HomePage';
+import ScrapEstimatorPage from './pages/ScrapEstimatorPage';
+import TutorialsPage from './pages/TutorialsPage';
+import ThriftMapPage from './pages/ThriftMapPage';
+import AboutPage from './pages/AboutPage';
+import  LoginPage from './pages/LoginPage';
+import  AdminPage from './pages/AdminPage';
 import { Routes, Route } from 'react-router-dom';
 
 function App() {

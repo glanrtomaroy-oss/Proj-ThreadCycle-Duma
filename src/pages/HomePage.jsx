@@ -1,6 +1,4 @@
-import thriftshop from './assets/thriftshop.webp';
-import fabric from './assets/fabric.jpg';
-import tutorial from './assets/tutorial.jpg';
+import { supabase } from '../util/supabase';
 
 
 function HomePage({ setActivePage }) {
@@ -46,8 +44,7 @@ function HomePage({ setActivePage }) {
             {/* Scrap Estimator */}
             <div className="feature-card">
               <div 
-                className="feature-img" 
-                style={{ backgroundImage: `url(${fabric})` }}
+                className="feature-img bg-[url('../assets/fabric.jpg')]" 
               ></div>
               <div className="feature-content">
                 <h3>Scrap Estimator</h3>
@@ -64,8 +61,7 @@ function HomePage({ setActivePage }) {
             {/* DIY Tutorials */}
             <div className="feature-card">
               <div 
-                className="feature-img" 
-                style={{ backgroundImage: `url(${tutorial})` }}
+                className="feature-img bg-[url('../assets/tutorial.jpg')]" 
               ></div>
               <div className="feature-content">
                 <h3>DIY Tutorial Hub</h3>
@@ -82,8 +78,7 @@ function HomePage({ setActivePage }) {
             {/* Thrift Shop Map */}
             <div className="feature-card">
               <div 
-                className="feature-img" 
-                style={{ backgroundImage: `url(${thriftshop})` }}
+                className="feature-img bg-[url('../assets/thriftshop.webp')]" 
               ></div>
               <div className="feature-content">
                 <h3>Thrift Shop Map</h3>
