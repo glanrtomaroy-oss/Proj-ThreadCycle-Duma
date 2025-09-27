@@ -7,6 +7,7 @@ import ThriftMapPage from './ThriftMapPage';
 import AboutPage from './AboutPage';
 import  LoginPage from './LoginPage';
 import  AdminPage from './AdminPage';
+import { Routes, Route } from 'react-router-dom';
 
 function App() {
   const [activePage, setActivePage] = useState("home");
