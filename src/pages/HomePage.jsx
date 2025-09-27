@@ -44,7 +44,7 @@ function HomePage({ setActivePage }) {
             {/* Scrap Estimator */}
             <div className="feature-card">
               <div 
-                className="feature-img bg-[url('../assets/fabric.jpg')]" 
+                className="feature-img bg-[url('/fabric.jpg')]" 
               ></div>
               <div className="feature-content">
                 <h3>Scrap Estimator</h3>
@@ -61,7 +61,7 @@ function HomePage({ setActivePage }) {
             {/* DIY Tutorials */}
             <div className="feature-card">
               <div 
-                className="feature-img bg-[url('../assets/tutorial.jpg')]" 
+                className="feature-img bg-[url('/tutorial.jpg')]" 
               ></div>
               <div className="feature-content">
                 <h3>DIY Tutorial Hub</h3>
@@ -78,7 +78,7 @@ function HomePage({ setActivePage }) {
             {/* Thrift Shop Map */}
             <div className="feature-card">
               <div 
-                className="feature-img bg-[url('../assets/thriftshop.webp')]" 
+                className="feature-img bg-[url('/thriftshop.webp')]" 
               ></div>
               <div className="feature-content">
                 <h3>Thrift Shop Map</h3>

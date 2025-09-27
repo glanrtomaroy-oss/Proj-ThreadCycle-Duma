@@ -79,41 +79,29 @@ function LoginPage({ setActivePage, setUser }) {
   };
 
   return (
-    <div className="min-h-[calc(100vh-200px)] flex items-center justify-center bg-gradient-to-br from-[#f5f7fa] to-[#c3cfe2] px-5 py-10">
-      <div className="w-full max-w-[400px]">
-        <div className="bg-white p-10 rounded-xl shadow-[0_10px_30px_rgba(0,0,0,0.1)] border border-[#e1e5e9]">
-          <div className="text-center mb-8">
-            <h2 className='text-[#2c3e50] mb-2 text-[28px]'>{isLogin ? 'Welcome!' : 'Create Account'}</h2>
-            <p className='text-[#7f8c8d] text-base'>{isLogin ? 'Sign in to your account' : 'Join our sustainable fashion community'}</p>
+    <div className="login-page">
+      <div className="login-container">
+        <div className="login-card">
+          <div className="login-header">
+            <h2>{isLogin ? 'Welcome!' : 'Create Account'}</h2>
+            <p>{isLogin ? 'Sign in to your account' : 'Join our sustainable fashion community'}</p>
           </div>
 
-          <form onSubmit={handleSubmit} className="mb-5">
+          <form onSubmit={handleSubmit} className="login-form">
             {!isLogin && (
-              <div className="mb-5">
-              <label 
-                htmlFor="username" 
-                className="block mb-2 text-[#2c3e50] font-medium text-sm"
-              >
-                Username
-              </label>
-
-              <input
-                type="text"
-                id="username"
-                name="username"
-                value={formData.username}
-                onChange={handleInputChange}
-                placeholder="Enter your username"
-                className={`w-full px-4 py-3 border-2 rounded-lg text-base transition focus:outline-none focus:border-[#4c5f0d] focus:ring-2 focus:ring-[#4c5f0d]/20
-                  ${errors.username ? "border-[#e74c3c]" : "border-[#e1e5e9]"}`}
-              />
-
-              {errors.username && (
-                <span className="text-[#e74c3c] text-sm mt-1 block">
-                  {errors.username}
-                </span>
-              )}
-            </div>
+               <div className="form-group">
+               <label htmlFor="username">Username</label>
+               <input
+                 type="text"
+                 id="username"
+                 name="username"
+                 value={formData.username}
+                 onChange={handleInputChange}
+                 className={errors.username ? 'error' : ''}
+                 placeholder="Enter your username"
+               />
+               {errors.username && <span className="error-message">{errors.username}</span>}
+             </div>
             )}
 
             <div className="form-group">
