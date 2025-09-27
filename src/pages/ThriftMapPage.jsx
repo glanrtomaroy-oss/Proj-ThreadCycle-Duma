@@ -80,7 +80,7 @@ function ThriftMapPage({ user }) {
 
         // Default center: Dumaguete City
         const dumagueteCenter = { lat: 9.3057, lng: 123.3055 };
-        
+
         mapInstanceRef.current = new window.google.maps.Map(mapRef.current, {
           zoom: 14,
           center: dumagueteCenter,
@@ -158,13 +158,13 @@ function ThriftMapPage({ user }) {
         navigator.geolocation.getCurrentPosition(
           (position) => {
             if (!isMounted) return;
-            
+
             const userLoc = {
               lat: position.coords.latitude,
               lng: position.coords.longitude
             };
             setUserLocation(userLoc);
-            
+
             // Add user location marker
             if (mapInstanceRef.current) {
               const userMarker = new window.google.maps.Marker({
@@ -227,7 +227,7 @@ function ThriftMapPage({ user }) {
           setMapLoaded(false);
         }
       };
-      
+
       document.head.appendChild(script);
       googleScriptRef.current = script;
     };
@@ -240,16 +240,16 @@ function ThriftMapPage({ user }) {
     // Cleanup function - FIXED
     return () => {
       isMounted = false;
-      
+
       // Clean up markers
       markersRef.current.forEach(marker => marker.setMap(null));
       markersRef.current = [];
-      
+
       // Clean up global function
       if (window.selectShopFromMap) {
         delete window.selectShopFromMap;
       }
-      
+
       // Reset map state
       mapInstanceRef.current = null;
       setMapLoaded(false);
@@ -268,10 +268,10 @@ function ThriftMapPage({ user }) {
     if (!mapInstanceRef.current || !window.google || !mapLoaded) return;
 
     markersRef.current.forEach(marker => {
-      const shop = thriftShops.find(s => 
+      const shop = thriftShops.find(s =>
         s.lat === marker.position.lat() && s.lng === marker.position.lng()
       );
-      
+
       if (shop) {
         const shouldShow = filteredShops.some(filteredShop => filteredShop.id === shop.id);
         marker.setMap(shouldShow ? mapInstanceRef.current : null);
@@ -290,7 +290,7 @@ function ThriftMapPage({ user }) {
   const handleCommentChange = (shopId, comment) => {
     // FIX: Only allow comment changes if user is logged in
     if (!user) return;
-    
+
     setNewComments(prev => ({
       ...prev,
       [shopId]: comment
@@ -299,7 +299,7 @@ function ThriftMapPage({ user }) {
 
   const handleCommentSubmit = (shopId) => {
     const comment = newComments[shopId]?.trim();
-    
+
     if (!comment) {
       alert("Please enter a comment before sending.");
       return;
@@ -355,14 +355,14 @@ function ThriftMapPage({ user }) {
   return (
     <>
       {/* Hero Section for Thrift Map */}
-      <section className="hero thriftmap-hero" id="thrift-map">
-        <div className="container">
-          <h1>Thrift Shop Map</h1>
-          <p>
+      <section className="bg-gradient-to-r from-[#7a8450] to-[rgba(38,70,83,0.8)] bg-cover bg-center text-white py-20 text-center bg-[url('https://images.unsplash.com/photo-1558769132-cb1aea458c5e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1500&q=80')]" id="thrift-map">
+        <div className="w-full max-w-6xl mx-auto px-4">
+          <h1 className="text-4xl font-bold mb-5">Thrift Shop Map</h1>
+          <p className="text-xl max-w-3xl mx-auto mb-8">
             Discover local ukay-ukay stores in Dumaguete City with interactive maps, details, price ranges, and user reviews
           </p>
           {!user && (
-            <div className="login-required-banner">
+            <div className="bg-blue-100 border border-blue-300 text-blue-800 px-4 py-3 rounded-lg flex items-center gap-2 max-w-md mx-auto">
               <i className="fas fa-info-circle"></i>
               <span>Log in to view and post comments on thrift shops</span>
             </div>
@@ -371,21 +371,21 @@ function ThriftMapPage({ user }) {
       </section>
 
       {/* Thrift Map Section */}
-      <section className="thrift-map-section">
-        <div className="container">
-          <div className="section-title">
-            <h2>Find Thrift Shops Near You</h2>
-            <p>Browse through our curated list of second-hand stores in Dumaguete City</p>
+      <section className="py-10 pb-20">
+        <div className="w-full max-w-6xl mx-auto px-4">
+          <div className="text-center mb-12">
+            <h2 className="text-2xl font-bold mb-4 text-gray-800">Find Thrift Shops Near You</h2>
+            <p className="text-gray-600 max-w-3xl mx-auto">Browse through our curated list of second-hand stores in Dumaguete City</p>
           </div>
 
           {/* Interactive Map Container */}
           <div className="map-container">
-            <div 
-              ref={mapRef} 
+            <div
+              ref={mapRef}
               className="google-map"
-              style={{ 
-                height: '400px', 
-                width: '100%', 
+              style={{
+                height: '400px',
+                width: '100%',
                 borderRadius: '8px',
                 border: '2px solid #e1e5e9',
                 background: mapLoaded ? 'transparent' : '#f8f9fa',
@@ -397,13 +397,13 @@ function ThriftMapPage({ user }) {
             >
               {!mapLoaded && (
                 <div className="map-loading">
-                  <i className="fas fa-spinner fa-spin" style={{fontSize: '24px', marginRight: '10px'}}></i>
+                  <i className="fas fa-spinner fa-spin" style={{ fontSize: '24px', marginRight: '10px' }}></i>
                   Loading Map...
                 </div>
               )}
             </div>
             <div className="map-controls">
-              <button 
+              <button
                 className="btn btn-outline"
                 onClick={() => {
                   if (userLocation && mapInstanceRef.current) {
@@ -415,7 +415,7 @@ function ThriftMapPage({ user }) {
               >
                 <i className="fas fa-location-arrow"></i> Center on My Location
               </button>
-              <button 
+              <button
                 className="btn btn-outline"
                 onClick={() => {
                   if (mapInstanceRef.current) {
@@ -431,59 +431,67 @@ function ThriftMapPage({ user }) {
           </div>
 
           {/* Map Filters */}
-          <div className="filters">
-            <div className="filter-group">
-              <h3>Filter by Category</h3>
-              <div className="filter-options">
-                <button 
-                  className={`filter-btn ${activeCategory === "all" ? "active" : ""}`}
+          <div className="bg-white rounded-lg p-5 mb-8 shadow-lg">
+            <div className="mb-4">
+              <h3 className="mb-2 text-lg font-medium text-gray-800">Filter by Category</h3>
+              <div className="flex flex-wrap gap-2">
+                <button
+                  className={`px-4 py-2 bg-gray-100 border border-gray-300 rounded-full cursor-pointer transition-all ${activeCategory === "all" ? "bg-[#4c5f0d] text-white border-[#4c5f0d]" : "hover:bg-[#4c5f0d] hover:text-white hover:border-[#4c5f0d]"
+                    }`}
                   onClick={() => handleCategoryFilter("all")}
                 >
                   All Shops
                 </button>
-                <button 
-                  className={`filter-btn ${activeCategory === "clothing" ? "active" : ""}`}
+                <button
+                  className={`px-4 py-2 bg-gray-100 border border-gray-300 rounded-full cursor-pointer transition-all ${activeCategory === "clothing" ? "bg-[#4c5f0d] text-white border-[#4c5f0d]" : "hover:bg-[#4c5f0d] hover:text-white hover:border-[#4c5f0d]"
+                    }`}
                   onClick={() => handleCategoryFilter("clothing")}
                 >
                   Clothing
                 </button>
-                <button 
-                  className={`filter-btn ${activeCategory === "shoes" ? "active" : ""}`}
+                <button
+                  className={`px-4 py-2 bg-gray-100 border border-gray-300 rounded-full cursor-pointer transition-all ${activeCategory === "shoes" ? "bg-[#4c5f0d] text-white border-[#4c5f0d]" : "hover:bg-[#4c5f0d] hover:text-white hover:border-[#4c5f0d]"
+                    }`}
                   onClick={() => handleCategoryFilter("shoes")}
                 >
                   Shoes
                 </button>
-                <button 
-                  className={`filter-btn ${activeCategory === "accessories" ? "active" : ""}`}
+                <button
+                  className={`px-4 py-2 bg-gray-100 border border-gray-300 rounded-full cursor-pointer transition-all ${activeCategory === "accessories" ? "bg-[#4c5f0d] text-white border-[#4c5f0d]" : "hover:bg-[#4c5f0d] hover:text-white hover:border-[#4c5f0d]"
+                    }`}
                   onClick={() => handleCategoryFilter("accessories")}
                 >
                   Accessories
                 </button>
               </div>
             </div>
-            <div className="filter-group">
-              <h3>Price Range</h3>
-              <div className="filter-options">
-                <button 
-                  className={`filter-btn ${activePrice === "all" ? "active" : ""}`}
+            <div>
+              <h3 className="mb-2 text-lg font-medium text-gray-800">Price Range</h3>
+              <div className="flex flex-wrap gap-2">
+                <button
+                  className={`px-4 py-2 bg-gray-100 border border-gray-300 rounded-full cursor-pointer transition-all ${activePrice === "all" ? "bg-[#4c5f0d] text-white border-[#4c5f0d]" : "hover:bg-[#4c5f0d] hover:text-white hover:border-[#4c5f0d]"
+                    }`}
                   onClick={() => handlePriceFilter("all")}
                 >
                   Any Price
                 </button>
-                <button 
-                  className={`filter-btn ${activePrice === "low" ? "active" : ""}`}
+                <button
+                  className={`px-4 py-2 bg-gray-100 border border-gray-300 rounded-full cursor-pointer transition-all ${activePrice === "low" ? "bg-[#4c5f0d] text-white border-[#4c5f0d]" : "hover:bg-[#4c5f0d] hover:text-white hover:border-[#4c5f0d]"
+                    }`}
                   onClick={() => handlePriceFilter("low")}
                 >
                   ₱50 - ₱200
                 </button>
-                <button 
-                  className={`filter-btn ${activePrice === "medium" ? "active" : ""}`}
+                <button
+                  className={`px-4 py-2 bg-gray-100 border border-gray-300 rounded-full cursor-pointer transition-all ${activePrice === "medium" ? "bg-[#4c5f0d] text-white border-[#4c5f0d]" : "hover:bg-[#4c5f0d] hover:text-white hover:border-[#4c5f0d]"
+                    }`}
                   onClick={() => handlePriceFilter("medium")}
                 >
                   ₱200 - ₱500
                 </button>
-                <button 
-                  className={`filter-btn ${activePrice === "high" ? "active" : ""}`}
+                <button
+                  className={`px-4 py-2 bg-gray-100 border border-gray-300 rounded-full cursor-pointer transition-all ${activePrice === "high" ? "bg-[#4c5f0d] text-white border-[#4c5f0d]" : "hover:bg-[#4c5f0d] hover:text-white hover:border-[#4c5f0d]"
+                    }`}
                   onClick={() => handlePriceFilter("high")}
                 >
                   ₱500+
@@ -495,7 +503,7 @@ function ThriftMapPage({ user }) {
           {/* Thrift Shops List */}
           <div className="thrift-shops-list">
             <h3>Thrift Shops in Dumaguete ({filteredShops.length})</h3>
-            
+
             {filteredShops.map(shop => (
               <div key={shop.id} id={`shop-${shop.id}`} className="thrift-shop-card" data-category={shop.category} data-price={shop.price}>
                 <div className="shop-image" style={{ backgroundImage: `url('${shop.image}')` }}></div>
@@ -513,13 +521,13 @@ function ThriftMapPage({ user }) {
                   <p className="shop-hours">
                     <i className="fas fa-clock"></i> {shop.hours}
                   </p>
-                  
+
                   <div className="comments-section">
                     <h4>
                       Comments ({comments[shop.id]?.length || 0})
                       {!user && <span className="login-required-tag"> - Login Required</span>}
                     </h4>
-                    
+
                     {/* Comments List - Protected */}
                     <div className="comments-list">
                       {user ? (
@@ -538,7 +546,7 @@ function ThriftMapPage({ user }) {
                           <p>Please log in to view comments</p>
                         </div>
                       )}
-                      
+
                       {user && comments[shop.id]?.length === 0 && (
                         <div className="no-comments-message">
                           <p>No comments yet. Be the first to comment!</p>
@@ -557,7 +565,7 @@ function ThriftMapPage({ user }) {
                           onKeyPress={(e) => handleKeyPress(e, shop.id)}
                           rows="2"
                         />
-                        <button 
+                        <button
                           className="comment-send-btn"
                           onClick={() => handleCommentSubmit(shop.id)}
                           title="Send comment"
@@ -579,14 +587,14 @@ function ThriftMapPage({ user }) {
                   </div>
                 </div>
                 <div className="shop-actions">
-                  <button 
+                  <button
                     className="btn btn-outline"
                     onClick={() => centerMapOnShop(shop)}
                     disabled={!mapLoaded}
                   >
                     <i className="fas fa-map-pin"></i> Show on Map
                   </button>
-                  <button 
+                  <button
                     className="btn btn-primary"
                     onClick={() => handleDirections(shop)}
                   >

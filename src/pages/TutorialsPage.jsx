@@ -80,7 +80,7 @@ function TutorialsPage({ user }) {
   const handleCommentChange = (tutorialId, comment) => {
     // FIX: Only allow comment changes if user is logged in
     if (!user) return;
-    
+
     setNewComments(prev => ({
       ...prev,
       [tutorialId]: comment
@@ -95,7 +95,7 @@ function TutorialsPage({ user }) {
     }
 
     const comment = newComments[tutorialId]?.trim();
-    
+
     if (!comment) {
       alert("Please enter a comment before sending.");
       return;
@@ -129,14 +129,14 @@ function TutorialsPage({ user }) {
   return (
     <>
       {/* Hero Section for Tutorials */}
-      <section className="hero tutorials-hero" id="tutorials">
-        <div className="container">
-          <h1>DIY Tutorials & Guides</h1>
-          <p>
+      <section className="bg-gradient-to-r from-[#7a8450] to-[rgba(38,70,83,0.8)] bg-cover bg-center text-white py-20 text-center bg-[url('https://images.unsplash.com/photo-1558769132-cb1aea458c5e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1500&q=80')]" id="tutorials">
+        <div className="w-full max-w-6xl mx-auto px-4">
+          <h1 className="text-4xl font-bold mb-5">DIY Tutorials & Guides</h1>
+          <p className="text-xl max-w-3xl mx-auto mb-8">
             Learn how to repair, repurpose, and upcycle your clothing with our step-by-step tutorials
           </p>
           {!user && (
-            <div className="login-required-banner">
+            <div className="bg-blue-100 border border-blue-300 text-blue-800 px-4 py-3 rounded-lg flex items-center gap-2 max-w-md mx-auto">
               <i className="fas fa-info-circle"></i>
               <span>Log in to ask questions and join tutorial discussions</span>
             </div>
@@ -145,73 +145,82 @@ function TutorialsPage({ user }) {
       </section>
 
       {/* Tutorials Section */}
-      <section className="tutorials-section">
-        <div className="container">
-          <div className="section-title">
-            <h2>Browse Our Tutorial Collection</h2>
-            <p>Filter by category or difficulty level to find the perfect tutorial for your skill level and project needs</p>
+      <section className="py-10 pb-20">
+        <div className="w-full max-w-6xl mx-auto px-4">
+          <div className="text-center mb-12">
+            <h2 className="text-2xl font-bold mb-4 text-gray-800">Browse Our Tutorial Collection</h2>
+            <p className="text-gray-600 max-w-3xl mx-auto">Filter by category or difficulty level to find the perfect tutorial for your skill level and project needs</p>
           </div>
 
           {/* Filters */}
-          <div className="filters">
-            <div className="filter-group">
-              <h3>Category</h3>
-              <div className="filter-options">
-                <button 
-                  className={`filter-btn ${activeFilter === "all" ? "active" : ""}`}
+          <div className="bg-white rounded-lg p-5 mb-8 shadow-lg">
+            <div className="mb-4">
+              <h3 className="mb-2 text-lg font-medium text-gray-800">Category</h3>
+              <div className="flex flex-wrap gap-2">
+                <button
+                  className={`px-4 py-2 bg-gray-100 border border-gray-300 rounded-full cursor-pointer transition-all ${activeFilter === "all" ? "bg-[#4c5f0d] text-white border-[#4c5f0d]" : "hover:bg-[#4c5f0d] hover:text-white hover:border-[#4c5f0d]"
+                    }`}
                   onClick={() => handleFilterClick("all")}
                 >
                   All Categories
                 </button>
-                <button 
-                  className={`filter-btn ${activeFilter === "repair" ? "active" : ""}`}
+                <button
+                  className={`px-4 py-2 bg-gray-100 border border-gray-300 rounded-full cursor-pointer transition-all ${activeFilter === "repair" ? "bg-[#4c5f0d] text-white border-[#4c5f0d]" : "hover:bg-[#4c5f0d] hover:text-white hover:border-[#4c5f0d]"
+                    }`}
                   onClick={() => handleFilterClick("repair")}
                 >
                   Repair
                 </button>
-                <button 
-                  className={`filter-btn ${activeFilter === "upcycle" ? "active" : ""}`}
+                <button
+                  className={`px-4 py-2 bg-gray-100 border border-gray-300 rounded-full cursor-pointer transition-all ${activeFilter === "upcycle" ? "bg-[#4c5f0d] text-white border-[#4c5f0d]" : "hover:bg-[#4c5f0d] hover:text-white hover:border-[#4c5f0d]"
+                    }`}
                   onClick={() => handleFilterClick("upcycle")}
                 >
                   Upcycling
                 </button>
-                <button 
-                  className={`filter-btn ${activeFilter === "customization" ? "active" : ""}`}
+                <button
+                  className={`px-4 py-2 bg-gray-100 border border-gray-300 rounded-full cursor-pointer transition-all ${activeFilter === "customization" ? "bg-[#4c5f0d] text-white border-[#4c5f0d]" : "hover:bg-[#4c5f0d] hover:text-white hover:border-[#4c5f0d]"
+                    }`}
                   onClick={() => handleFilterClick("customization")}
                 >
                   Customization
                 </button>
-                <button 
-                  className={`filter-btn ${activeFilter === "accessories" ? "active" : ""}`}
+                <button
+                  className={`px-4 py-2 bg-gray-100 border border-gray-300 rounded-full cursor-pointer transition-all ${activeFilter === "accessories" ? "bg-[#4c5f0d] text-white border-[#4c5f0d]" : "hover:bg-[#4c5f0d] hover:text-white hover:border-[#4c5f0d]"
+                    }`}
                   onClick={() => handleFilterClick("accessories")}
                 >
                   Accessories
                 </button>
               </div>
             </div>
-            <div className="filter-group">
-              <h3>Difficulty Level</h3>
-              <div className="filter-options">
-                <button 
-                  className={`filter-btn ${activeDifficulty === "all" ? "active" : ""}`}
+            <div>
+              <h3 className="mb-2 text-lg font-medium text-gray-800">Difficulty Level</h3>
+              <div className="flex flex-wrap gap-2">
+                <button
+                  className={`px-4 py-2 bg-gray-100 border border-gray-300 rounded-full cursor-pointer transition-all ${activeDifficulty === "all" ? "bg-[#4c5f0d] text-white border-[#4c5f0d]" : "hover:bg-[#4c5f0d] hover:text-white hover:border-[#4c5f0d]"
+                    }`}
                   onClick={() => handleDifficultyClick("all")}
                 >
                   All Levels
                 </button>
-                <button 
-                  className={`filter-btn ${activeDifficulty === "beginner" ? "active" : ""}`}
+                <button
+                  className={`px-4 py-2 bg-gray-100 border border-gray-300 rounded-full cursor-pointer transition-all ${activeDifficulty === "beginner" ? "bg-[#4c5f0d] text-white border-[#4c5f0d]" : "hover:bg-[#4c5f0d] hover:text-white hover:border-[#4c5f0d]"
+                    }`}
                   onClick={() => handleDifficultyClick("beginner")}
                 >
                   Beginner
                 </button>
-                <button 
-                  className={`filter-btn ${activeDifficulty === "intermediate" ? "active" : ""}`}
+                <button
+                  className={`px-4 py-2 bg-gray-100 border border-gray-300 rounded-full cursor-pointer transition-all ${activeDifficulty === "intermediate" ? "bg-[#4c5f0d] text-white border-[#4c5f0d]" : "hover:bg-[#4c5f0d] hover:text-white hover:border-[#4c5f0d]"
+                    }`}
                   onClick={() => handleDifficultyClick("intermediate")}
                 >
                   Intermediate
                 </button>
-                <button 
-                  className={`filter-btn ${activeDifficulty === "advanced" ? "active" : ""}`}
+                <button
+                  className={`px-4 py-2 bg-gray-100 border border-gray-300 rounded-full cursor-pointer transition-all ${activeDifficulty === "advanced" ? "bg-[#4c5f0d] text-white border-[#4c5f0d]" : "hover:bg-[#4c5f0d] hover:text-white hover:border-[#4c5f0d]"
+                    }`}
                   onClick={() => handleDifficultyClick("advanced")}
                 >
                   Advanced
@@ -223,10 +232,10 @@ function TutorialsPage({ user }) {
           {/* Tutorials Grid */}
           <div className="tutorials-grid">
             {filteredTutorials.map(tutorial => (
-              <div 
-                key={tutorial.id} 
-                className="tutorial-card" 
-                data-category={tutorial.category} 
+              <div
+                key={tutorial.id}
+                className="tutorial-card"
+                data-category={tutorial.category}
                 data-difficulty={tutorial.difficulty}
               >
                 <div className="tutorial-video">
@@ -245,7 +254,7 @@ function TutorialsPage({ user }) {
                     {tutorial.difficulty.charAt(0).toUpperCase() + tutorial.difficulty.slice(1)}
                   </span>
                 </div>
-                
+
                 <div className="tutorial-content">
                   <div className="tutorial-meta">
                     <span className="tutorial-category">
@@ -255,14 +264,14 @@ function TutorialsPage({ user }) {
                   </div>
                   <h3>{tutorial.title}</h3>
                   <p>{tutorial.description}</p>
-                  
+
                   {/* Comments Section - Protected */}
                   <div className="comments-section">
                     <h4>
                       Comments ({comments[tutorial.id]?.length || 0})
                       {!user && <span className="login-required-tag"> - Login Required</span>}
                     </h4>
-                    
+
                     {/* Comments List - Protected */}
                     <div className="comments-list">
                       {user ? (
@@ -281,7 +290,7 @@ function TutorialsPage({ user }) {
                           <p>Please log in to view comments</p>
                         </div>
                       )}
-                      
+
                       {user && comments[tutorial.id]?.length === 0 && (
                         <div className="no-comments-message">
                           <p>No comments yet. Be the first to comment!</p>
@@ -300,7 +309,7 @@ function TutorialsPage({ user }) {
                           onKeyPress={(e) => handleKeyPress(e, tutorial.id)}
                           rows="2"
                         />
-                        <button 
+                        <button
                           className="comment-send-btn"
                           onClick={() => handleCommentSubmit(tutorial.id)}
                           title="Send comment"
