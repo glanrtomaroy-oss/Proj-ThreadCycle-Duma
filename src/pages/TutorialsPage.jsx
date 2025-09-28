@@ -126,6 +126,12 @@ function TutorialsPage({ user }) {
     }
   };
 
+  const difficultyColors = {
+    beginner: 'bg-[#27ae60]',
+    intermediate: 'bg-[#f39c12]',
+    advanced: 'bg-[#e74c3c]',
+  };
+
   return (
     <>
       {/* Hero Section for Tutorials */}
@@ -259,7 +265,7 @@ function TutorialsPage({ user }) {
                       allowFullScreen
                     ></iframe>
                   </div>
-                  <span className={`absolute top-[15px] right-[15px] px-2.5 py-1.5 rounded-[20px] text-[0.8rem] font-medium  text-white z-10 difficulty-${tutorial.difficulty}`}>
+                  <span className={`absolute top-[15px] right-[15px] px-2.5 py-1.5 rounded-[20px] text-[0.8rem] font-medium  text-white z-10 ${difficultyColors[tutorial.difficulty]}`}>
                     {tutorial.difficulty.charAt(0).toUpperCase() + tutorial.difficulty.slice(1)}
                   </span>
                 </div>
