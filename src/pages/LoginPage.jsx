@@ -1,165 +1,127 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { UserAuth } from '../context/AuthContext';
+import toast from 'react-hot-toast'
 
-function LoginPage({ setUser }) {
+const LoginPage = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const [isLogin, setIsLogin] = useState(true);
-  const [formData, setFormData] = useState({
-    username: '',
-    email: '',
-    password: '',
-    confirmPassword: ''
-  });
-  const [errors, setErrors] = useState({});
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
-    if (errors[name]) {
-      setErrors(prev => ({
-        ...prev,
-        [name]: ''
-      }));
-    }
-  };
-
-  const validateForm = () => {
-    const newErrors = {};
-
-    if (!formData.username.trim() && !isLogin) {
-      newErrors.username = 'Username is required';
-    }
-
-    if (!formData.email.trim()) {
-      newErrors.email = 'Email is required';
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = 'Email is invalid';
-    }
-
-    if (!formData.password) {
-      newErrors.password = 'Password is required';
-    } else if (formData.password.length < 6) {
-      newErrors.password = 'Password must be at least 6 characters';
-    }
-
-    if (!isLogin && formData.password !== formData.confirmPassword) {
-      newErrors.confirmPassword = 'Passwords do not match';
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
-  const handleSubmit = (e) => {
+  const { signInUser } = UserAuth();
+  
+  const handleLogin = async (e) => {
     e.preventDefault();
 
-    if (validateForm()) {
-      if (isLogin) {
-        console.log('Logging in:', { email: formData.email, password: formData.password });
-        setUser({ username: formData.username || formData.email.split('@')[0] });
-        navigate('/'); // ✅ Go back to home after login
+    if (loading) return;
+
+    setLoading(true);
+
+    try {
+      const result = await signInUser(email, password );
+      if (result.success) {
+        toast.success("Successfully signed in! Welcome back to ThreadCycle!");
+
+        console.log(result);
+
+        // ✅ Redirect based on role
+        if (result.role === "admin") {
+          navigate("/admin");
+        } else if (result.role === "customer") {
+          navigate("/");
+        }
+
+        // Scroll to top after navigation
+        setTimeout(() => window.scrollTo(0, 0), 100);
       } else {
-        console.log('Registering:', formData);
-        setUser({ username: formData.username });
-        navigate('/'); // ✅ Go back to home after signup
+        toast.error(result.error);
       }
+    } catch (err) {
+      toast.error("An unexpected error occurred");
+    } finally {
+      setLoading(false);
     }
   };
 
-  const toggleMode = () => {
-    setIsLogin(!isLogin);
-    setErrors({});
-    setFormData({
-      username: '',
-      email: '',
-      password: '',
-      confirmPassword: ''
-    });
+  const handleGoToSignup = () => {
+    navigate('/signup');
   };
 
   return (
-    <div className="login-page">
-      <div className="login-container">
-        <div className="login-card">
-          <div className="login-header">
-            <h2>{isLogin ? 'Welcome!' : 'Create Account'}</h2>
-            <p>{isLogin ? 'Sign in to your account' : 'Join our sustainable fashion community'}</p>
+    <div className="min-h-[calc(100vh-200px)] flex items-center justify-center bg-[#FEFEE3] py-10 px-5">
+      <div className="w-full max-w-md">
+        <div className="bg-white p-10 rounded-xl shadow-2xl border border-gray-200">
+          <div className="text-center mb-8">
+            <h2 className="text-gray-800 mb-2 text-3xl font-bold">Welcome!</h2>
+            <p className="text-gray-600 text-base">Sign in to your account</p>
           </div>
 
-          <form onSubmit={handleSubmit} className="login-form">
-            {!isLogin && (
-              <div className="form-group">
-                <label htmlFor="username">Username</label>
-                <input
-                  type="text"
-                  id="username"
-                  name="username"
-                  value={formData.username}
-                  onChange={handleInputChange}
-                  className={errors.username ? 'error' : ''}
-                  placeholder="Enter your username"
-                />
-                {errors.username && <span className="error-message">{errors.username}</span>}
-              </div>
-            )}
-
-            <div className="form-group">
-              <label htmlFor="email">Email</label>
+          <form onSubmit={handleLogin} className="mb-5">
+            <div className="mb-5">
+              <label htmlFor="email" className="block mb-2 text-gray-800 font-medium text-sm">Email</label>
               <input
                 type="email"
                 id="email"
                 name="email"
-                value={formData.email}
-                onChange={handleInputChange}
-                className={errors.email ? 'error' : ''}
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className={"w-full px-4 py-3 border-2 border-[#4C956C]/40 rounded-lg text-base transition-colors focus:outline-none focus:shadow-sm box-border"}
                 placeholder="Enter your email"
+                required
               />
-              {errors.email && <span className="error-message">{errors.email}</span>}
             </div>
 
-            <div className="form-group">
-              <label htmlFor="password">Password</label>
+            <div className="mb-5">
+              <label htmlFor="password" className="block mb-2 text-gray-800 font-medium text-sm">Password</label>
+              <div className='relative'>
               <input
-                type="password"
+                type={showPassword ? "text" : "password"}
                 id="password"
                 name="password"
-                value={formData.password}
-                onChange={handleInputChange}
-                className={errors.password ? 'error' : ''}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className={"w-full px-4 py-3 border-2 border-[#4C956C]/40 rounded-lg text-base transition-colors focus:outline-none focus:shadow-sm box-border"}
                 placeholder="Enter your password"
+                required
               />
-              {errors.password && <span className="error-message">{errors.password}</span>}
+              <button
+                type="button"
+                className="absolute inset-y-0 right-0 pr-3 flex items-center text-[#AF524D]/60 hover:text-[#AF524D] transition-colors"
+                onClick={() => setShowPassword(!showPassword)}
+              >
+              {showPassword ? (
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="black">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.878 9.878L3 3m6.878 6.878L21 21" />
+                </svg>
+                ) : (
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="black">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                </svg>
+                )}
+                </button>
+              </div>
             </div>
 
-            {!isLogin && (
-              <div className="form-group">
-                <label htmlFor="confirmPassword">Confirm Password</label>
-                <input
-                  type="password"
-                  id="confirmPassword"
-                  name="confirmPassword"
-                  value={formData.confirmPassword}
-                  onChange={handleInputChange}
-                  className={errors.confirmPassword ? 'error' : ''}
-                  placeholder="Confirm your password"
-                />
-                {errors.confirmPassword && <span className="error-message">{errors.confirmPassword}</span>}
-              </div>
-            )}
-
-            <button type="submit" className="btn btn-primary login-btn">
-              {isLogin ? 'Sign In' : 'Create Account'}
+            <button
+              type="submit"
+              className={`w-full py-3 rounded-lg text-base font-semibold mt-2 transition-colors
+                ${loading 
+                  ? "bg-gray-400 text-gray-200 cursor-not-allowed" 
+                  : "bg-[#4C956C] text-white hover:bg-[#3B7D57] cursor-pointer"
+                }`}
+              disabled={loading}
+            >
+              {loading ? "Signing In..." : "Sign In"}
             </button>
           </form>
 
-          <div className="login-footer">
-            <p>
-              {isLogin ? "Don't have an account? " : "Already have an account? "}
-              <button type="button" className="toggle-mode-btn" onClick={toggleMode}>
-                {isLogin ? 'Sign Up' : 'Sign In'}
+          <div className="text-center border-t border-gray-200 pt-5">
+            <p className="text-gray-600 text-sm">
+              Don't have an account?{' '}
+              <button type="button" className="bg-none border-none text-[#4C956C] cursor-pointer font-semibold underline hover:text-[#3B7D57]" onClick={handleGoToSignup}>
+                Sign Up
               </button>
             </p>
           </div>

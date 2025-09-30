@@ -1,237 +1,158 @@
-import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { useState, useEffect } from 'react';
-import './Header.css';
+import { NavLink, Link } from 'react-router-dom';
+import { useState } from 'react';
+import { UserAuth } from '../context/AuthContext';
 
-function Header({ user, onLogout }) {
-    const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-    const navigate = useNavigate();
-    const location = useLocation();
+const Header = () => {
+  const { userRole, loading } = UserAuth();
+  // const [user, setUser] = useState("");
 
-    const isAdmin = user && user.role === 'admin';
-
-    const isActive = (path) => location.pathname === path;
-
-    const handleLogout = () => {
-        onLogout();
-        setMobileMenuOpen(false);
-        navigate('/');
-    };
-
-    const closeMobileMenu = () => {
-        setMobileMenuOpen(false);
-    };
-
-    // lock body scroll while mobile menu is open
-    useEffect(() => {
-        if (mobileMenuOpen) {
-            const previous = document.body.style.overflow;
-            document.body.style.overflow = 'hidden';
-            return () => { document.body.style.overflow = previous; };
-        }
-        return undefined;
-    }, [mobileMenuOpen]);
-
-    return (
-        <header className="site-header">
-            <div className="container header-inner">
-                <nav className="navbar" role="navigation" aria-label="Main Navigation">
-                    <Link to="/" className="logo" onClick={closeMobileMenu}>
-                        <div className="logo-image" aria-hidden="true">
-                            <img src="/logo.png" alt="ThreadCycle Duma Logo" />
-                            <i className="fas fa-recycle"></i>
-                        </div>
-                        <span className="site-title">ThreadCycle Duma</span>
-                    </Link>
-
-                    {/* Desktop / Tablet Navigation */}
-                    <ul className="nav-links">
-                        <li>
-                            <Link
-                                to="/"
-                                className={`${isActive('/') ? 'active' : ''}`}
-                            >
-                                Home
-                            </Link>
-                        </li>
-                        <li>
-                            <Link
-                                to="/scrap-estimator"
-                                className={`${isActive('/scrap-estimator') ? 'active' : ''}`}
-                            >
-                                Scrap Estimator
-                            </Link>
-                        </li>
-                        <li>
-                            <Link
-                                to="/tutorials"
-                                className={`${isActive('/tutorials') ? 'active' : ''}`}
-                            >
-                                Tutorials
-                            </Link>
-                        </li>
-                        <li>
-                            <Link
-                                to="/thrift-map"
-                                className={`${isActive('/thrift-map') ? 'active' : ''}`}
-                            >
-                                Thrift Map
-                            </Link>
-                        </li>
-                        <li>
-                            <Link
-                                to="/about"
-                                className={`${isActive('/about') ? 'active' : ''}`}
-                            >
-                                About
-                            </Link>
-                        </li>
-                        {isAdmin && (
-                            <li>
-                                <Link
-                                    to="/admin"
-                                    className={`${isActive('/admin') ? 'active' : ''}`}
-                                >
-                                    Admin
-                                </Link>
-                            </li>
-                        )}
-                    </ul>
-
-                    <div className="auth-buttons">
-                        {user ? (
-                            <div className="user-menu">
-                                <span className="welcome-text">Welcome, {user.username}</span>
-                                {isAdmin && <span className="admin-badge">Admin</span>}
-                                <button className="btn btn-outline" onClick={handleLogout}>Logout</button>
-                            </div>
-                        ) : (
-                            <Link
-                                to="/login"
-                                className="btn btn-outline"
-                            >
-                                Login
-                            </Link>
-                        )}
-                    </div>
-
-                    {/* Mobile menu button */}
-                    <button
-                        className="mobile-menu-btn"
-                        onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                        aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
-                        aria-expanded={mobileMenuOpen}
-                        type="button"
-                    >
-                        {mobileMenuOpen ? (
-                            // Close (X) icon - inline SVG
-                            <svg
-                                width="24"
-                                height="24"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                xmlns="http://www.w3.org/2000/svg"
-                                aria-hidden="true"
-                            >
-                                <path d="M18 6L6 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                                <path d="M6 6L18 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                            </svg>
-                        ) : (
-                            // Hamburger icon - inline SVG
-                            <svg
-                                width="24"
-                                height="24"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                xmlns="http://www.w3.org/2000/svg"
-                                aria-hidden="true"
-                            >
-                                <path d="M3 7h18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                                <path d="M3 12h18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                                <path d="M3 17h18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                            </svg>
-                        )}
-                    </button>
-                </nav>
-
-                {/* Mobile Navigation */}
-                {mobileMenuOpen && (
-                    <div className="mobile-nav" role="dialog" aria-modal="true">
-                        <button className="mobile-nav-close" onClick={closeMobileMenu} aria-label="Close menu" type="button">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                                <path d="M18 6L6 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                                <path d="M6 6L18 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                            </svg>
-                        </button>
-                        <ul className="mobile-nav-links">
-                            <li>
-                                <Link
-                                    to="/"
-                                    className={`${isActive('/') ? 'active' : ''}`}
-                                    onClick={closeMobileMenu}
-                                >
-                                    <i className="fas fa-home"></i> Home
-                                </Link>
-                            </li>
-                            <li>
-                                <Link
-                                    to="/scrap-estimator"
-                                    className={`${isActive('/scrap-estimator') ? 'active' : ''}`}
-                                    onClick={closeMobileMenu}
-                                >
-                                    <i className="fas fa-calculator"></i> Scrap Estimator
-                                </Link>
-                            </li>
-                            <li>
-                                <Link
-                                    to="/tutorials"
-                                    className={`${isActive('/tutorials') ? 'active' : ''}`}
-                                    onClick={closeMobileMenu}
-                                >
-                                    <i className="fas fa-video"></i> Tutorials
-                                </Link>
-                            </li>
-                            <li>
-                                <Link
-                                    to="/thrift-map"
-                                    className={`${isActive('/thrift-map') ? 'active' : ''}`}
-                                    onClick={closeMobileMenu}
-                                >
-                                    <i className="fas fa-map-marked-alt"></i> Thrift Map
-                                </Link>
-                            </li>
-                            <li>
-                                <Link
-                                    to="/about"
-                                    className={`${isActive('/about') ? 'active' : ''}`}
-                                    onClick={closeMobileMenu}
-                                >
-                                    <i className="fas fa-info-circle"></i> About
-                                </Link>
-                            </li>
-                            {isAdmin && (
-                                <li>
-                                    <Link
-                                        to="/admin"
-                                        className={`${isActive('/admin') ? 'active' : ''}`}
-                                        onClick={closeMobileMenu}
-                                    >
-                                        <i className="fas fa-cog"></i> Admin
-                                    </Link>
-                                </li>
-                            )}
-                            <li className="mobile-auth">
-                                {user ? (
-                                    <button className="btn btn-primary" onClick={handleLogout}>Logout</button>
-                                ) : (
-                                    <Link to="/login" className="btn btn-primary" onClick={closeMobileMenu}>Login</Link>
-                                )}
-                            </li>
-                        </ul>
-                    </div>
-                )}
+  return (
+    <header className="bg-[#2C6E49] shadow-lg sticky top-0 z-50">
+      <div className="w-full max-w-6xl mx-auto px-4">
+        <nav className="flex gap-20 items-center py-4">
+          <div className="flex items-center">
+            <div className="relative w-20 h-20 flex items-center justify-center">
+              <img src="/logo.png" alt="ThreadCycle Duma Logo" className="w-full h-full object-contain rounded-full" />
+              <i className="fas fa-recycle absolute text-xl text-green-600 hidden"></i>
             </div>
-        </header>
-    );
+            <span className="text-2xl font-bold text-[#85b027]">ThreadCycle</span>
+          </div>
+          <ul className=" flex justify-center list-none">
+            <li className="ml-6">
+              <NavLink
+                className={({ isActive }) =>
+                  `relative transition-colors no-underline 
+                   text-white font-medium hover:text-[#FEFEE3] 
+                   after:content-[''] after:absolute after:w-0 after:h-[2px] 
+                   after:left-0 after:-bottom-1 after:bg-[#FEFEE3] 
+                   after:transition-all after:duration-300 
+                   hover:after:w-full
+                   ${isActive 
+                      ? "text-[#4C956C] after:w-full" 
+                      : "after:w-0"}`
+                }
+                
+                to="/"
+              >
+                Home
+              </NavLink>
+            </li>
+            <li className="ml-6">
+              <NavLink
+                className={({ isActive }) =>
+                  `relative transition-colors no-underline 
+                   text-white font-medium hover:text-[#FEFEE3] 
+                   after:content-[''] after:absolute after:w-0 after:h-[2px] 
+                   after:left-0 after:-bottom-1 after:bg-[#FEFEE3] 
+                   after:transition-all after:duration-300 
+                   hover:after:w-full
+                   ${isActive 
+                      ? "text-[#4C956C] after:w-full" 
+                      : "after:w-0"}`
+                }
+                to="/scrap-estimator"
+              >
+                Scrap Estimator
+              </NavLink>
+            </li>
+            <li className="ml-6">
+              <NavLink
+                className={({ isActive }) =>
+                  `relative transition-colors no-underline 
+                   text-white font-medium hover:text-[#FEFEE3] 
+                   after:content-[''] after:absolute after:w-0 after:h-[2px] 
+                   after:left-0 after:-bottom-1 after:bg-[#FEFEE3] 
+                   after:transition-all after:duration-300 
+                   hover:after:w-full
+                   ${isActive 
+                      ? "text-[#4C956C] after:w-full" 
+                      : "after:w-0"}`
+                }
+                to="/tutorials"
+              >
+                Tutorials
+              </NavLink>
+            </li>
+            <li className="ml-6">
+              <NavLink
+                className={({ isActive }) =>
+                  `relative transition-colors no-underline 
+                   text-white font-medium hover:text-[#FEFEE3] 
+                   after:content-[''] after:absolute after:w-0 after:h-[2px] 
+                   after:left-0 after:-bottom-1 after:bg-[#FEFEE3] 
+                   after:transition-all after:duration-300 
+                   hover:after:w-full
+                   ${isActive 
+                      ? "text-[#4C956C] after:w-full" 
+                      : "after:w-0"}`
+                }
+                to="/thrift-map"
+              >
+                Thrift Map
+              </NavLink>
+            </li>
+            <li className="ml-6">
+              <NavLink
+                className={({ isActive }) =>
+                  `relative transition-colors no-underline 
+                   text-white font-medium hover:text-[#FEFEE3] 
+                   after:content-[''] after:absolute after:w-0 after:h-[2px] 
+                   after:left-0 after:-bottom-1 after:bg-[#FEFEE3] 
+                   after:transition-all after:duration-300 
+                   hover:after:w-full
+                   ${isActive 
+                      ? "text-[#4C956C] after:w-full" 
+                      : "after:w-0"}`
+                }
+                to="/about"
+              >
+                About
+              </NavLink>
+            </li>
+            {/* Admin Link */}
+            {!loading && userRole === "admin" && (
+              <li className="ml-6">
+                <NavLink 
+                  className={({isActive}) => 
+                    `text-gray-800 font-medium transition-colors no-underline hover:text-[#4c5f0d] ${
+                      isActive ? 'text-[#4c5f0d] border-b-2 border-[#4c5f0d]' : ''
+                    }`
+                  } 
+                  to="/admin"
+                >
+                  Admin
+                </NavLink>
+              </li>
+            )}
+          </ul>
+          <div className="flex items-center">
+            {!loading && userRole === "customer" ? (
+              <div className="flex items-center">
+                <NavLink
+                  className={({ isActive }) =>
+                    `bg-[#4C956C] hover:bg-[#3B7D57] text-white font-bold px-6 py-3 rounded-lg cursor-pointer transition-all duration-300 tracking-wide text-sm shadow-lg hover:shadow-xl hover:scale-105 transform flex items-center' : ''
+                    }`
+                  }
+                  to="/profile"
+                >
+                  Profile
+                </NavLink>
+              </div>
+            ) : (
+              <NavLink
+                className={
+                  "bg-[#4C956C] hover:bg-[#3B7D57] text-white font-bold px-6 py-3 rounded-lg cursor-pointer transition-all duration-300 tracking-wide text-sm shadow-lg hover:shadow-xl hover:scale-105 transform flex items-center "
+                }
+                to="/login"
+              >
+                Login
+              </NavLink>
+            )}
+          </div>
+        </nav>
+      </div>
+    </header>
+  )
 }
 
-export default Header;
+export default Header

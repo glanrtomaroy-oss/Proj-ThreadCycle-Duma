@@ -1,84 +1,62 @@
 import './App.css';
-import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
+import { Toaster } from 'react-hot-toast';
 import Header from './components/Header';
 import Footer from './components/Footer';
-import ErrorBoundary from './components/ErrorBoundary';
 import HomePage from './pages/HomePage';
 import ScrapEstimatorPage from './pages/ScrapEstimatorPage';
 import TutorialsPage from './pages/TutorialsPage';
 import ThriftMapPage from './pages/ThriftMapPage';
 import AboutPage from './pages/AboutPage';
 import LoginPage from './pages/LoginPage';
+import SignupPage from './pages/SignUpPage';
+import ProfilePage from './pages/ProfilePage';
 import AdminPage from './pages/AdminPage';
+import { Routes, Route } from 'react-router-dom';
+import { AuthContextProvider } from './context/AuthContext';
 
 function App() {
-  const [user, setUser] = useState(null);
-
-  const handleLogout = () => {
-    setUser(null);
-  };
-
   return (
-    <div className="app">
-      <Header user={user} onLogout={handleLogout} />
-
-      <main className="main-content">
-        <Routes>
-          <Route
-            path="/"
-            element={<HomePage user={user} />}
-          />
-          <Route
-            path="/scrap-estimator"
-            element={<ScrapEstimatorPage user={user} />}
-          />
-          <Route
-            path="/tutorials"
-            element={<TutorialsPage user={user} />}
-          />
-          <Route
-            path="/thrift-map"
-            element={
-              <ErrorBoundary>
-                <ThriftMapPage user={user} />
-              </ErrorBoundary>
-            }
-          />
-          <Route
-            path="/about"
-            element={<AboutPage />}
-          />
-          <Route
-            path="/login"
-            element={<LoginPageWithNav setUser={setUser} />}
-          />
-          <Route
-            path="/admin"
-            element={
-              user?.role === 'admin'
-                ? <AdminPage user={user} />
-                : <HomePage user={user} />
-            }
-          />
-        </Routes>
-      </main>
-
+    <AuthContextProvider>
+      <Header />
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/scrap-estimator" element={<ScrapEstimatorPage />} />
+        <Route path="/tutorials" element={<TutorialsPage />} />
+        <Route path="/thrift-map" element={<ThriftMapPage />} />
+        <Route path="/about" element={<AboutPage />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/signup" element={<SignupPage />} />
+        <Route path="/admin" element={<AdminPage />} />
+        <Route path="/profile" element={<ProfilePage />} />
+      </Routes>
       <Footer />
-    </div>
+      <Toaster
+        position="top-center"
+        toastOptions={{
+          duration: 4000,
+          style: {
+            background: 'white',
+            color: 'black',
+          },
+          success: {
+            duration: 3000,
+            iconTheme: {
+              primary: '#4c5f0d',
+              secondary: '#fff',
+            },
+          },
+          error: {
+            duration: 4000,
+            iconTheme: {
+              primary: '#e74c3c',
+              secondary: '#fff',
+            },
+          },
+        }}
+      />
+    </AuthContextProvider>
   );
-}
-
-// LoginPage wrapper to handle navigation
-function LoginPageWithNav({ setUser }) {
-  const navigate = useNavigate();
-
-  const handleUserLogin = (userData) => {
-    setUser(userData);
-    navigate('/');
-  };
-
-  return <LoginPage setUser={handleUserLogin} />;
 }
 
 export default App;

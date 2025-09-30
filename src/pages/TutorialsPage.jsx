@@ -80,7 +80,7 @@ function TutorialsPage({ user }) {
   const handleCommentChange = (tutorialId, comment) => {
     // FIX: Only allow comment changes if user is logged in
     if (!user) return;
-    
+
     setNewComments(prev => ({
       ...prev,
       [tutorialId]: comment
@@ -95,7 +95,7 @@ function TutorialsPage({ user }) {
     }
 
     const comment = newComments[tutorialId]?.trim();
-    
+
     if (!comment) {
       alert("Please enter a comment before sending.");
       return;
@@ -126,17 +126,30 @@ function TutorialsPage({ user }) {
     }
   };
 
+  const difficultyColors = {
+    beginner: 'bg-[#27ae60]',
+    intermediate: 'bg-[#f39c12]',
+    advanced: 'bg-[#e74c3c]',
+  };
+
   return (
     <>
       {/* Hero Section for Tutorials */}
-      <section className="hero tutorials-hero" id="tutorials">
-        <div className="container">
-          <h1>DIY Tutorials & Guides</h1>
-          <p>
+      <section
+        id="tutorials"
+        className="relative bg-[url('https://images.unsplash.com/photo-1558769132-cb1aea458c5e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1500&q=80')] bg-cover bg-center bg-no-repeat"
+      >
+        {/* Gradient overlay */}
+        <div className="absolute inset-0 bg-gradient-to-r from-[#7a8450]/70 to-[rgba(38,70,83,0.8)]"></div>
+
+        {/* Content */}
+        <div className="relative w-full max-w-6xl mx-auto px-4 text-white py-20 text-center">
+          <h1 className="text-4xl font-bold mb-5">DIY Tutorials & Guides</h1>
+          <p className="text-xl max-w-3xl mx-auto mb-8">
             Learn how to repair, repurpose, and upcycle your clothing with our step-by-step tutorials
           </p>
           {!user && (
-            <div className="login-required-banner">
+            <div className="bg-blue-100 border border-blue-300 text-blue-800 px-4 py-3 rounded-lg flex items-center gap-2 max-w-md mx-auto">
               <i className="fas fa-info-circle"></i>
               <span>Log in to ask questions and join tutorial discussions</span>
             </div>
@@ -144,74 +157,84 @@ function TutorialsPage({ user }) {
         </div>
       </section>
 
+
       {/* Tutorials Section */}
-      <section className="tutorials-section">
-        <div className="container">
-          <div className="section-title">
-            <h2>Browse Our Tutorial Collection</h2>
-            <p>Filter by category or difficulty level to find the perfect tutorial for your skill level and project needs</p>
+      <section className="py-10 pb-20">
+        <div className="w-full max-w-6xl mx-auto px-4">
+          <div className="text-center mb-12">
+            <h2 className="text-2xl font-bold mb-4 text-gray-800">Browse Our Tutorial Collection</h2>
+            <p className="text-gray-600 max-w-3xl mx-auto">Filter by category or difficulty level to find the perfect tutorial for your skill level and project needs</p>
           </div>
 
           {/* Filters */}
-          <div className="filters">
-            <div className="filter-group">
-              <h3>Category</h3>
-              <div className="filter-options">
-                <button 
-                  className={`filter-btn ${activeFilter === "all" ? "active" : ""}`}
+          <div className="bg-white rounded-lg p-5 mb-8 shadow-lg">
+            <div className="mb-4">
+              <h3 className="mb-2 text-lg font-medium text-gray-800">Category</h3>
+              <div className="flex flex-wrap gap-2">
+                <button
+                  className={`px-4 py-2 bg-[var(--light)] border border-[var(--light-gray)] rounded-full cursor-pointer transition-all ${activeFilter === "all" ? "bg-[var(--primary)] text-white border-[var(--primary)]" : "hover:bg-[var(--primary)] hover:text-white hover:border-[var(--primary)]"
+                    }`}
                   onClick={() => handleFilterClick("all")}
                 >
                   All Categories
                 </button>
-                <button 
-                  className={`filter-btn ${activeFilter === "repair" ? "active" : ""}`}
+                <button
+                  className={`px-4 py-2 bg-[var(--light)] border border-[var(--light-gray)] rounded-full cursor-pointer transition-all ${activeFilter === "repair" ? "bg-[var(--primary)] text-white border-[var(--primary)]" : "hover:bg-[var(--primary)] hover:text-white hover:border-[var(--primary)]"
+                    }`}
                   onClick={() => handleFilterClick("repair")}
                 >
                   Repair
                 </button>
-                <button 
-                  className={`filter-btn ${activeFilter === "upcycle" ? "active" : ""}`}
+                <button
+                  className={`px-4 py-2 bg-[var(--light)] border border-[var(--light-gray)] rounded-full cursor-pointer transition-all ${activeFilter === "upcycle" ? "bg-[var(--primary)] text-white border-[var(--primary)]" : "hover:bg-[var(--primary)] hover:text-white hover:border-[var(--primary)]"
+                    }`}
                   onClick={() => handleFilterClick("upcycle")}
                 >
                   Upcycling
                 </button>
-                <button 
-                  className={`filter-btn ${activeFilter === "customization" ? "active" : ""}`}
+                <button
+                  className={`px-4 py-2 bg-[var(--light)] border border-[var(--light-gray)] rounded-full cursor-pointer transition-all ${activeFilter === "customization" ? "bg-[var(--primary)] text-white border-[var(--primary)]" : "hover:bg-[var(--primary)] hover:text-white hover:border-[var(--primary)]"
+                    }`}
                   onClick={() => handleFilterClick("customization")}
                 >
                   Customization
                 </button>
-                <button 
-                  className={`filter-btn ${activeFilter === "accessories" ? "active" : ""}`}
+                <button
+                  className={`px-4 py-2 bg-[var(--light)] border border-[var(--light-gray)] rounded-full cursor-pointer transition-all ${activeFilter === "accessories" ? "bg-[var(--primary)] text-white border-[var(--primary)]" : "hover:bg-[var(--primary)] hover:text-white hover:border-[var(--primary)]"
+                    }`}
                   onClick={() => handleFilterClick("accessories")}
                 >
                   Accessories
                 </button>
               </div>
             </div>
-            <div className="filter-group">
-              <h3>Difficulty Level</h3>
-              <div className="filter-options">
-                <button 
-                  className={`filter-btn ${activeDifficulty === "all" ? "active" : ""}`}
+            <div>
+              <h3 className="mb-2 text-lg font-medium text-gray-800">Difficulty Level</h3>
+              <div className="flex flex-wrap gap-2">
+                <button
+                  className={`px-4 py-2 bg-[var(--light)] border border-[var(--light-gray)] rounded-full cursor-pointer transition-all ${activeDifficulty === "all" ? "bg-[var(--primary)] text-white border-[var(--primary)]" : "hover:bg-[var(--primary)] hover:text-white hover:border-[var(--primary)]"
+                    }`}
                   onClick={() => handleDifficultyClick("all")}
                 >
                   All Levels
                 </button>
-                <button 
-                  className={`filter-btn ${activeDifficulty === "beginner" ? "active" : ""}`}
+                <button
+                  className={`px-4 py-2 bg-[var(--light)] border border-[var(--light-gray)] rounded-full cursor-pointer transition-all ${activeDifficulty === "beginner" ? "bg-[var(--primary)] text-white border-[var(--primary)]" : "hover:bg-[var(--primary)] hover:text-white hover:border-[var(--primary)]"
+                    }`}
                   onClick={() => handleDifficultyClick("beginner")}
                 >
                   Beginner
                 </button>
-                <button 
-                  className={`filter-btn ${activeDifficulty === "intermediate" ? "active" : ""}`}
+                <button
+                  className={`px-4 py-2 bg-[var(--light)] border border-[var(--light-gray)] rounded-full cursor-pointer transition-all ${activeDifficulty === "intermediate" ? "bg-[var(--primary)] text-white border-[var(--primary)]" : "hover:bg-[var(--primary)] hover:text-white hover:border-[var(--primary)]"
+                    }`}
                   onClick={() => handleDifficultyClick("intermediate")}
                 >
                   Intermediate
                 </button>
-                <button 
-                  className={`filter-btn ${activeDifficulty === "advanced" ? "active" : ""}`}
+                <button
+                  className={`px-4 py-2 bg-[var(--light)] border border-[var(--light-gray)] rounded-full cursor-pointer transition-all ${activeDifficulty === "advanced" ? "bg-[var(--primary)] text-white border-[var(--primary)]" : "hover:bg-[var(--primary)] hover:text-white hover:border-[var(--primary)]"
+                    }`}
                   onClick={() => handleDifficultyClick("advanced")}
                 >
                   Advanced
@@ -221,17 +244,18 @@ function TutorialsPage({ user }) {
           </div>
 
           {/* Tutorials Grid */}
-          <div className="tutorials-grid">
+          <div className="grid gap-7.5 grid-cols-[repeat(auto-fill,minmax(300px,1fr))]">
             {filteredTutorials.map(tutorial => (
-              <div 
-                key={tutorial.id} 
-                className="tutorial-card" 
-                data-category={tutorial.category} 
+              <div
+                key={tutorial.id}
+                className="bg-white rounded-lg overflow-hidden shadow-[0_5px_15px_rgba(0,0,0,0.1)] transition-transform duration-300 cursor-pointer hover:-translate-y-[5px]"
+                data-category={tutorial.category}
                 data-difficulty={tutorial.difficulty}
               >
-                <div className="tutorial-video">
-                  <div className="video-container">
+                <div className="relative h-[200px]">
+                  <div className="w-[100%] h-[100%] relative">
                     <iframe
+                      className="rounded-t-[10px] rounded-b-0"
                       width="100%"
                       height="200"
                       src={`https://www.youtube.com/embed/${tutorial.youtubeId}`}
@@ -241,30 +265,30 @@ function TutorialsPage({ user }) {
                       allowFullScreen
                     ></iframe>
                   </div>
-                  <span className={`difficulty-badge difficulty-${tutorial.difficulty}`}>
+                  <span className={`absolute top-[15px] right-[15px] px-2.5 py-1.5 rounded-[20px] text-[0.8rem] font-medium  text-white z-10 ${difficultyColors[tutorial.difficulty]}`}>
                     {tutorial.difficulty.charAt(0).toUpperCase() + tutorial.difficulty.slice(1)}
                   </span>
                 </div>
-                
-                <div className="tutorial-content">
+
+                <div className="p-[20px]">
                   <div className="tutorial-meta">
                     <span className="tutorial-category">
                       {tutorial.category.charAt(0).toUpperCase() + tutorial.category.slice(1)}
                     </span>
                     <span><i className="far fa-clock"></i> {tutorial.duration}</span>
                   </div>
-                  <h3>{tutorial.title}</h3>
-                  <p>{tutorial.description}</p>
-                  
+                  <h3 className="mb-2.5 text-[var(--dark)]text-[1.3rem]">{tutorial.title}</h3>
+                  <p className="text-[var(--gray)] mb-[15px] text-[.95rem] leading-[1.5]">{tutorial.description}</p>
+
                   {/* Comments Section - Protected */}
-                  <div className="comments-section">
+                  {/* <div className="comments-section">
                     <h4>
                       Comments ({comments[tutorial.id]?.length || 0})
                       {!user && <span className="login-required-tag"> - Login Required</span>}
-                    </h4>
-                    
+                    </h4> */}
+
                     {/* Comments List - Protected */}
-                    <div className="comments-list">
+                    {/* <div className="comments-list">
                       {user ? (
                         comments[tutorial.id]?.map(comment => (
                           <div key={comment.id} className="comment">
@@ -281,16 +305,16 @@ function TutorialsPage({ user }) {
                           <p>Please log in to view comments</p>
                         </div>
                       )}
-                      
+
                       {user && comments[tutorial.id]?.length === 0 && (
                         <div className="no-comments-message">
                           <p>No comments yet. Be the first to comment!</p>
                         </div>
                       )}
-                    </div>
+                    </div> */}
 
                     {/* Comment Input - Protected */}
-                    {user ? (
+                    {/* {user ? (
                       <div className="comment-input-container">
                         <textarea
                           className="comment-input"
@@ -300,7 +324,7 @@ function TutorialsPage({ user }) {
                           onKeyPress={(e) => handleKeyPress(e, tutorial.id)}
                           rows="2"
                         />
-                        <button 
+                        <button
                           className="comment-send-btn"
                           onClick={() => handleCommentSubmit(tutorial.id)}
                           title="Send comment"
@@ -318,8 +342,8 @@ function TutorialsPage({ user }) {
                           </div>
                         </div>
                       </div>
-                    )}
-                  </div>
+                    )} */}
+                  {/* </div> */}
                 </div>
               </div>
             ))}

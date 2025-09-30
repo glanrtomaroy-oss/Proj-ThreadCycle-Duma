@@ -95,7 +95,7 @@ function AdminPage({ user }) {
 
   const handleUpdateShop = (e) => {
     e.preventDefault();
-    setShops(shops.map(shop => 
+    setShops(shops.map(shop =>
       shop.id === editingShop.id ? { ...newShop, id: shop.id } : shop
     ));
     setEditingShop(null);
@@ -132,28 +132,31 @@ function AdminPage({ user }) {
   };
 
   return (
-    <div className="admin-page">
-      <div className="admin-container">
-        <div className="admin-header">
-          <h1>Admin Dashboard</h1>
-          <p>Manage thrift shops, moderate comments, and oversee platform activities</p>
+    <div className="min-h-[calc(100vh-200px)] bg-gray-100 py-10">
+      <div className="max-w-6xl mx-auto px-5">
+        <div className="text-center mb-10">
+          <h1 className="text-gray-800 text-4xl font-bold mb-2">Admin Dashboard</h1>
+          <p className="text-gray-600 text-lg">Manage thrift shops, moderate comments, and oversee platform activities</p>
         </div>
 
-        <div className="admin-tabs">
-          <button 
-            className={`tab-btn ${activeTab === 'shops' ? 'active' : ''}`}
+        <div className="flex bg-white rounded-lg p-2 mb-8 shadow-lg">
+          <button
+            className={`flex-1 py-4 px-5 border-none bg-transparent cursor-pointer text-base font-medium rounded-md transition-all ${activeTab === 'shops' ? 'bg-blue-500 text-white' : 'hover:bg-gray-100'
+              }`}
             onClick={() => setActiveTab('shops')}
           >
             Thrift Shops
           </button>
-          <button 
-            className={`tab-btn ${activeTab === 'comments' ? 'active' : ''}`}
+          <button
+            className={`flex-1 py-4 px-5 border-none bg-transparent cursor-pointer text-base font-medium rounded-md transition-all ${activeTab === 'comments' ? 'bg-blue-500 text-white' : 'hover:bg-gray-100'
+              }`}
             onClick={() => setActiveTab('comments')}
           >
             Comment Moderation
           </button>
-          <button 
-            className={`tab-btn ${activeTab === 'users' ? 'active' : ''}`}
+          <button
+            className={`flex-1 py-4 px-5 border-none bg-transparent cursor-pointer text-base font-medium rounded-md transition-all ${activeTab === 'users' ? 'bg-blue-500 text-white' : 'hover:bg-gray-100'
+              }`}
             onClick={() => setActiveTab('users')}
           >
             User Management
@@ -162,80 +165,86 @@ function AdminPage({ user }) {
 
         {/* Thrift Shops Management */}
         {activeTab === 'shops' && (
-          <div className="tab-content">
-            <div className="admin-section">
-              <h2>Add New Thrift Shop</h2>
-              <form onSubmit={editingShop ? handleUpdateShop : handleAddShop} className="shop-form">
-                <div className="form-row">
-                  <div className="form-group">
-                    <label>Shop Name</label>
+          <div className="bg-white rounded-lg p-8 shadow-lg">
+            <div className="mb-10">
+              <h2 className="text-gray-800 mb-5 text-2xl font-bold border-b-2 border-gray-100 pb-2">Add New Thrift Shop</h2>
+              <form onSubmit={editingShop ? handleUpdateShop : handleAddShop} className="bg-gray-100 p-6 rounded-lg mb-8">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
+                  <div className="mb-5">
+                    <label className="block mb-2 text-gray-800 font-medium">Shop Name</label>
                     <input
                       type="text"
                       value={newShop.name}
-                      onChange={(e) => setNewShop({...newShop, name: e.target.value})}
+                      onChange={(e) => setNewShop({ ...newShop, name: e.target.value })}
+                      className="w-full px-3 py-3 border-2 border-gray-200 rounded-md text-sm transition-colors focus:outline-none focus:border-blue-500"
                       required
                     />
                   </div>
-                  <div className="form-group">
-                    <label>Address</label>
+                  <div className="mb-5">
+                    <label className="block mb-2 text-gray-800 font-medium">Address</label>
                     <input
                       type="text"
                       value={newShop.address}
-                      onChange={(e) => setNewShop({...newShop, address: e.target.value})}
-                      required
-                    />
-                  </div>
-                </div>
-                
-                <div className="form-row">
-                  <div className="form-group">
-                    <label>Latitude</label>
-                    <input
-                      type="number"
-                      step="any"
-                      value={newShop.latitude}
-                      onChange={(e) => setNewShop({...newShop, latitude: e.target.value})}
-                      required
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label>Longitude</label>
-                    <input
-                      type="number"
-                      step="any"
-                      value={newShop.longitude}
-                      onChange={(e) => setNewShop({...newShop, longitude: e.target.value})}
+                      onChange={(e) => setNewShop({ ...newShop, address: e.target.value })}
+                      className="w-full px-3 py-3 border-2 border-gray-200 rounded-md text-sm transition-colors focus:outline-none focus:border-blue-500"
                       required
                     />
                   </div>
                 </div>
 
-                <div className="form-row">
-                  <div className="form-group">
-                    <label>Operating Hours</label>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
+                  <div className="mb-5">
+                    <label className="block mb-2 text-gray-800 font-medium">Latitude</label>
+                    <input
+                      type="number"
+                      step="any"
+                      value={newShop.latitude}
+                      onChange={(e) => setNewShop({ ...newShop, latitude: e.target.value })}
+                      className="w-full px-3 py-3 border-2 border-gray-200 rounded-md text-sm transition-colors focus:outline-none focus:border-blue-500"
+                      required
+                    />
+                  </div>
+                  <div className="mb-5">
+                    <label className="block mb-2 text-gray-800 font-medium">Longitude</label>
+                    <input
+                      type="number"
+                      step="any"
+                      value={newShop.longitude}
+                      onChange={(e) => setNewShop({ ...newShop, longitude: e.target.value })}
+                      className="w-full px-3 py-3 border-2 border-gray-200 rounded-md text-sm transition-colors focus:outline-none focus:border-blue-500"
+                      required
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
+                  <div className="mb-5">
+                    <label className="block mb-2 text-gray-800 font-medium">Operating Hours</label>
                     <input
                       type="text"
                       value={newShop.hours}
-                      onChange={(e) => setNewShop({...newShop, hours: e.target.value})}
+                      onChange={(e) => setNewShop({ ...newShop, hours: e.target.value })}
+                      className="w-full px-3 py-3 border-2 border-gray-200 rounded-md text-sm transition-colors focus:outline-none focus:border-blue-500"
                       placeholder="e.g., 9:00 AM - 6:00 PM"
                     />
                   </div>
-                  <div className="form-group">
-                    <label>Price Range</label>
+                  <div className="mb-5">
+                    <label className="block mb-2 text-gray-800 font-medium">Price Range</label>
                     <input
                       type="text"
                       value={newShop.priceRange}
-                      onChange={(e) => setNewShop({...newShop, priceRange: e.target.value})}
+                      onChange={(e) => setNewShop({ ...newShop, priceRange: e.target.value })}
+                      className="w-full px-3 py-3 border-2 border-gray-200 rounded-md text-sm transition-colors focus:outline-none focus:border-blue-500"
                       placeholder="e.g., ₱50 - ₱300"
                     />
                   </div>
                 </div>
 
-                <div className="form-group">
-                  <label>Item Types</label>
-                  <div className="checkbox-group">
+                <div className="mb-5">
+                  <label className="block mb-2 text-gray-800 font-medium">Item Types</label>
+                  <div className="flex gap-5 flex-wrap">
                     {['clothing', 'shoes', 'bags', 'accessories'].map(type => (
-                      <label key={type} className="checkbox-label">
+                      <label key={type} className="flex items-center gap-2 cursor-pointer">
                         <input
                           type="checkbox"
                           checked={newShop.itemTypes.includes(type)}
@@ -243,8 +252,9 @@ function AdminPage({ user }) {
                             const types = e.target.checked
                               ? [...newShop.itemTypes, type]
                               : newShop.itemTypes.filter(t => t !== type);
-                            setNewShop({...newShop, itemTypes: types});
+                            setNewShop({ ...newShop, itemTypes: types });
                           }}
+                          className="w-auto"
                         />
                         {type.charAt(0).toUpperCase() + type.slice(1)}
                       </label>
@@ -252,13 +262,13 @@ function AdminPage({ user }) {
                   </div>
                 </div>
 
-                <button type="submit" className="btn btn-primary">
+                <button type="submit" className="px-6 py-3 border-none rounded-md cursor-pointer text-sm font-medium transition-all mr-2 bg-[#4c5f0d] text-white hover:bg-[#4c5f0d]">
                   {editingShop ? 'Update Shop' : 'Add Shop'}
                 </button>
                 {editingShop && (
-                  <button 
-                    type="button" 
-                    className="btn btn-outline"
+                  <button
+                    type="button"
+                    className="px-6 py-3 bg-transparent border-2 border-[#4c5f0d] text-[#4c5f0d] rounded-md cursor-pointer text-sm font-medium transition-all hover:bg-[#4c5f0d] hover:text-white"
                     onClick={() => {
                       setEditingShop(null);
                       setNewShop({
@@ -278,27 +288,27 @@ function AdminPage({ user }) {
               </form>
             </div>
 
-            <div className="admin-section">
-              <h2>Manage Thrift Shops</h2>
-              <div className="shops-list">
+            <div className="mb-10">
+              <h2 className="text-gray-800 mb-5 text-2xl font-bold border-b-2 border-gray-100 pb-2">Manage Thrift Shops</h2>
+              <div className="grid gap-5">
                 {shops.map(shop => (
-                  <div key={shop.id} className="shop-card">
-                    <div className="shop-info">
-                      <h3>{shop.name}</h3>
-                      <p><strong>Address:</strong> {shop.address}</p>
-                      <p><strong>Hours:</strong> {shop.hours}</p>
-                      <p><strong>Price Range:</strong> {shop.priceRange}</p>
-                      <p><strong>Items:</strong> {shop.itemTypes.join(', ')}</p>
+                  <div key={shop.id} className="bg-gray-100 p-5 rounded-lg border-l-4 border-blue-500 flex justify-between items-center">
+                    <div className="flex-1">
+                      <h3 className="text-gray-800 mb-2">{shop.name}</h3>
+                      <p className="my-1 text-gray-600"><strong>Address:</strong> {shop.address}</p>
+                      <p className="my-1 text-gray-600"><strong>Hours:</strong> {shop.hours}</p>
+                      <p className="my-1 text-gray-600"><strong>Price Range:</strong> {shop.priceRange}</p>
+                      <p className="my-1 text-gray-600"><strong>Items:</strong> {shop.itemTypes.join(', ')}</p>
                     </div>
-                    <div className="shop-actions">
-                      <button 
-                        className="btn btn-outline"
+                    <div className="flex gap-2">
+                      <button
+                        className="px-6 py-3 bg-transparent border-2 border-[#4c5f0d] text-[#4c5f0d] rounded-md cursor-pointer text-sm font-medium transition-all hover:bg-[#4c5f0d] hover:text-white"
                         onClick={() => handleEditShop(shop)}
                       >
                         Edit
                       </button>
-                      <button 
-                        className="btn btn-danger"
+                      <button
+                        className="px-6 py-3 bg-red-500 text-white border-none rounded-md cursor-pointer text-sm font-medium transition-all hover:bg-red-600"
                         onClick={() => handleDeleteShop(shop.id)}
                       >
                         Delete
@@ -313,36 +323,37 @@ function AdminPage({ user }) {
 
         {/* Comment Moderation */}
         {activeTab === 'comments' && (
-          <div className="tab-content">
-            <div className="admin-section">
-              <h2>Comment Moderation</h2>
-              <div className="comments-list">
+          <div className="bg-white rounded-lg p-8 shadow-lg">
+            <div className="mb-10">
+              <h2 className="text-gray-800 mb-5 text-2xl font-bold border-b-2 border-gray-100 pb-2">Comment Moderation</h2>
+              <div className="grid gap-5">
                 {comments.map(comment => (
-                  <div key={comment.id} className="comment-card">
-                    <div className="comment-content">
-                      <div className="comment-header">
-                        <strong>{comment.user}</strong>
-                        <span className={`status-badge ${comment.status}`}>
+                  <div key={comment.id} className="bg-gray-100 p-5 rounded-lg border-l-4 border-blue-500 flex justify-between items-center">
+                    <div className="flex-1">
+                      <div className="flex justify-between items-center mb-2">
+                        <strong className="text-gray-800">{comment.user}</strong>
+                        <span className={`px-2 py-1 rounded text-xs font-medium ${comment.status === 'pending' ? 'bg-yellow-100 text-yellow-800' : 'bg-blue-100 text-blue-800'
+                          }`}>
                           {comment.status}
                         </span>
                       </div>
-                      <p>{comment.content}</p>
-                      <div className="comment-meta">
+                      <p className="text-gray-600 mb-2">{comment.content}</p>
+                      <div className="flex gap-4 text-xs text-gray-500">
                         <span>Shop: {comment.shop}</span>
                         <span>Date: {comment.date}</span>
                       </div>
                     </div>
-                    <div className="comment-actions">
+                    <div className="flex gap-2">
                       {comment.status === 'pending' && (
-                        <button 
-                          className="btn btn-success"
+                        <button
+                          className="px-6 py-3 bg-green-500 text-white border-none rounded-md cursor-pointer text-sm font-medium transition-all hover:bg-green-600"
                           onClick={() => handleApproveComment(comment.id)}
                         >
                           Approve
                         </button>
                       )}
-                      <button 
-                        className="btn btn-danger"
+                      <button
+                        className="px-6 py-3 bg-red-500 text-white border-none rounded-md cursor-pointer text-sm font-medium transition-all hover:bg-red-600"
                         onClick={() => handleDeleteComment(comment.id)}
                       >
                         Delete
@@ -357,20 +368,20 @@ function AdminPage({ user }) {
 
         {/* User Management */}
         {activeTab === 'users' && (
-          <div className="tab-content">
-            <div className="admin-section">
-              <h2>User Management</h2>
-              <div className="users-list">
+          <div className="bg-white rounded-lg p-8 shadow-lg">
+            <div className="mb-10">
+              <h2 className="text-gray-800 mb-5 text-2xl font-bold border-b-2 border-gray-100 pb-2">User Management</h2>
+              <div className="grid gap-5">
                 {users.map(user => (
-                  <div key={user.id} className="user-card">
-                    <div className="user-info">
-                      <h3>{user.username}</h3>
-                      <p>Email: {user.email}</p>
-                      <p>Role: {user.role}</p>
+                  <div key={user.id} className="bg-gray-100 p-5 rounded-lg border-l-4 border-blue-500 flex justify-between items-center">
+                    <div className="flex-1">
+                      <h3 className="text-gray-800 mb-2">{user.username}</h3>
+                      <p className="my-1 text-gray-600">Email: {user.email}</p>
+                      <p className="my-1 text-gray-600">Role: {user.role}</p>
                     </div>
-                    <div className="user-actions">
-                      <button 
-                        className="btn btn-warning"
+                    <div className="flex gap-2">
+                      <button
+                        className="px-6 py-3 bg-yellow-500 text-white border-none rounded-md cursor-pointer text-sm font-medium transition-all hover:bg-yellow-600"
                         onClick={() => handleResetPassword(user.id)}
                       >
                         Reset Password
