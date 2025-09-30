@@ -18,11 +18,11 @@ function HomePage({ setActivePage }) {
       </section>
 
       {/* Thrift Map Section - SIMPLIFIED VERSION */}
-      <section className="py-10 pb-20" id="thrift-map">
+      <section className="bg-[#FEFEE3] py-10 pb-20" id="thrift-map">
         <div className="w-full max-w-6xl mx-auto px-4">
           <div className="text-center mb-12">
-            <h2 className="text-2xl font-bold mb-4 text-gray-800">Key Features</h2>
-            <p className="text-gray-600 max-w-3xl mx-auto">Discover how ThreadCycle Duma helps you embrace sustainable fashion practices</p>
+            <h2 className="text-2xl font-bold mb-4 text-[#2C6E49]">Key Features</h2>
+            <p className="text-[#2C6E49] max-w-3xl mx-auto">Discover how ThreadCycle Duma helps you embrace sustainable fashion practices</p>
           </div>
 
           {/* Map Container */}
@@ -41,7 +41,7 @@ function HomePage({ setActivePage }) {
       </section>
 
       {/* Features Section */}
-      <section className="py-20" id="features">
+      <section className="bg-[#FEFEE3] py-20" id="features">
         <div className="w-full max-w-6xl mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {/* Scrap Estimator */}

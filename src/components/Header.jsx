@@ -4,10 +4,10 @@ import { UserAuth } from '../context/AuthContext';
 
 const Header = () => {
   const { userRole, loading } = UserAuth();
-  const [user, setUser] = useState("");
+  // const [user, setUser] = useState("");
 
   return (
-    <header className="bg-white shadow-lg sticky top-0 z-50">
+    <header className="bg-[#2C6E49] shadow-lg sticky top-0 z-50">
       <div className="w-full max-w-6xl mx-auto px-4">
         <nav className="flex gap-20 items-center py-4">
           <div className="flex items-center">
@@ -15,15 +15,23 @@ const Header = () => {
               <img src="/logo.png" alt="ThreadCycle Duma Logo" className="w-full h-full object-contain rounded-full" />
               <i className="fas fa-recycle absolute text-xl text-green-600 hidden"></i>
             </div>
-            <span className="text-2xl font-bold text-[#4c5f0d]">ThreadCycle Duma</span>
+            <span className="text-2xl font-bold text-[#85b027]">ThreadCycle</span>
           </div>
           <ul className=" flex justify-center list-none">
             <li className="ml-6">
               <NavLink
                 className={({ isActive }) =>
-                  `text-gray-800 font-medium transition-colors no-underline hover:text-[#4c5f0d] ${isActive ? 'text-[#4c5f0d] border-b-2 border-[#4c5f0d]' : ''
-                  }`
+                  `relative transition-colors no-underline 
+                   text-white font-medium hover:text-[#FEFEE3] 
+                   after:content-[''] after:absolute after:w-0 after:h-[2px] 
+                   after:left-0 after:-bottom-1 after:bg-[#FEFEE3] 
+                   after:transition-all after:duration-300 
+                   hover:after:w-full
+                   ${isActive 
+                      ? "text-[#4C956C] after:w-full" 
+                      : "after:w-0"}`
                 }
+                
                 to="/"
               >
                 Home
@@ -32,8 +40,15 @@ const Header = () => {
             <li className="ml-6">
               <NavLink
                 className={({ isActive }) =>
-                  `text-gray-800 font-medium transition-colors no-underline hover:text-[#4c5f0d] ${isActive ? 'text-[#4c5f0d] border-b-2 border-[#4c5f0d]' : ''
-                  }`
+                  `relative transition-colors no-underline 
+                   text-white font-medium hover:text-[#FEFEE3] 
+                   after:content-[''] after:absolute after:w-0 after:h-[2px] 
+                   after:left-0 after:-bottom-1 after:bg-[#FEFEE3] 
+                   after:transition-all after:duration-300 
+                   hover:after:w-full
+                   ${isActive 
+                      ? "text-[#4C956C] after:w-full" 
+                      : "after:w-0"}`
                 }
                 to="/scrap-estimator"
               >
@@ -43,8 +58,15 @@ const Header = () => {
             <li className="ml-6">
               <NavLink
                 className={({ isActive }) =>
-                  `text-gray-800 font-medium transition-colors no-underline hover:text-[#4c5f0d] ${isActive ? 'text-[#4c5f0d] border-b-2 border-[#4c5f0d]' : ''
-                  }`
+                  `relative transition-colors no-underline 
+                   text-white font-medium hover:text-[#FEFEE3] 
+                   after:content-[''] after:absolute after:w-0 after:h-[2px] 
+                   after:left-0 after:-bottom-1 after:bg-[#FEFEE3] 
+                   after:transition-all after:duration-300 
+                   hover:after:w-full
+                   ${isActive 
+                      ? "text-[#4C956C] after:w-full" 
+                      : "after:w-0"}`
                 }
                 to="/tutorials"
               >
@@ -54,8 +76,15 @@ const Header = () => {
             <li className="ml-6">
               <NavLink
                 className={({ isActive }) =>
-                  `text-gray-800 font-medium transition-colors no-underline hover:text-[#4c5f0d] ${isActive ? 'text-[#4c5f0d] border-b-2 border-[#4c5f0d]' : ''
-                  }`
+                  `relative transition-colors no-underline 
+                   text-white font-medium hover:text-[#FEFEE3] 
+                   after:content-[''] after:absolute after:w-0 after:h-[2px] 
+                   after:left-0 after:-bottom-1 after:bg-[#FEFEE3] 
+                   after:transition-all after:duration-300 
+                   hover:after:w-full
+                   ${isActive 
+                      ? "text-[#4C956C] after:w-full" 
+                      : "after:w-0"}`
                 }
                 to="/thrift-map"
               >
@@ -65,8 +94,15 @@ const Header = () => {
             <li className="ml-6">
               <NavLink
                 className={({ isActive }) =>
-                  `text-gray-800 font-medium transition-colors no-underline hover:text-[#4c5f0d] ${isActive ? 'text-[#4c5f0d] border-b-2 border-[#4c5f0d]' : ''
-                  }`
+                  `relative transition-colors no-underline 
+                   text-white font-medium hover:text-[#FEFEE3] 
+                   after:content-[''] after:absolute after:w-0 after:h-[2px] 
+                   after:left-0 after:-bottom-1 after:bg-[#FEFEE3] 
+                   after:transition-all after:duration-300 
+                   hover:after:w-full
+                   ${isActive 
+                      ? "text-[#4C956C] after:w-full" 
+                      : "after:w-0"}`
                 }
                 to="/about"
               >
@@ -94,19 +130,18 @@ const Header = () => {
               <div className="flex items-center">
                 <NavLink
                   className={({ isActive }) =>
-                    `text-gray-800 font-medium transition-colors no-underline hover:text-[#4c5f0d] ${isActive ? 'text-[#4c5f0d] border-b-2 border-[#4c5f0d]' : ''
+                    `bg-[#4C956C] hover:bg-[#3B7D57] text-white font-bold px-6 py-3 rounded-lg cursor-pointer transition-all duration-300 tracking-wide text-sm shadow-lg hover:shadow-xl hover:scale-105 transform flex items-center' : ''
                     }`
                   }
                   to="/profile"
                 >
-                  Logout
+                  Profile
                 </NavLink>
               </div>
             ) : (
               <NavLink
-                className={({ isActive }) =>
-                  `px-4 py-2 rounded font-medium cursor-pointer transition-all duration-300 bg-transparent border border-[var(--primary)] border-2 text-[var(--primary)] mr-2.5 hover:bg-[var(--primary)] hover:text-white ${isActive ? 'text-[var(--primary)] border-b-2 border-[var(--primary)]' : ''
-                  }`
+                className={
+                  "bg-[#4C956C] hover:bg-[#3B7D57] text-white font-bold px-6 py-3 rounded-lg cursor-pointer transition-all duration-300 tracking-wide text-sm shadow-lg hover:shadow-xl hover:scale-105 transform flex items-center "
                 }
                 to="/login"
               >

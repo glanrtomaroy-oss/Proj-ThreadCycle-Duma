@@ -93,10 +93,10 @@ body {
 }
 
 /* Fallback if image doesn't load */
-.logo-image img:not([src])~.fa-recycle,
+/* .logo-image img:not([src])~.fa-recycle,
 .logo-image img[src=""]~.fa-recycle {
   display: block;
-}
+} */
 
 /* Responsive logo */
 /*@media (max-width: 768px) {

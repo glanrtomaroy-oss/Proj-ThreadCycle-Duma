@@ -115,7 +115,7 @@ const SignupPage = () => {
                 name="username"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
-                className={"w-full px-4 py-3 border-2 rounded-lg text-base transition-colors focus:outline-none focus:shadow-sm box-border"}
+                className={"w-full px-4 py-3 border-2 border-[#4C956C]/40 rounded-lg text-base transition-colors focus:outline-none focus:shadow-sm box-border"}
                 placeholder="Enter your username"
                 required
               />
@@ -129,7 +129,7 @@ const SignupPage = () => {
                 name="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className={"w-full px-4 py-3 border-2 rounded-lg text-base transition-colors focus:outline-none focus:shadow-sm box-border"}
+                className={"w-full px-4 py-3 border-2 border-[#4C956C]/40 rounded-lg text-base transition-colors focus:outline-none focus:shadow-sm box-border"}
                 placeholder="Enter your email"
                 required
               />
@@ -144,7 +144,7 @@ const SignupPage = () => {
                 name="password"
                 value={password}
                 onChange={handlePasswordChange}
-                className={"w-full px-4 py-3 border-2 rounded-lg text-base transition-colors focus:outline-none focus:shadow-sm box-border"}
+                className={"w-full px-4 py-3 border-2 border-[#4C956C]/40 rounded-lg text-base transition-colors focus:outline-none focus:shadow-sm box-border"}
                 placeholder="Enter your password"
                 required
               />
@@ -176,7 +176,7 @@ const SignupPage = () => {
                 name="confirmPassword"
                 value={confirmPassword}
                 onChange={handleConfirmPasswordChange}
-                className={"w-full px-4 py-3 border-2 rounded-lg text-base transition-colors focus:outline-none focus:shadow-sm box-border"}
+                className={"w-full px-4 py-3 border-2 border-[#4C956C]/40 rounded-lg text-base transition-colors focus:outline-none focus:shadow-sm box-border"}
                 placeholder="Confirm your password"
                 required
               />
@@ -204,7 +204,7 @@ const SignupPage = () => {
               className={`w-full py-3 rounded-lg text-base font-semibold mt-2 transition-colors
                 ${loading 
                   ? "bg-gray-400 text-gray-200 cursor-not-allowed" 
-                  : "bg-[#4c5f0d] text-white hover:bg-[#3b4a0a] cursor-pointer"
+                  : "bg-[#4C956C] text-white hover:bg-[#3B7D57] cursor-pointer"
                 }`}
               disabled={loading}
             >
@@ -215,7 +215,7 @@ const SignupPage = () => {
           <div className="text-center border-t border-gray-200 pt-5">
             <p className="text-gray-600 text-sm">
               Already have an account?{' '}
-              <button type="button" className="bg-none border-none text-[#4c5f0d] cursor-pointer font-semibold underline hover:text-[#4c5f0d]" onClick={handleGoToLogin}>
+              <button type="button" className="bg-none border-none text-[#4C956C] cursor-pointer font-semibold underline hover:text-[#4c5f0d]" onClick={handleGoToLogin}>
                 Sign In
               </button>
             </p>

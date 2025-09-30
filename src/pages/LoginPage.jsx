@@ -49,7 +49,7 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="min-h-[calc(100vh-200px)] flex items-center justify-center bg-gradient-to-br from-gray-100 to-gray-300 py-10 px-5">
+    <div className="min-h-[calc(100vh-200px)] flex items-center justify-center bg-[#FEFEE3] py-10 px-5">
       <div className="w-full max-w-md">
         <div className="bg-white p-10 rounded-xl shadow-2xl border border-gray-200">
           <div className="text-center mb-8">
@@ -66,7 +66,7 @@ const LoginPage = () => {
                 name="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className={"w-full px-4 py-3 border-2 rounded-lg text-base transition-colors focus:outline-none focus:shadow-sm box-border"}
+                className={"w-full px-4 py-3 border-2 border-[#4C956C]/40 rounded-lg text-base transition-colors focus:outline-none focus:shadow-sm box-border"}
                 placeholder="Enter your email"
                 required
               />
@@ -81,7 +81,7 @@ const LoginPage = () => {
                 name="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className={"w-full px-4 py-3 border-2 rounded-lg text-base transition-colors focus:outline-none focus:shadow-sm box-border"}
+                className={"w-full px-4 py-3 border-2 border-[#4C956C]/40 rounded-lg text-base transition-colors focus:outline-none focus:shadow-sm box-border"}
                 placeholder="Enter your password"
                 required
               />
@@ -109,7 +109,7 @@ const LoginPage = () => {
               className={`w-full py-3 rounded-lg text-base font-semibold mt-2 transition-colors
                 ${loading 
                   ? "bg-gray-400 text-gray-200 cursor-not-allowed" 
-                  : "bg-[#4c5f0d] text-white hover:bg-[#3b4a0a] cursor-pointer"
+                  : "bg-[#4C956C] text-white hover:bg-[#3B7D57] cursor-pointer"
                 }`}
               disabled={loading}
             >
@@ -120,7 +120,7 @@ const LoginPage = () => {
           <div className="text-center border-t border-gray-200 pt-5">
             <p className="text-gray-600 text-sm">
               Don't have an account?{' '}
-              <button type="button" className="bg-none border-none text-[#4c5f0d] cursor-pointer font-semibold underline hover:text-[#4c5f0d]" onClick={handleGoToSignup}>
+              <button type="button" className="bg-none border-none text-[#4C956C] cursor-pointer font-semibold underline hover:text-[#3B7D57]" onClick={handleGoToSignup}>
                 Sign Up
               </button>
             </p>
