@@ -23,7 +23,7 @@ const LoginPage = () => {
       if (result.success) {
         toast.success("Successfully signed in! Welcome back to ThreadCycle!");
 
-        console.log(result.role);
+        console.log(result);
 
         // ✅ Redirect based on role
         if (result.role === "admin") {

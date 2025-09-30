@@ -87,7 +87,8 @@ export const AuthContextProvider = ({ children }) => {
         if (!role) {
           return { success: false, error: "No role found for this user" };
         }
-  
+
+        setUserRole(role);
         return { success: true, data, role };
       }
   
