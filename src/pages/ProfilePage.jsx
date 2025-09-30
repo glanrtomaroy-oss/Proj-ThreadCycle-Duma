@@ -9,20 +9,13 @@ const ProfilePage = ({ user, setUser }) => {
   // Initialize with user data from props
   useEffect(() => {
     if (user) {
-      const initUser = {
-        displayName: user.displayName || user.username || 'User',
-        email: user.email || 'user@example.com',
-        joinDate: user.joinDate || new Date().toISOString().split('T')[0],
-        role: user.role || 'Member',
-        username: user.username || 'user'
-      };
-      setLocalUser(initUser);
-      setTempDisplayName(initUser.displayName);
+      setLocalUser(user);
+      setTempDisplayName(user.displayName || user.username);
     }
   }, [user]);
 
   const handleEditClick = () => {
-    setTempDisplayName(localUser.displayName);
+    setTempDisplayName(localUser.displayName || localUser.username);
     setIsEditing(true);
   };
 
@@ -43,7 +36,14 @@ const ProfilePage = ({ user, setUser }) => {
       };
 
       setLocalUser(updatedUser);
-      if (setUser) setUser(updatedUser);
+      
+      // Properly update the parent user state - this is crucial!
+      if (setUser) {
+        setUser(prevUser => ({
+          ...prevUser,
+          displayName: tempDisplayName.trim()
+        }));
+      }
 
       setIsEditing(false);
     } catch (error) {
@@ -54,7 +54,7 @@ const ProfilePage = ({ user, setUser }) => {
   };
 
   const handleCancelClick = () => {
-    setTempDisplayName(localUser.displayName);
+    setTempDisplayName(localUser.displayName || localUser.username);
     setIsEditing(false);
   };
 
@@ -82,13 +82,12 @@ const ProfilePage = ({ user, setUser }) => {
     <div className="profile-container">
       <div className="profile-card">
         <div className="profile-header">
-          <h1>Profile Overview</h1>
-          <p>View and update profile information.</p>
+          <h1>Profile Settings</h1>
+          <p>Manage your account information</p>
         </div>
 
         <div className="profile-content">
-
-          {/* Profile Information */}
+          {/* Profile Information - Only display name and basic info */}
           <div className="profile-info">
             <div className="info-section">
               <h3>Account Information</h3>
@@ -128,7 +127,7 @@ const ProfilePage = ({ user, setUser }) => {
                     </div>
                   ) : (
                     <div className="display-container">
-                      <span>{localUser.displayName}</span>
+                      <span>{localUser.displayName || localUser.username}</span>
                       <button 
                         onClick={handleEditClick} 
                         className="edit-btn"
@@ -140,15 +139,7 @@ const ProfilePage = ({ user, setUser }) => {
                 </div>
               </div>
 
-              {/* Read-only fields */}
-              <div className="info-item">
-                <label>Email Address</label>
-                <div className="info-value">
-                  <span>{localUser.email}</span>
-                  <span className="read-only-badge">Read Only</span>
-                </div>
-              </div>
-
+              {/* Read-only fields - Only username and email remain */}
               <div className="info-item">
                 <label>Username</label>
                 <div className="info-value">
@@ -157,6 +148,13 @@ const ProfilePage = ({ user, setUser }) => {
                 </div>
               </div>
 
+              <div className="info-item">
+                <label>Email Address</label>
+                <div className="info-value">
+                  <span>{localUser.email}</span>
+                  <span className="read-only-badge">Read Only</span>
+                </div>
+              </div>
             </div>
           </div>
         </div>
