@@ -1,5 +1,4 @@
 import { NavLink, Link } from 'react-router-dom';
-import { useState } from 'react';
 import { UserAuth } from '../context/AuthContext';
 
 const Header = () => {
@@ -21,18 +20,14 @@ const Header = () => {
             <li className="ml-6">
               <NavLink
                 className={({ isActive }) =>
-                  `relative transition-colors no-underline 
-                   text-white font-medium hover:text-[#FEFEE3] 
-                   after:content-[''] after:absolute after:w-0 after:h-[2px] 
-                   after:left-0 after:-bottom-1 after:bg-[#FEFEE3] 
-                   after:transition-all after:duration-300 
-                   hover:after:w-full
-                   ${isActive 
-                      ? "text-[#4C956C] after:w-full" 
-                      : "after:w-0"}`
+                  `relative transition-colors no-underline font-medium hover:text-[#FEFEE3] after:content-[''] after:absolute after:w-0 after:h-[2px] after:left-0 after:-bottom-1 after:bg-[#FEFEE3] after:transition-all after:duration-300 hover:after:w-full
+                  ${isActive 
+                      ? "text-[#FEFEE3] after:w-full" 
+                      : "text-white after:w-0"}`
                 }
                 
                 to="/"
+                end
               >
                 Home
               </NavLink>
@@ -47,8 +42,8 @@ const Header = () => {
                    after:transition-all after:duration-300 
                    hover:after:w-full
                    ${isActive 
-                      ? "text-[#4C956C] after:w-full" 
-                      : "after:w-0"}`
+                      ? "text-[#FEFEE3] after:w-full" 
+                      : "text-white after:w-0"}`
                 }
                 to="/scrap-estimator"
               >
@@ -59,14 +54,14 @@ const Header = () => {
               <NavLink
                 className={({ isActive }) =>
                   `relative transition-colors no-underline 
-                   text-white font-medium hover:text-[#FEFEE3] 
+                   font-medium hover:text-[#FEFEE3] 
                    after:content-[''] after:absolute after:w-0 after:h-[2px] 
                    after:left-0 after:-bottom-1 after:bg-[#FEFEE3] 
                    after:transition-all after:duration-300 
                    hover:after:w-full
                    ${isActive 
-                      ? "text-[#4C956C] after:w-full" 
-                      : "after:w-0"}`
+                      ? "text-[#FEFEE3] after:w-full" 
+                      : "text-white after:w-0"}`
                 }
                 to="/tutorials"
               >
@@ -77,14 +72,14 @@ const Header = () => {
               <NavLink
                 className={({ isActive }) =>
                   `relative transition-colors no-underline 
-                   text-white font-medium hover:text-[#FEFEE3] 
+                   font-medium hover:text-[#FEFEE3] 
                    after:content-[''] after:absolute after:w-0 after:h-[2px] 
                    after:left-0 after:-bottom-1 after:bg-[#FEFEE3] 
                    after:transition-all after:duration-300 
                    hover:after:w-full
                    ${isActive 
-                      ? "text-[#4C956C] after:w-full" 
-                      : "after:w-0"}`
+                      ? "text-[#FEFEE3] after:w-full" 
+                      : "text-white after:w-0"}`
                 }
                 to="/thrift-map"
               >
@@ -95,14 +90,14 @@ const Header = () => {
               <NavLink
                 className={({ isActive }) =>
                   `relative transition-colors no-underline 
-                   text-white font-medium hover:text-[#FEFEE3] 
+                   font-medium hover:text-[#FEFEE3] 
                    after:content-[''] after:absolute after:w-0 after:h-[2px] 
                    after:left-0 after:-bottom-1 after:bg-[#FEFEE3] 
                    after:transition-all after:duration-300 
                    hover:after:w-full
                    ${isActive 
-                      ? "text-[#4C956C] after:w-full" 
-                      : "after:w-0"}`
+                      ? "text-[#FEFEE3] after:w-full" 
+                      : "text-white after:w-0"}`
                 }
                 to="/about"
               >

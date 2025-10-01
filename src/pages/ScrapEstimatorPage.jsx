@@ -204,14 +204,14 @@ function ScrapEstimatorPage() {
       </section>
 
       {/* Calculator Section */}
-      <section className="py-10 min-h-[80vh]">
+      <section className="bg-[#FEFEE3] py-10 min-h-[80vh]">
         <div className="w-full max-w-6xl mx-auto px-4">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-10">
 
             {/* Dashboard Stats */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 lg:col-span-2">
               <div className="bg-white rounded-lg p-5 shadow-lg flex items-center gap-4">
-                <div className="w-12 h-12 bg-[#4c5f0d] rounded-full flex items-center justify-center text-white text-xl">
+                <div className="w-12 h-12 bg-[#4C956C] rounded-full flex items-center justify-center text-white text-xl">
                   <i className="fas fa-ruler-combined"></i>
                 </div>
                 <div>
@@ -220,7 +220,7 @@ function ScrapEstimatorPage() {
                 </div>
               </div>
               <div className="bg-white rounded-lg p-5 shadow-lg flex items-center gap-4">
-                <div className="w-12 h-12 bg-[#4c5f0d] rounded-full flex items-center justify-center text-white text-xl">
+                <div className="w-12 h-12 bg-[#4C956C] rounded-full flex items-center justify-center text-white text-xl">
                   <i className="fas fa-leaf"></i>
                 </div>
                 <div>
@@ -229,7 +229,7 @@ function ScrapEstimatorPage() {
                 </div>
               </div>
               <div className="bg-white rounded-lg p-5 shadow-lg flex items-center gap-4">
-                <div className="w-12 h-12 bg-[#4c5f0d] rounded-full flex items-center justify-center text-white text-xl">
+                <div className="w-12 h-12 bg-[#4C956C] rounded-full flex items-center justify-center text-white text-xl">
                   <i className="fas fa-co2"></i>
                 </div>
                 <div>
@@ -279,13 +279,13 @@ function ScrapEstimatorPage() {
                       onChange={handleUsedLength}
                     />
                   </div>
-                  <button type="submit" className="px-6 py-3 border-none rounded cursor-pointer font-medium transition-all bg-[#4c5f0d] text-white hover:bg-[#4c5f0d] w-full">Calculate Savings</button>
+                  <button type="submit" className="px-6 py-3 border-none rounded cursor-pointer font-medium transition-all bg-[#4C956C] text-white hover:bg-[#3B7D57] w-full">Calculate Savings</button>
                 </form>
               </div>
             </div>
 
             {/* Recent Calculations */}
-            <div className="bg-white rounded-lg p-8 shadow-lg max-h-[450px] flex flex-col">
+            <div className="bg-white rounded-lg p-8 shadow-lg max-h-116 flex flex-col">
               <div className="flex justify-between items-center mb-5 flex-shrink-0 flex-wrap gap-4">
                 <h2 className="text-gray-800 text-xl font-bold">Recent Calculations ({filteredCalculations.length})</h2>
 

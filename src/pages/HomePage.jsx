@@ -1,7 +1,10 @@
 import { supabase } from '../util/supabase';
+import { useNavigate } from 'react-router-dom';
 
 
-function HomePage({ setActivePage }) {
+const HomePage = () => {
+  const navigate = useNavigate();
+
   return (
     <>
       {/* Hero Section */}
@@ -21,8 +24,8 @@ function HomePage({ setActivePage }) {
       <section className="bg-[#FEFEE3] py-10 pb-20" id="thrift-map">
         <div className="w-full max-w-6xl mx-auto px-4">
           <div className="text-center mb-12">
-            <h2 className="text-2xl font-bold mb-4 text-[#2C6E49]">Key Features</h2>
-            <p className="text-[#2C6E49] max-w-3xl mx-auto">Discover how ThreadCycle Duma helps you embrace sustainable fashion practices</p>
+            <h2 className="text-2xl font-bold mb-4 text-gray-800">Key Features</h2>
+            <p className="text-gray-600 max-w-3xl mx-auto">Discover how ThreadCycle Duma helps you embrace sustainable fashion practices</p>
           </div>
 
           {/* Map Container */}
@@ -44,15 +47,17 @@ function HomePage({ setActivePage }) {
       <section className="bg-[#FEFEE3] py-20" id="features">
         <div className="w-full max-w-6xl mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+
             {/* Scrap Estimator */}
-            <div className="bg-white rounded-lg overflow-hidden shadow-lg transition-transform hover:-translate-y-1">
+            <div className="bg-white rounded-lg overflow-hidden shadow-lg transition-transform duration-300 ease-in-out hover:-translate-y-1 h-100 flex flex-col">
               <div className="h-48 bg-cover bg-center bg-[url('/fabric.jpg')]"></div>
-              <div className="p-5">
+
+              <div className="p-5 flex flex-col flex-grow">
                 <h3 className="mb-2 text-gray-800">Scrap Estimator</h3>
                 <p className="text-gray-600 mb-4">Calculate and track leftover fabric scraps from your projects to minimize waste.</p>
                 <button
-                  className="px-4 py-2 bg-transparent border border-[#4c5f0d] text-[#4c5f0d] rounded hover:bg-[#4c5f0d] hover:text-white transition-colors"
-                  onClick={() => setActivePage("scrap-estimator")}
+                  className="mt-auto w-auto px-4 py-2 bg-transparent border border-[#2C6E49] text-[#2C6E49] rounded hover:bg-[#2C6E49] hover:text-white transition-colors"
+                  onClick={() => navigate("/scrap-estimator")}
                 >
                   Learn More
                 </button>
@@ -60,29 +65,38 @@ function HomePage({ setActivePage }) {
             </div>
 
             {/* DIY Tutorials */}
-            <div className="bg-white rounded-lg overflow-hidden shadow-lg transition-transform hover:-translate-y-1">
+            <div className="bg-white rounded-lg overflow-hidden shadow-lg transition-transform duration-300 ease-in-out hover:-translate-y-1 h-100 flex  flex-col">
               <div className="h-48 bg-cover bg-center bg-[url('/tutorial.jpg')]"></div>
-              <div className="p-5">
+              
+              <div className="p-5 flex flex-col flex-grow">
                 <h3 className="mb-2 text-gray-800">DIY Tutorial Hub</h3>
-                <p className="text-gray-600 mb-4">Access step-by-step guides for repairing and upcycling clothes at various difficulty levels.</p>
+                <p className="text-gray-600 mb-4">
+                  Access step-by-step guides for repairing and upcycling clothes at various difficulty levels.
+                </p>
+
                 <button
-                  className="px-4 py-2 bg-transparent border border-[#4c5f0d] text-[#4c5f0d] rounded hover:bg-[#4c5f0d] hover:text-white transition-colors"
-                  onClick={() => setActivePage("tutorials")}
+                  className="mt-auto w-auto px-4 py-2 bg-transparent border border-[#2C6E49] text-[#2C6E49] rounded hover:bg-[#2C6E49] hover:text-white transition-colors"
+                  onClick={() => navigate("/tutorials")}
                 >
                   Learn More
                 </button>
               </div>
             </div>
 
+
             {/* Thrift Shop Map */}
-            <div className="bg-white rounded-lg overflow-hidden shadow-lg transition-transform hover:-translate-y-1">
+            <div className="bg-white rounded-lg overflow-hidden shadow-lg transition-transform duration-300 ease-in-out hover:-translate-y-1 h-100 flex flex-col">
               <div className="h-48 bg-cover bg-center bg-[url('/thriftshop.webp')]"></div>
-              <div className="p-5">
+
+              <div className="p-5 flex flex-col flex-grow">
                 <h3 className="mb-2 text-gray-800">Thrift Shop Map</h3>
-                <p className="text-gray-600 mb-4">Discover local ukay-ukay stores with detailed information and user reviews.</p>
+                <p className="text-gray-600 mb-4">
+                  Discover local ukay-ukay stores with detailed information and user reviews.
+                </p>
+
                 <button
-                  className="px-4 py-2 bg-transparent border border-[#4c5f0d] text-[#4c5f0d] rounded hover:bg-[#4c5f0d] hover:text-white transition-colors"
-                  onClick={() => setActivePage("thrift-map")}
+                  className="mt-auto px-4 py-2 bg-transparent border border-[#4c5f0d] text-[#4c5f0d] rounded hover:bg-[#2C6E49] hover:text-white transition-colors"
+                  onClick={() => navigate("/thrift-map")}
                 >
                   Learn More
                 </button>

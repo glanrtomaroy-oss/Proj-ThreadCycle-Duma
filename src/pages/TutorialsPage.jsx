@@ -148,18 +148,12 @@ function TutorialsPage({ user }) {
           <p className="text-xl max-w-3xl mx-auto mb-8">
             Learn how to repair, repurpose, and upcycle your clothing with our step-by-step tutorials
           </p>
-          {!user && (
-            <div className="bg-blue-100 border border-blue-300 text-blue-800 px-4 py-3 rounded-lg flex items-center gap-2 max-w-md mx-auto">
-              <i className="fas fa-info-circle"></i>
-              <span>Log in to ask questions and join tutorial discussions</span>
-            </div>
-          )}
         </div>
       </section>
 
 
       {/* Tutorials Section */}
-      <section className="py-10 pb-20">
+      <section className="bg-[#FEFEE3] py-10 pb-20">
         <div className="w-full max-w-6xl mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="text-2xl font-bold mb-4 text-gray-800">Browse Our Tutorial Collection</h2>
@@ -172,35 +166,35 @@ function TutorialsPage({ user }) {
               <h3 className="mb-2 text-lg font-medium text-gray-800">Category</h3>
               <div className="flex flex-wrap gap-2">
                 <button
-                  className={`px-4 py-2 bg-[var(--light)] border border-[var(--light-gray)] rounded-full cursor-pointer transition-all ${activeFilter === "all" ? "bg-[var(--primary)] text-white border-[var(--primary)]" : "hover:bg-[var(--primary)] hover:text-white hover:border-[var(--primary)]"
+                  className={`px-4 py-2 border rounded-full cursor-pointer transition-all ${activeFilter === "all" ? "bg-[#4C956C] text-white border-[#4C956C]" : "bg-[var(--light)] border-[var(--light-gray)] hover:bg-[#3B7D57] hover:text-white hover:border-[#3B7D57]"
                     }`}
                   onClick={() => handleFilterClick("all")}
                 >
                   All Categories
                 </button>
                 <button
-                  className={`px-4 py-2 bg-[var(--light)] border border-[var(--light-gray)] rounded-full cursor-pointer transition-all ${activeFilter === "repair" ? "bg-[var(--primary)] text-white border-[var(--primary)]" : "hover:bg-[var(--primary)] hover:text-white hover:border-[var(--primary)]"
+                  className={`px-4 py-2 border rounded-full cursor-pointer transition-all ${activeFilter === "repair" ? "bg-[#4C956C] text-white border-[#4C956C]" : "bg-[var(--light)] border-[var(--light-gray)] hover:bg-[#3B7D57] hover:text-white hover:border-[#3B7D57]"
                     }`}
                   onClick={() => handleFilterClick("repair")}
                 >
                   Repair
                 </button>
                 <button
-                  className={`px-4 py-2 bg-[var(--light)] border border-[var(--light-gray)] rounded-full cursor-pointer transition-all ${activeFilter === "upcycle" ? "bg-[var(--primary)] text-white border-[var(--primary)]" : "hover:bg-[var(--primary)] hover:text-white hover:border-[var(--primary)]"
+                  className={`px-4 py-2 border rounded-full cursor-pointer transition-all ${activeFilter === "upcycle" ? "bg-[#4C956C] text-white border-[#4C956C]" : "bg-[var(--light)] border-[var(--light-gray)] hover:bg-[#3B7D57] hover:text-white hover:border-[#3B7D57]"
                     }`}
                   onClick={() => handleFilterClick("upcycle")}
                 >
                   Upcycling
                 </button>
                 <button
-                  className={`px-4 py-2 bg-[var(--light)] border border-[var(--light-gray)] rounded-full cursor-pointer transition-all ${activeFilter === "customization" ? "bg-[var(--primary)] text-white border-[var(--primary)]" : "hover:bg-[var(--primary)] hover:text-white hover:border-[var(--primary)]"
+                  className={`px-4 py-2 border rounded-full cursor-pointer transition-all ${activeFilter === "customization" ? "bg-[#4C956C] text-white border-[#4C956C]" : "bg-[var(--light)] border-[var(--light-gray)] hover:bg-[#3B7D57] hover:text-white hover:border-[#3B7D57]"
                     }`}
                   onClick={() => handleFilterClick("customization")}
                 >
                   Customization
                 </button>
                 <button
-                  className={`px-4 py-2 bg-[var(--light)] border border-[var(--light-gray)] rounded-full cursor-pointer transition-all ${activeFilter === "accessories" ? "bg-[var(--primary)] text-white border-[var(--primary)]" : "hover:bg-[var(--primary)] hover:text-white hover:border-[var(--primary)]"
+                  className={`px-4 py-2 border rounded-full cursor-pointer transition-all ${activeFilter === "accessories" ? "bg-[#4C956C] text-white border-[#4C956C]" : "bg-[var(--light)] border-[var(--light-gray)] hover:bg-[#3B7D57] hover:text-white hover:border-[#3B7D57]"
                     }`}
                   onClick={() => handleFilterClick("accessories")}
                 >
@@ -212,28 +206,28 @@ function TutorialsPage({ user }) {
               <h3 className="mb-2 text-lg font-medium text-gray-800">Difficulty Level</h3>
               <div className="flex flex-wrap gap-2">
                 <button
-                  className={`px-4 py-2 bg-[var(--light)] border border-[var(--light-gray)] rounded-full cursor-pointer transition-all ${activeDifficulty === "all" ? "bg-[var(--primary)] text-white border-[var(--primary)]" : "hover:bg-[var(--primary)] hover:text-white hover:border-[var(--primary)]"
+                  className={`px-4 py-2 border rounded-full cursor-pointer transition-all ${activeDifficulty === "all" ? "bg-[#4C956C] text-white border-[#4C956C]" : "bg-[var(--light)] border-[var(--light-gray)] hover:bg-[#3B7D57] hover:text-white hover:border-[#3B7D57]"
                     }`}
                   onClick={() => handleDifficultyClick("all")}
                 >
                   All Levels
                 </button>
                 <button
-                  className={`px-4 py-2 bg-[var(--light)] border border-[var(--light-gray)] rounded-full cursor-pointer transition-all ${activeDifficulty === "beginner" ? "bg-[var(--primary)] text-white border-[var(--primary)]" : "hover:bg-[var(--primary)] hover:text-white hover:border-[var(--primary)]"
+                  className={`px-4 py-2 border rounded-full cursor-pointer transition-all ${activeDifficulty === "beginner" ? "bg-[#4C956C] text-white border-[#4C956C]" : "bg-[var(--light)] border-[var(--light-gray)] hover:bg-[#3B7D57] hover:text-white hover:border-[#3B7D57]"
                     }`}
                   onClick={() => handleDifficultyClick("beginner")}
                 >
                   Beginner
                 </button>
                 <button
-                  className={`px-4 py-2 bg-[var(--light)] border border-[var(--light-gray)] rounded-full cursor-pointer transition-all ${activeDifficulty === "intermediate" ? "bg-[var(--primary)] text-white border-[var(--primary)]" : "hover:bg-[var(--primary)] hover:text-white hover:border-[var(--primary)]"
+                  className={`px-4 py-2 border border-[var(--light-gray)] rounded-full cursor-pointer transition-all ${activeDifficulty === "intermediate" ? "bg-[#4C956C] text-white border-[#4C956C]" : "bg-[var(--light)] border-[var(--light-gray)] hover:bg-[#3B7D57] hover:text-white hover:border-[#3B7D57]"
                     }`}
                   onClick={() => handleDifficultyClick("intermediate")}
                 >
                   Intermediate
                 </button>
                 <button
-                  className={`px-4 py-2 bg-[var(--light)] border border-[var(--light-gray)] rounded-full cursor-pointer transition-all ${activeDifficulty === "advanced" ? "bg-[var(--primary)] text-white border-[var(--primary)]" : "hover:bg-[var(--primary)] hover:text-white hover:border-[var(--primary)]"
+                  className={`px-4 py-2 border rounded-full cursor-pointer transition-all ${activeDifficulty === "advanced" ? "bg-[#4C956C] text-white border-[#4C956C]" : "bg-[var(--light)] border-[var(--light-gray)] hover:bg-[#3B7D57] hover:text-white hover:border-[#3B7D57]"
                     }`}
                   onClick={() => handleDifficultyClick("advanced")}
                 >
@@ -248,7 +242,7 @@ function TutorialsPage({ user }) {
             {filteredTutorials.map(tutorial => (
               <div
                 key={tutorial.id}
-                className="bg-white rounded-lg overflow-hidden shadow-[0_5px_15px_rgba(0,0,0,0.1)] transition-transform duration-300 cursor-pointer hover:-translate-y-[5px]"
+                className="bg-white rounded-lg overflow-hidden shadow-[0_5px_15px_rgba(0,0,0,0.1)] transition-transform duration-300 eascursor-pointer hover:-translate-y-[5px]"
                 data-category={tutorial.category}
                 data-difficulty={tutorial.difficulty}
               >

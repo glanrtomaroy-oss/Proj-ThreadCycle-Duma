@@ -19,33 +19,45 @@ function AboutPage() {
       </section>
 
       {/* About Section */}
-      <section className="py-10 pb-20">
+      <section className="bg-[#FEFEE3] py-10 pb-20">
         <div className="w-full max-w-6xl mx-auto px-4">
-          <div className="grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-10 mb-16">
-            <div className="space-y-6">
-              <h2 className="text-2xl font-bold text-gray-800 mt-6 first:mt-0">Our Story</h2>
-              <p className="text-gray-600 leading-relaxed">ThreadCycle Duma was born out of a passion for sustainable fashion and a desire to address the growing issue of textile waste in our community. Founded in 2023, our platform connects local fashion creators, tailoring shops, and sewing enthusiasts who share a common goal: to reduce fashion waste and promote eco-friendly practices.</p>
+          <div className="space-y-6">
+            <div className="flex gap-20">
 
-              <p className="text-gray-600 leading-relaxed">Dumaguete City, known as the "City of Gentle People," has a rich culture of creativity and community. We wanted to harness this spirit to create a movement towards more sustainable fashion choices that benefit both our community and our environment.</p>
+              {/* Our Story */}
+              <div className="space-y-6 bg-white rounded-lg p-6 shadow-lg">
+                <h2 className="text-2xl font-bold text-gray-800 mt-6 first:mt-0">Our Story</h2>
+                <p className="text-gray-600 leading-relaxed">ThreadCycle Duma was born out of a passion for sustainable fashion and a desire to address the growing issue of textile waste in our community. Founded in 2023, our platform connects local fashion creators, tailoring shops, and sewing enthusiasts who share a common goal: to reduce fashion waste and promote eco-friendly practices.</p>
 
-              <h2 className="text-2xl font-bold text-gray-800 mt-6">Our Mission</h2>
-              <p className="text-gray-600 leading-relaxed">Our mission is to provide a centralized platform that encourages the reuse, repurposing, and responsible management of fabrics within the Dumaguete community. We aim to:</p>
-              <ul className="ml-5 mb-5 space-y-2">
-                <li className="text-gray-600 leading-relaxed">Reduce textile waste through education and practical tools</li>
-                <li className="text-gray-600 leading-relaxed">Support local thrift shops and sustainable businesses</li>
-                <li className="text-gray-600 leading-relaxed">Create a community around slow fashion practices</li>
-                <li className="text-gray-600 leading-relaxed">Educate people on repairing and upcycling clothing</li>
-                <li className="text-gray-600 leading-relaxed">Track and celebrate our collective impact on reducing fashion waste</li>
-              </ul>
+                <p className="text-gray-600 leading-relaxed">Dumaguete City, known as the "City of Gentle People," has a rich culture of creativity and community. We wanted to harness this spirit to create a movement towards more sustainable fashion choices that benefit both our community and our environment.</p>
+              </div>
 
-              <h2 className="text-2xl font-bold text-gray-800 mt-6">Our Vision</h2>
-              <p className="text-gray-600 leading-relaxed">We envision a Dumaguete City where sustainable fashion is the norm, not the exception. A community where clothing is valued, repaired, and repurposed, and where the environmental impact of our fashion choices is minimized through conscious consumption and creative reuse.</p>
+              <div className="flex justify-center w-full">
+                <div className="relative w-full max-w-sm h-[600px] flex items-center justify-center shadow-lg">
+                  <i className="fas fa-leaf absolute text-green-600 text-xl hidden"></i>
+                  <img src="aboutpic.jpg" alt="Sustainable Fashion Community" className="w-full h-full rounded-xl object-cover shadow-lg" />
+                </div>
+              </div>
             </div>
 
-            <div className="flex justify-center">
-              <div className="relative w-full max-w-sm h-[600px] flex items-center justify-center">
-                <i className="fas fa-leaf absolute text-green-600 text-xl hidden"></i>
-                <img src="aboutpic.jpg" alt="Sustainable Fashion Community" className="w-full h-full rounded-xl object-cover shadow-lg" />
+            <div className="flex gap-10">
+              {/* Our Mission */}
+              <div className="space-y-6 bg-white rounded-lg p-6 shadow-lg basis-1/2">
+                <h2 className="text-2xl font-bold text-gray-800 mt-6">Our Mission</h2>
+                <p className="text-gray-600 leading-relaxed">Our mission is to provide a centralized platform that encourages the reuse, repurposing, and responsible management of fabrics within the Dumaguete community. We aim to:</p>
+                <ul className="ml-5 mb-5 space-y-2 list-disc">
+                  <li className="text-gray-600 leading-relaxed">Reduce textile waste through education and practical tools</li>
+                  <li className="text-gray-600 leading-relaxed">Support local thrift shops and sustainable businesses</li>
+                  <li className="text-gray-600 leading-relaxed">Create a community around slow fashion practices</li>
+                  <li className="text-gray-600 leading-relaxed">Educate people on repairing and upcycling clothing</li>
+                  <li className="text-gray-600 leading-relaxed">Track and celebrate our collective impact on reducing fashion waste</li>
+                </ul>
+              </div>
+
+              {/* Our Vision */}
+              <div className="space-y-6 bg-white rounded-lg p-6 shadow-lg basis-1/2">
+                <h2 className="text-2xl font-bold text-gray-800 mt-6">Our Vision</h2>
+                <p className="text-gray-600 leading-relaxed">We envision a Dumaguete City where sustainable fashion is the norm, not the exception. A community where clothing is valued, repaired, and repurposed, and where the environmental impact of our fashion choices is minimized through conscious consumption and creative reuse.</p>
               </div>
             </div>
           </div>
@@ -71,9 +83,9 @@ function AboutPage() {
                 <div className="w-30 h-30 rounded-full overflow-hidden mx-auto mb-4">
                   <img src="member2.jpg" alt="Voughn John Zoe N. Villalon" className="w-full h-full object-cover" />
                 </div>
-                <h3 className="text-gray-800 mb-1">Voughn John Zoe N. Villalon</h3>
-                <p className="text-[#4c5f0d] font-medium mb-2">Co-Founder & Sustainability Expert</p>
-                <p className="text-gray-600 text-sm">Fashion enthusiast with expertise in sustainable practices and community engagement.</p>
+                <h3 className="line-through text-gray-800 mb-1">Voughn John Zoe N. Villalon</h3>
+                <p className="line-through text-[#4c5f0d] font-medium mb-2">Co-Founder & Sustainability Expert</p>
+                <p className="line-through text-gray-600 text-sm">Fashion enthusiast with expertise in sustainable practices and community engagement.</p>
               </div>
 
               <div className="bg-white rounded-lg overflow-hidden shadow-lg text-center p-5 transition-transform hover:-translate-y-1">
@@ -81,7 +93,7 @@ function AboutPage() {
                   <img src="member3.jpg" alt="Kate Valerie Katada" className="w-full h-full object-cover" />
                 </div>
                 <h3 className="text-gray-800 mb-1">Kate Valerie Katada</h3>
-                <p className="text-[#4c5f0d] font-medium mb-2">Co-Founder & Sustainability Expert</p>
+                <p className="text-[#4c5f0d] font-medium mb-2">Co-Founder & Secretary</p>
                 <p className="text-gray-600 text-sm">Fashion enthusiast with expertise in sustainable practices and community engagement.</p>
               </div>
             </div>
