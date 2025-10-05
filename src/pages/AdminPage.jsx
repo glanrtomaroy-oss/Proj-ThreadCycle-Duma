@@ -4,10 +4,8 @@ function AdminPage({ user }) {
   const [activeTab, setActiveTab] = useState('shops');
   const [shops, setShops] = useState([]);
   const [comments, setComments] = useState([]);
-  const [users, setUsers] = useState([]);
   const [newShop, setNewShop] = useState({
     name: '',
-    address: '',
     latitude: '',
     longitude: '',
     hours: '',
@@ -69,12 +67,6 @@ function AdminPage({ user }) {
         status: "pending"
       }
     ]);
-
-    setUsers([
-      { id: 1, username: "tailor_juan", email: "juan@email.com", role: "user", joinDate: "2024-01-10" },
-      { id: 2, username: "sew_smart", email: "maria@email.com", role: "user", joinDate: "2024-01-12" },
-      { id: 3, username: "fashion_lover", email: "lisa@email.com", role: "user", joinDate: "2024-01-14" }
-    ]);
   }, []);
 
   // Thrift Shop Management
@@ -88,7 +80,6 @@ function AdminPage({ user }) {
     setShops([...shops, shop]);
     setNewShop({
       name: '',
-      address: '',
       latitude: '',
       longitude: '',
       hours: '',
@@ -112,7 +103,6 @@ function AdminPage({ user }) {
     setEditingShop(null);
     setNewShop({
       name: '',
-      address: '',
       latitude: '',
       longitude: '',
       hours: '',
@@ -148,11 +138,6 @@ function AdminPage({ user }) {
     }
   };
 
-  // User Management
-  const handleResetPassword = (userId) => {
-    alert(`Password reset initiated for user ${userId}`);
-  };
-
   return (
     <div className="min-h-[calc(100vh-200px)] bg-gray-100 py-10">
       <div className="max-w-6xl mx-auto px-5">
@@ -160,7 +145,7 @@ function AdminPage({ user }) {
         <div className="text-center mb-10">
           <h1 className="text-gray-800 text-4xl font-bold mb-2">Admin Dashboard</h1>
           <p className="text-gray-600 text-lg">
-            Welcome, {user?.displayName}! Manage thrift shops, moderate comments, and oversee platform activities
+            Welcome, {user?.displayName}! Manage thrift shops and moderate comments
           </p>
           {message && (
             <div className="mt-4 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded">
@@ -187,14 +172,6 @@ function AdminPage({ user }) {
           >
             Comment Moderation
           </button>
-          <button
-            className={`flex-1 py-4 px-5 border-none bg-transparent cursor-pointer text-base font-medium rounded-md transition-all ${
-              activeTab === 'users' ? 'bg-blue-500 text-white' : 'hover:bg-gray-100'
-            }`}
-            onClick={() => setActiveTab('users')}
-          >
-            User Management
-          </button>
         </div>
 
         {/* Thrift Shops Management */}
@@ -219,14 +196,13 @@ function AdminPage({ user }) {
                     />
                   </div>
                   <div className="mb-5">
-                    <label className="block mb-2 text-gray-800 font-medium">Address *</label>
+                    <label className="block mb-2 text-gray-800 font-medium">Operating Hours</label>
                     <input
                       type="text"
-                      value={newShop.address}
-                      onChange={(e) => setNewShop({ ...newShop, address: e.target.value })}
+                      value={newShop.hours}
+                      onChange={(e) => setNewShop({ ...newShop, hours: e.target.value })}
                       className="w-full px-3 py-3 border-2 border-gray-200 rounded-md text-sm transition-colors focus:outline-none focus:border-blue-500"
-                      required
-                      placeholder="Enter full address"
+                      placeholder="e.g., 9:00 AM - 6:00 PM"
                     />
                   </div>
                 </div>
@@ -259,16 +235,6 @@ function AdminPage({ user }) {
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
-                  <div className="mb-5">
-                    <label className="block mb-2 text-gray-800 font-medium">Operating Hours</label>
-                    <input
-                      type="text"
-                      value={newShop.hours}
-                      onChange={(e) => setNewShop({ ...newShop, hours: e.target.value })}
-                      className="w-full px-3 py-3 border-2 border-gray-200 rounded-md text-sm transition-colors focus:outline-none focus:border-blue-500"
-                      placeholder="e.g., 9:00 AM - 6:00 PM"
-                    />
-                  </div>
                   <div className="mb-5">
                     <label className="block mb-2 text-gray-800 font-medium">Price Range</label>
                     <input
@@ -318,7 +284,6 @@ function AdminPage({ user }) {
                         setEditingShop(null);
                         setNewShop({
                           name: '',
-                          address: '',
                           latitude: '',
                           longitude: '',
                           hours: '',
@@ -344,7 +309,6 @@ function AdminPage({ user }) {
                   <div key={shop.id} className="bg-gray-100 p-5 rounded-lg border-l-4 border-blue-500 flex justify-between items-center">
                     <div className="flex-1">
                       <h3 className="text-gray-800 mb-2 text-xl font-semibold">{shop.name}</h3>
-                      <p className="my-1 text-gray-600"><strong>Address:</strong> {shop.address}</p>
                       <p className="my-1 text-gray-600"><strong>Hours:</strong> {shop.hours}</p>
                       <p className="my-1 text-gray-600"><strong>Price Range:</strong> {shop.priceRange}</p>
                       <p className="my-1 text-gray-600"><strong>Items:</strong> {shop.itemTypes.join(', ')}</p>
@@ -421,37 +385,6 @@ function AdminPage({ user }) {
                         onClick={() => handleDeleteComment(comment.id)}
                       >
                         Delete
-                      </button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* User Management */}
-        {activeTab === 'users' && (
-          <div className="bg-white rounded-lg p-8 shadow-lg">
-            <div className="mb-10">
-              <h2 className="text-gray-800 mb-5 text-2xl font-bold border-b-2 border-gray-100 pb-2">
-                User Management ({users.length})
-              </h2>
-              <div className="grid gap-5">
-                {users.map(user => (
-                  <div key={user.id} className="bg-gray-100 p-5 rounded-lg border-l-4 border-blue-500 flex justify-between items-center">
-                    <div className="flex-1">
-                      <h3 className="text-gray-800 mb-2 text-xl font-semibold">{user.username}</h3>
-                      <p className="my-1 text-gray-600"><strong>Email:</strong> {user.email}</p>
-                      <p className="my-1 text-gray-600"><strong>Role:</strong> {user.role}</p>
-                      <p className="my-1 text-gray-600"><strong>Join Date:</strong> {user.joinDate}</p>
-                    </div>
-                    <div className="flex gap-2">
-                      <button
-                        className="px-6 py-3 bg-yellow-500 text-white border-none rounded-md cursor-pointer text-sm font-medium transition-all hover:bg-yellow-600"
-                        onClick={() => handleResetPassword(user.id)}
-                      >
-                        Reset Password
                       </button>
                     </div>
                   </div>
