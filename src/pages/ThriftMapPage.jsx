@@ -3,59 +3,69 @@ import { supabase } from '../util/supabase';
 
 function ThriftMapPage({ user }) {
   const [shops, setShops] = useState([]);
-  const [activeCategory, setActiveCategory] = useState('all');
-  const [activePrice, setActivePrice] = useState('all');
   const [comments, setComments] = useState({});
   const [newComments, setNewComments] = useState({});
   const [loading, setLoading] = useState(true);
+  const [activeCategory, setActiveCategory] = useState('all');
+  const [activePrice, setActivePrice] = useState('all');
 
-  // 🟢 Fetch thrift shop data from Supabase
+  //  Load Thrift Shops
   useEffect(() => {
-    const fetchThriftShops = async () => {
+    const fetchShops = async () => {
       setLoading(true);
       const { data, error } = await supabase.from('THRIFT SHOP').select('*');
-      if (error) {
-        console.error('Error fetching shops:', error);
-      } else {
-        setShops(data);
-      }
+      if (error) console.error('Error fetching shops:', error);
+      else setShops(data);
       setLoading(false);
     };
-
-    fetchThriftShops();
+    fetchShops();
   }, []);
 
-  // 🟡 Filters
-  const filteredShops = shops.filter(shop => {
-    const categoryMatch = activeCategory === 'all' || shop.category === activeCategory;
-    const priceMatch = activePrice === 'all' || shop.price === activePrice;
-    return categoryMatch && priceMatch;
-  });
+  // Load Comments for all shops
+  useEffect(() => {
+    const fetchComments = async () => {
+      const { data, error } = await supabase.from('COMMENT').select('*').order('CreationDate', { ascending: false });
+      if (error) {
+        console.error('Error loading comments:', error);
+      } else {
+        // Group comments by ShopID
+        const grouped = data.reduce((acc, c) => {
+          if (!acc[c.ShopID]) acc[c.ShopID] = [];
+          acc[c.ShopID].push(c);
+          return acc;
+        }, {});
+        setComments(grouped);
+      }
+    };
+    fetchComments();
+  }, []);
 
-  // 🟠 Comments (local only for now)
-  const handleCommentChange = (shopId, comment) => {
-    if (!user) return;
-    setNewComments(prev => ({ ...prev, [shopId]: comment }));
-  };
-
-  const handleCommentSubmit = (shopId) => {
-    const comment = newComments[shopId]?.trim();
-    if (!comment) return alert('Please type something first.');
-    if (!user) return alert('Please log in to comment.');
+  // Handle posting a comment
+  const handleCommentSubmit = async (shopId) => {
+    const content = newComments[shopId]?.trim();
+    if (!content) return alert('Please write something first.');
+    if (!user) return alert('You must log in to comment.');
 
     const newComment = {
-      id: Date.now(),
-      text: comment,
-      timestamp: new Date().toLocaleString(),
-      user: user.username || 'Anonymous'
+      Content: content,
+      CreationDate: new Date().toISOString(),
+      CustID: user.id,
+      ShopID: shopId,
+      Status: 'active',
     };
 
-    setComments(prev => ({
-      ...prev,
-      [shopId]: [...(prev[shopId] || []), newComment]
-    }));
-
-    setNewComments(prev => ({ ...prev, [shopId]: '' }));
+    const { data, error } = await supabase.from('COMMENT').insert([newComment]).select();
+    if (error) {
+      console.error('Error adding comment:', error);
+      alert('Error adding comment. Try again.');
+    } else {
+      const added = data[0];
+      setComments((prev) => ({
+        ...prev,
+        [shopId]: [added, ...(prev[shopId] || [])],
+      }));
+      setNewComments((prev) => ({ ...prev, [shopId]: '' }));
+    }
   };
 
   const handleKeyPress = (e, shopId) => {
@@ -65,15 +75,22 @@ function ThriftMapPage({ user }) {
     }
   };
 
+  // Filter shops
+  const filteredShops = shops.filter((s) => {
+    const categoryMatch = activeCategory === 'all' || s.category === activeCategory;
+    const priceMatch = activePrice === 'all' || s.price === activePrice;
+    return categoryMatch && priceMatch;
+  });
+
   return (
     <>
-      {/* 🟢 Hero Section */}
-      <section className="relative bg-[url('https://images.unsplash.com/photo-1558769132-cb1aea458c5e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1500&q=80')] bg-cover bg-center bg-no-repeat">
+      {/* HERO */}
+      <section className="relative bg-[url('https://images.unsplash.com/photo-1558769132-cb1aea458c5e?auto=format&fit=crop&w=1500&q=80')] bg-cover bg-center bg-no-repeat">
         <div className="absolute inset-0 bg-gradient-to-r from-[#7a8450]/70 to-[rgba(38,70,83,0.8)]"></div>
         <div className="relative w-full max-w-6xl mx-auto px-4 text-white py-20 text-center">
           <h1 className="text-4xl font-bold mb-5">Thrift Shop Map</h1>
           <p className="text-xl max-w-3xl mx-auto mb-8">
-            Discover local ukay-ukay stores in Dumaguete City with interactive maps, details, price ranges, and user reviews
+            Discover local ukay-ukay stores in Dumaguete City with interactive maps, details, price ranges, and user reviews.
           </p>
           {!user && (
             <div className="bg-blue-100 border border-blue-300 text-blue-800 px-4 py-3 rounded-lg flex items-center gap-2 max-w-md mx-auto">
@@ -84,7 +101,7 @@ function ThriftMapPage({ user }) {
         </div>
       </section>
 
-      {/* 🟣 Thrift Map Section (Placeholder) */}
+      {/* MAIN SECTION */}
       <section className="py-10 pb-20 bg-[#f9fafb]">
         <div className="w-full max-w-6xl mx-auto px-4">
           <div className="text-center mb-12">
@@ -92,7 +109,7 @@ function ThriftMapPage({ user }) {
             <p className="text-gray-600 max-w-3xl mx-auto">Browse through our curated list of second-hand stores in Dumaguete City</p>
           </div>
 
-          {/* 🗺️ Placeholder Map Box */}
+          {/* Map Placeholder */}
           <div className="bg-white rounded-lg overflow-hidden shadow-lg mb-10 h-[400px] flex flex-col items-center justify-center">
             <div className="text-center">
               <i className="fas fa-map-marked-alt text-5xl text-[#7a8450] mb-4"></i>
@@ -101,12 +118,12 @@ function ThriftMapPage({ user }) {
             </div>
           </div>
 
-          {/* 🧭 Filters */}
+          {/* Filters */}
           <div className="bg-white rounded-lg p-5 mb-8 shadow-lg">
             <div className="mb-4">
               <h3 className="mb-2 text-lg font-medium text-gray-800">Filter by Category</h3>
               <div className="flex flex-wrap gap-2">
-                {['all', 'clothing', 'shoes', 'accessories'].map(cat => (
+                {['all', 'clothing', 'shoes', 'accessories'].map((cat) => (
                   <button
                     key={cat}
                     onClick={() => setActiveCategory(cat)}
@@ -124,7 +141,7 @@ function ThriftMapPage({ user }) {
             <div>
               <h3 className="mb-2 text-lg font-medium text-gray-800">Price Range</h3>
               <div className="flex flex-wrap gap-2">
-                {['all', 'low', 'medium', 'high'].map(price => (
+                {['all', 'low', 'medium', 'high'].map((price) => (
                   <button
                     key={price}
                     onClick={() => setActivePrice(price)}
@@ -146,60 +163,39 @@ function ThriftMapPage({ user }) {
             </div>
           </div>
 
-          {/* 🏪 Shop List */}
+          {/* SHOP LIST */}
           {loading ? (
             <div className="text-center py-10">
               <i className="fas fa-spinner fa-spin text-3xl text-[#7a8450]"></i>
               <p className="text-gray-600 mt-2">Loading thrift shops...</p>
             </div>
-          ) : filteredShops.length === 0 ? (
-            <div className="text-center py-10 text-gray-500">
-              <i className="fas fa-search text-3xl mb-2"></i>
-              <p>No thrift shops found for the selected filters.</p>
-            </div>
           ) : (
-            filteredShops.map(shop => (
-              <div
-                key={shop.id}
-                className="bg-white rounded-lg overflow-hidden shadow-lg mb-7 flex hover:-translate-y-1 transition-transform duration-300"
-              >
+            filteredShops.map((shop) => (
+              <div key={shop.id} className="bg-white rounded-lg overflow-hidden shadow-lg mb-7 flex hover:-translate-y-1 transition-transform duration-300">
                 <div
                   className="w-[250px] bg-cover bg-center"
                   style={{ backgroundImage: `url(${shop.image || 'https://via.placeholder.com/250'})` }}
                 ></div>
                 <div className="p-5 flex flex-col flex-1">
                   <h4 className="mb-2 text-gray-800 text-xl font-semibold">{shop.name}</h4>
-                  <div className="flex gap-2 mb-2">
-                    <span className="bg-[#f3f4f6] px-2 py-1 rounded text-sm text-gray-600">
-                      {shop.category || 'General'}
-                    </span>
-                    <span className="bg-[#f3f4f6] px-2 py-1 rounded text-sm text-gray-600">
-                      {shop.price_range || '₱50 - ₱200'}
-                    </span>
-                  </div>
                   <p className="text-gray-600 text-sm mb-1">{shop.address}</p>
-                  <p className="text-gray-600 text-sm">{shop.hours}</p>
 
-                  {/* Comments */}
                   <div className="mt-5 border-t pt-3">
                     <h4 className="text-gray-800 text-sm font-semibold mb-2">
                       Comments ({comments[shop.id]?.length || 0})
                     </h4>
 
                     <div className="max-h-[150px] overflow-y-auto mb-3">
-                      {user ? (
-                        comments[shop.id]?.map(c => (
-                          <div key={c.id} className="bg-gray-100 p-2 rounded mb-1">
-                            <div className="flex justify-between text-xs text-gray-500">
-                              <span>{c.user}</span>
-                              <span>{c.timestamp}</span>
-                            </div>
-                            <p className="text-gray-700 text-sm">{c.text}</p>
+                      {comments[shop.id]?.map((c) => (
+                        <div key={c.ComID} className="bg-gray-100 p-2 rounded mb-1">
+                          <div className="flex justify-between text-xs text-gray-500">
+                            <span>User {c.CustID}</span>
+                            <span>{new Date(c.CreationDate).toLocaleString()}</span>
                           </div>
-                        ))
-                      ) : (
-                        <p className="text-gray-500 text-sm italic">Login to view comments.</p>
-                      )}
+                          <p className="text-gray-700 text-sm">{c.Content}</p>
+                        </div>
+                      ))}
+                      {!user && <p className="text-gray-500 text-sm italic">Login to view and post comments.</p>}
                     </div>
 
                     {user && (
@@ -208,7 +204,7 @@ function ThriftMapPage({ user }) {
                           className="w-full border border-gray-300 rounded p-2 text-sm resize-none"
                           placeholder="Write a comment..."
                           value={newComments[shop.id] || ''}
-                          onChange={(e) => handleCommentChange(shop.id, e.target.value)}
+                          onChange={(e) => setNewComments((prev) => ({ ...prev, [shop.id]: e.target.value }))}
                           onKeyPress={(e) => handleKeyPress(e, shop.id)}
                           rows="2"
                         />
