@@ -4,10 +4,8 @@ function AdminPage({ user }) {
   const [activeTab, setActiveTab] = useState('shops');
   const [shops, setShops] = useState([]);
   const [comments, setComments] = useState([]);
-  const [users, setUsers] = useState([]);
   const [newShop, setNewShop] = useState({
     name: '',
-    address: '',
     latitude: '',
     longitude: '',
     hours: '',
@@ -60,11 +58,6 @@ function AdminPage({ user }) {
         status: "pending"
       }
     ]);
-
-    setUsers([
-      { id: 1, username: "tailor_juan", email: "juan@email.com", role: "user" },
-      { id: 2, username: "sew_smart", email: "maria@email.com", role: "user" }
-    ]);
   }, []);
 
   // Thrift Shop Management
@@ -78,7 +71,6 @@ function AdminPage({ user }) {
     setShops([...shops, shop]);
     setNewShop({
       name: '',
-      address: '',
       latitude: '',
       longitude: '',
       hours: '',
@@ -100,7 +92,6 @@ function AdminPage({ user }) {
     setEditingShop(null);
     setNewShop({
       name: '',
-      address: '',
       latitude: '',
       longitude: '',
       hours: '',
@@ -124,12 +115,6 @@ function AdminPage({ user }) {
     setComments(comments.filter(comment => comment.id !== commentId));
   };
 
-  // User Management
-  const handleResetPassword = (userId) => {
-    // In real implementation, this would call an API
-    alert(`Password reset initiated for user ${userId}`);
-  };
-
   return (
     <div className="min-h-[calc(100vh-200px)] bg-gray-50 py-8">
       <div className="max-w-6xl mx-auto px-5">
@@ -150,12 +135,6 @@ function AdminPage({ user }) {
             onClick={() => setActiveTab('comments')}
           >
             Comment Moderation
-          </button>
-          <button
-            className={`py-3 px-6 border-b-2 font-medium text-sm ${activeTab === 'users' ? 'border-green-700 text-green-700' : 'border-transparent text-gray-500 hover:text-gray-700'}`}
-            onClick={() => setActiveTab('users')}
-          >
-            User Management
           </button>
         </div>
 
@@ -267,7 +246,6 @@ function AdminPage({ user }) {
                         setEditingShop(null);
                         setNewShop({
                           name: '',
-                          address: '',
                           latitude: '',
                           longitude: '',
                           hours: '',
@@ -293,7 +271,6 @@ function AdminPage({ user }) {
                         <h3 className="text-lg font-semibold text-gray-800">{shop.name}</h3>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                           <div>
-                            <p className="text-gray-600"><span className="font-medium">Address:</span> {shop.address}</p>
                             <p className="text-gray-600"><span className="font-medium">Hours:</span> {shop.hours}</p>
                             <p className="text-gray-600"><span className="font-medium">Price Range:</span> {shop.priceRange}</p>
                           </div>
@@ -360,34 +337,6 @@ function AdminPage({ user }) {
                         onClick={() => handleDeleteComment(comment.id)}
                       >
                         Delete
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* User Management */}
-        {activeTab === 'users' && (
-          <div className="bg-white rounded-lg p-6 shadow-sm border border-gray-200">
-            <h2 className="text-xl font-bold text-gray-800 mb-6">User Management</h2>
-            <div className="space-y-6">
-              {users.map(user => (
-                <div key={user.id} className="border border-gray-200 rounded-lg p-5 hover:shadow-md transition-shadow">
-                  <div className="flex justify-between items-start">
-                    <div className="space-y-2 flex-1">
-                      <h3 className="text-lg font-semibold text-gray-800">{user.username}</h3>
-                      <p className="text-gray-600">Email: {user.email}</p>
-                      <p className="text-gray-600">Role: {user.role}</p>
-                    </div>
-                    <div className="flex gap-2 ml-4">
-                      <button
-                        className="px-4 py-2 bg-green-700 text-white text-sm font-medium rounded hover:bg-green-800 transition-colors"
-                        onClick={() => handleResetPassword(user.id)}
-                      >
-                        Reset Password
                       </button>
                     </div>
                   </div>
