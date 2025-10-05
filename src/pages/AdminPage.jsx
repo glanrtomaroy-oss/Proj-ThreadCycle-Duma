@@ -4,7 +4,6 @@ function AdminPage({ user }) {
   const [activeTab, setActiveTab] = useState('shops');
   const [shops, setShops] = useState([]);
   const [comments, setComments] = useState([]);
-  const [users, setUsers] = useState([]);
   const [newShop, setNewShop] = useState({
     name: '',
     latitude: '',
@@ -17,7 +16,6 @@ function AdminPage({ user }) {
 
   // Sample data - replace with API calls
   useEffect(() => {
-    // Mock data for demonstration
     setShops([
       {
         id: 1,
@@ -32,7 +30,7 @@ function AdminPage({ user }) {
       {
         id: 2,
         name: "Eco Fashion Hub",
-        : "456 Rizal Avenue, Dumaguete City",
+        address: "456 Rizal Avenue, Dumaguete City",
         latitude: 9.3080,
         longitude: 123.3070,
         hours: "8:00 AM - 7:00 PM",
@@ -58,11 +56,6 @@ function AdminPage({ user }) {
         date: "2024-01-14",
         status: "pending"
       }
-    ]);
-
-    setUsers([
-      { id: 1, username: "tailor_juan", email: "juan@email.com", role: "user" },
-      { id: 2, username: "sew_smart", email: "maria@email.com", role: "user" }
     ]);
   }, []);
 
@@ -126,33 +119,39 @@ function AdminPage({ user }) {
       <div className="max-w-6xl mx-auto px-5">
         <div className="text-center mb-10">
           <h1 className="text-gray-800 text-4xl font-bold mb-2">Admin Dashboard</h1>
-          <p className="text-gray-600 text-lg">Manage thrift shops, moderate comments, and oversee platform activities</p>
+          <p className="text-gray-600 text-lg">Manage thrift shops and moderate comments</p>
         </div>
 
         <div className="flex bg-white rounded-lg p-2 mb-8 shadow-lg">
           <button
-            className={`flex-1 py-4 px-5 border-none bg-transparent cursor-pointer text-base font-medium rounded-md transition-all ${activeTab === 'shops' ? 'bg-blue-500 text-white' : 'hover:bg-gray-100'
-              }`}
+            className={`flex-1 py-4 px-5 border-none bg-transparent cursor-pointer text-base font-medium rounded-md transition-all ${
+              activeTab === 'shops' ? 'bg-blue-500 text-white' : 'hover:bg-gray-100'
+            }`}
             onClick={() => setActiveTab('shops')}
           >
             Thrift Shops
           </button>
           <button
-            className={`flex-1 py-4 px-5 border-none bg-transparent cursor-pointer text-base font-medium rounded-md transition-all ${activeTab === 'comments' ? 'bg-blue-500 text-white' : 'hover:bg-gray-100'
-              }`}
+            className={`flex-1 py-4 px-5 border-none bg-transparent cursor-pointer text-base font-medium rounded-md transition-all ${
+              activeTab === 'comments' ? 'bg-blue-500 text-white' : 'hover:bg-gray-100'
+            }`}
             onClick={() => setActiveTab('comments')}
           >
             Comment Moderation
           </button>
-          
         </div>
 
         {/* Thrift Shops Management */}
         {activeTab === 'shops' && (
           <div className="bg-white rounded-lg p-8 shadow-lg">
             <div className="mb-10">
-              <h2 className="text-gray-800 mb-5 text-2xl font-bold border-b-2 border-gray-100 pb-2">Add New Thrift Shop</h2>
-              <form onSubmit={editingShop ? handleUpdateShop : handleAddShop} className="bg-gray-100 p-6 rounded-lg mb-8">
+              <h2 className="text-gray-800 mb-5 text-2xl font-bold border-b-2 border-gray-100 pb-2">
+                Add New Thrift Shop
+              </h2>
+              <form
+                onSubmit={editingShop ? handleUpdateShop : handleAddShop}
+                className="bg-gray-100 p-6 rounded-lg mb-8"
+              >
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
                   <div className="mb-5">
                     <label className="block mb-2 text-gray-800 font-medium">Shop Name</label>
@@ -164,7 +163,6 @@ function AdminPage({ user }) {
                       required
                     />
                   </div>
-                 
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
@@ -218,7 +216,7 @@ function AdminPage({ user }) {
                 <div className="mb-5">
                   <label className="block mb-2 text-gray-800 font-medium">Item Types</label>
                   <div className="flex gap-5 flex-wrap">
-                    {['clothing', 'shoes', 'bags', 'accessories'].map(type => (
+                    {['clothing', 'shoes', 'bags', 'accessories'].map((type) => (
                       <label key={type} className="flex items-center gap-2 cursor-pointer">
                         <input
                           type="checkbox"
@@ -226,7 +224,7 @@ function AdminPage({ user }) {
                           onChange={(e) => {
                             const types = e.target.checked
                               ? [...newShop.itemTypes, type]
-                              : newShop.itemTypes.filter(t => t !== type);
+                              : newShop.itemTypes.filter((t) => t !== type);
                             setNewShop({ ...newShop, itemTypes: types });
                           }}
                           className="w-auto"
@@ -237,7 +235,10 @@ function AdminPage({ user }) {
                   </div>
                 </div>
 
-                <button type="submit" className="px-6 py-3 border-none rounded-md cursor-pointer text-sm font-medium transition-all mr-2 bg-[#4c5f0d] text-white hover:bg-[#4c5f0d]">
+                <button
+                  type="submit"
+                  className="px-6 py-3 border-none rounded-md cursor-pointer text-sm font-medium transition-all mr-2 bg-[#4c5f0d] text-white hover:bg-[#3a4b0a]"
+                >
                   {editingShop ? 'Update Shop' : 'Add Shop'}
                 </button>
                 {editingShop && (
@@ -263,15 +264,26 @@ function AdminPage({ user }) {
             </div>
 
             <div className="mb-10">
-              <h2 className="text-gray-800 mb-5 text-2xl font-bold border-b-2 border-gray-100 pb-2">Manage Thrift Shops</h2>
+              <h2 className="text-gray-800 mb-5 text-2xl font-bold border-b-2 border-gray-100 pb-2">
+                Manage Thrift Shops
+              </h2>
               <div className="grid gap-5">
-                {shops.map(shop => (
-                  <div key={shop.id} className="bg-gray-100 p-5 rounded-lg border-l-4 border-blue-500 flex justify-between items-center">
+                {shops.map((shop) => (
+                  <div
+                    key={shop.id}
+                    className="bg-gray-100 p-5 rounded-lg border-l-4 border-blue-500 flex justify-between items-center"
+                  >
                     <div className="flex-1">
                       <h3 className="text-gray-800 mb-2">{shop.name}</h3>
-                      <p className="my-1 text-gray-600"><strong>Hours:</strong> {shop.hours}</p>
-                      <p className="my-1 text-gray-600"><strong>Price Range:</strong> {shop.priceRange}</p>
-                      <p className="my-1 text-gray-600"><strong>Items:</strong> {shop.itemTypes.join(', ')}</p>
+                      <p className="my-1 text-gray-600">
+                        <strong>Hours:</strong> {shop.hours}
+                      </p>
+                      <p className="my-1 text-gray-600">
+                        <strong>Price Range:</strong> {shop.priceRange}
+                      </p>
+                      <p className="my-1 text-gray-600">
+                        <strong>Items:</strong> {shop.itemTypes.join(', ')}
+                      </p>
                     </div>
                     <div className="flex gap-2">
                       <button
@@ -298,15 +310,25 @@ function AdminPage({ user }) {
         {activeTab === 'comments' && (
           <div className="bg-white rounded-lg p-8 shadow-lg">
             <div className="mb-10">
-              <h2 className="text-gray-800 mb-5 text-2xl font-bold border-b-2 border-gray-100 pb-2">Comment Moderation</h2>
+              <h2 className="text-gray-800 mb-5 text-2xl font-bold border-b-2 border-gray-100 pb-2">
+                Comment Moderation
+              </h2>
               <div className="grid gap-5">
-                {comments.map(comment => (
-                  <div key={comment.id} className="bg-gray-100 p-5 rounded-lg border-l-4 border-blue-500 flex justify-between items-center">
+                {comments.map((comment) => (
+                  <div
+                    key={comment.id}
+                    className="bg-gray-100 p-5 rounded-lg border-l-4 border-blue-500 flex justify-between items-center"
+                  >
                     <div className="flex-1">
                       <div className="flex justify-between items-center mb-2">
                         <strong className="text-gray-800">{comment.user}</strong>
-                        <span className={`px-2 py-1 rounded text-xs font-medium ${comment.status === 'pending' ? 'bg-yellow-100 text-yellow-800' : 'bg-blue-100 text-blue-800'
-                          }`}>
+                        <span
+                          className={`px-2 py-1 rounded text-xs font-medium ${
+                            comment.status === 'pending'
+                              ? 'bg-yellow-100 text-yellow-800'
+                              : 'bg-blue-100 text-blue-800'
+                          }`}
+                        >
                           {comment.status}
                         </span>
                       </div>
@@ -330,34 +352,6 @@ function AdminPage({ user }) {
                         onClick={() => handleDeleteComment(comment.id)}
                       >
                         Delete
-                      </button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* User Management */}
-        {activeTab === 'users' && (
-          <div className="bg-white rounded-lg p-8 shadow-lg">
-            <div className="mb-10">
-              <h2 className="text-gray-800 mb-5 text-2xl font-bold border-b-2 border-gray-100 pb-2">User Management</h2>
-              <div className="grid gap-5">
-                {users.map(user => (
-                  <div key={user.id} className="bg-gray-100 p-5 rounded-lg border-l-4 border-blue-500 flex justify-between items-center">
-                    <div className="flex-1">
-                      <h3 className="text-gray-800 mb-2">{user.username}</h3>
-                      <p className="my-1 text-gray-600">Email: {user.email}</p>
-                      <p className="my-1 text-gray-600">Role: {user.role}</p>
-                    </div>
-                    <div className="flex gap-2">
-                      <button
-                        className="px-6 py-3 bg-yellow-500 text-white border-none rounded-md cursor-pointer text-sm font-medium transition-all hover:bg-yellow-600"
-                        onClick={() => handleResetPassword(user.id)}
-                      >
-                        Reset Password
                       </button>
                     </div>
                   </div>
