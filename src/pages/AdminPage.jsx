@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { supabase } from '../util/supabase';
+
 
 function AdminPage({ user }) {
   const [activeTab, setActiveTab] = useState('shops');
