@@ -159,6 +159,7 @@ function AdminPage({ user }) {
                       onChange={(e) => setNewShop({ ...newShop, name: e.target.value })}
                       className="w-full px-3 py-3 border-2 border-gray-200 rounded-md text-sm transition-colors focus:outline-none focus:border-blue-500"
                       required
+                      placeholder="Enter a shop name"
                     />
                   </div>
                 </div>
@@ -173,6 +174,7 @@ function AdminPage({ user }) {
                       onChange={(e) => setNewShop({ ...newShop, latitude: e.target.value })}
                       className="w-full px-3 py-3 border-2 border-gray-200 rounded-md text-sm transition-colors focus:outline-none focus:border-blue-500"
                       required
+                      placeholder="e.g., 9.3057"
                     />
                   </div>
                   <div className="mb-5">
@@ -184,6 +186,7 @@ function AdminPage({ user }) {
                       onChange={(e) => setNewShop({ ...newShop, longitude: e.target.value })}
                       className="w-full px-3 py-3 border-2 border-gray-200 rounded-md text-sm transition-colors focus:outline-none focus:border-blue-500"
                       required
+                      placeholder="e.g., 123.3055"
                     />
                   </div>
                 </div>
