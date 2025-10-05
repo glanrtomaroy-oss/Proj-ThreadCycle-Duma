@@ -155,7 +155,7 @@ function AdminPage({ user }) {
         <div className="flex bg-white rounded-lg p-2 mb-8 shadow-lg">
           <button
             className={`flex-1 py-4 px-5 border-none bg-transparent cursor-pointer text-base font-medium rounded-md transition-all ${
-              activeTab === 'shops' ? 'bg-blue-500 text-white' : 'hover:bg-gray-100'
+              activeTab === 'shops' ? 'bg-green-100 text-white' : 'hover:bg-gray-100'
             }`}
             onClick={() => setActiveTab('shops')}
           >
@@ -163,7 +163,7 @@ function AdminPage({ user }) {
           </button>
           <button
             className={`flex-1 py-4 px-5 border-none bg-transparent cursor-pointer text-base font-medium rounded-md transition-all ${
-              activeTab === 'comments' ? 'bg-blue-500 text-white' : 'hover:bg-gray-100'
+              activeTab === 'comments' ? 'bg-green-100 text-white' : 'hover:bg-gray-100'
             }`}
             onClick={() => setActiveTab('comments')}
           >
@@ -187,7 +187,7 @@ function AdminPage({ user }) {
                       type="text"
                       value={newShop.name}
                       onChange={(e) => setNewShop({ ...newShop, name: e.target.value })}
-                      className="w-full px-3 py-3 border-2 border-gray-200 rounded-md text-sm transition-colors focus:outline-none focus:border-blue-500"
+                      className="w-full px-3 py-3 border-2 border-gray-200 rounded-md text-sm transition-colors focus:outline-none focus:border-green-100"
                       required
                       placeholder="Enter shop name"
                     />
@@ -212,7 +212,7 @@ function AdminPage({ user }) {
                       step="any"
                       value={newShop.latitude}
                       onChange={(e) => setNewShop({ ...newShop, latitude: e.target.value })}
-                      className="w-full px-3 py-3 border-2 border-gray-200 rounded-md text-sm transition-colors focus:outline-none focus:border-blue-500"
+                      className="w-full px-3 py-3 border-2 border-gray-200 rounded-md text-sm transition-colors focus:outline-none focus:border-green-100"
                       required
                       placeholder="e.g., 9.3057"
                     />
@@ -224,7 +224,7 @@ function AdminPage({ user }) {
                       step="any"
                       value={newShop.longitude}
                       onChange={(e) => setNewShop({ ...newShop, longitude: e.target.value })}
-                      className="w-full px-3 py-3 border-2 border-gray-200 rounded-md text-sm transition-colors focus:outline-none focus:border-blue-500"
+                      className="w-full px-3 py-3 border-2 border-gray-200 rounded-md text-sm transition-colors focus:outline-none focus:border-green-100"
                       required
                       placeholder="e.g., 123.3055"
                     />
@@ -238,7 +238,7 @@ function AdminPage({ user }) {
                       type="text"
                       value={newShop.priceRange}
                       onChange={(e) => setNewShop({ ...newShop, priceRange: e.target.value })}
-                      className="w-full px-3 py-3 border-2 border-gray-200 rounded-md text-sm transition-colors focus:outline-none focus:border-blue-500"
+                      className="w-full px-3 py-3 border-2 border-gray-200 rounded-md text-sm transition-colors focus:outline-none focus:border-green-100"
                       placeholder="e.g., ₱50 - ₱100"
                     />
                   </div>
