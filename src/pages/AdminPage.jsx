@@ -125,7 +125,7 @@ function AdminPage({ user }) {
           onClick={() => setActiveTab('shops')}
           className={`flex-1 py-4 px-5 cursor-pointer text-base font-medium rounded-md transition-all
             ${activeTab === 'shops'
-              ? 'bg-white text-[#2C6E49] border border-[#2C6E49] shadow-sm'
+              ? 'bg-white text-[#2C6E49] border border-transparent shadow-sm'
               : 'bg-[#2C6E49] text-white hover:bg-[#25573A]'
             }`}
         >
@@ -136,7 +136,7 @@ function AdminPage({ user }) {
           onClick={() => setActiveTab('comments')}
           className={`flex-1 py-4 px-5 cursor-pointer text-base font-medium rounded-md transition-all
             ${activeTab === 'comments'
-              ? 'bg-white text-[#2C6E49] border border-[#2C6E49] shadow-sm'
+              ? 'bg-white text-[#2C6E49] border border-transparent shadow-sm'
               : 'bg-[#2C6E49] text-white hover:bg-[#25573A]'
             }`}
         >
