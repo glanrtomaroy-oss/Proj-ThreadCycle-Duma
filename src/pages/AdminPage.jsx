@@ -124,12 +124,6 @@ function AdminPage({ user }) {
     setComments(comments.filter(comment => comment.id !== commentId));
   };
 
-  // User Management
-  const handleResetPassword = (userId) => {
-    // In real implementation, this would call an API
-    alert(`Password reset initiated for user ${userId}`);
-  };
-
   return (
     <div className="min-h-[calc(100vh-200px)] bg-gray-100 py-10">
       <div className="max-w-6xl mx-auto px-5">
@@ -153,13 +147,7 @@ function AdminPage({ user }) {
           >
             Comment Moderation
           </button>
-          <button
-            className={`flex-1 py-4 px-5 border-none bg-transparent cursor-pointer text-base font-medium rounded-md transition-all ${activeTab === 'users' ? 'bg-blue-500 text-white' : 'hover:bg-gray-100'
-              }`}
-            onClick={() => setActiveTab('users')}
-          >
-            User Management
-          </button>
+          
         </div>
 
         {/* Thrift Shops Management */}
@@ -272,7 +260,6 @@ function AdminPage({ user }) {
                       setEditingShop(null);
                       setNewShop({
                         name: '',
-                        address: '',
                         latitude: '',
                         longitude: '',
                         hours: '',
@@ -294,7 +281,6 @@ function AdminPage({ user }) {
                   <div key={shop.id} className="bg-gray-100 p-5 rounded-lg border-l-4 border-blue-500 flex justify-between items-center">
                     <div className="flex-1">
                       <h3 className="text-gray-800 mb-2">{shop.name}</h3>
-                      <p className="my-1 text-gray-600"><strong>Address:</strong> {shop.address}</p>
                       <p className="my-1 text-gray-600"><strong>Hours:</strong> {shop.hours}</p>
                       <p className="my-1 text-gray-600"><strong>Price Range:</strong> {shop.priceRange}</p>
                       <p className="my-1 text-gray-600"><strong>Items:</strong> {shop.itemTypes.join(', ')}</p>
