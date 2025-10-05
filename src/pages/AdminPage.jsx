@@ -16,12 +16,10 @@ function AdminPage({ user }) {
 
   // Sample data - replace with API calls
   useEffect(() => {
-    // Mock data for demonstration
     setShops([
       {
         id: 1,
         name: "Green Threads Ukay",
-        address: "123 Calle Street, Dumaguete City",
         latitude: "9:30:57",
         longitude: "123:36:55",
         hours: "9:00 AM - 6:00 PM",
@@ -31,7 +29,6 @@ function AdminPage({ user }) {
       {
         id: 2,
         name: "Eco Fashion Hub",
-        address: "456 Rizal Avenue, Dumaguete City",
         latitude: "9:30:62",
         longitude: "123:30:7",
         hours: "8:00 AM - 7:00 PM",
@@ -120,7 +117,9 @@ function AdminPage({ user }) {
       <div className="max-w-6xl mx-auto px-5">
         <div className="text-center mb-8">
           <h1 className="text-gray-800 text-3xl font-bold mb-2">Admin Dashboard</h1>
-          <p className="text-gray-600">Welcome, Administrator! Manage thrift shops, moderate comments, and oversee platform activities</p>
+          <p className="text-gray-600">
+            Welcome, Administrator! Manage thrift shops and moderate comments.
+          </p>
         </div>
 
         <div className="flex mb-8 border-b border-gray-200">
@@ -160,52 +159,42 @@ function AdminPage({ user }) {
                   <div>
                     <label className="block text-gray-800 font-medium mb-2">Location*</label>
                     <div className="space-y-3">
-                      <div>
-                        <input
-                          type="text"
-                          value={newShop.latitude}
-                          onChange={(e) => setNewShop({ ...newShop, latitude: e.target.value })}
-                          className="w-full px-4 py-3 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                          placeholder="e.g. 9:30:57"
-                          required
-                        />
-                      </div>
-                      <div>
-                        <input
-                          type="text"
-                          value={newShop.longitude}
-                          onChange={(e) => setNewShop({ ...newShop, longitude: e.target.value })}
-                          className="w-full px-4 py-3 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                          placeholder="e.g. 123:36:55"
-                          required
-                        />
-                      </div>
+                      <input
+                        type="text"
+                        value={newShop.latitude}
+                        onChange={(e) => setNewShop({ ...newShop, latitude: e.target.value })}
+                        className="w-full px-4 py-3 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                        placeholder="e.g. 9:30:57"
+                        required
+                      />
+                      <input
+                        type="text"
+                        value={newShop.longitude}
+                        onChange={(e) => setNewShop({ ...newShop, longitude: e.target.value })}
+                        className="w-full px-4 py-3 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                        placeholder="e.g. 123:36:55"
+                        required
+                      />
                     </div>
                   </div>
 
                   <div>
                     <label className="block text-gray-800 font-medium mb-2">Operating Hours</label>
-                    <div className="space-y-3">
-                      <div>
-                        <input
-                          type="text"
-                          value={newShop.hours}
-                          onChange={(e) => setNewShop({ ...newShop, hours: e.target.value })}
-                          className="w-full px-4 py-3 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                          placeholder="e.g. 9:00 AM - 6:00 PM"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-gray-800 font-medium mb-2">Price Range</label>
-                        <input
-                          type="text"
-                          value={newShop.priceRange}
-                          onChange={(e) => setNewShop({ ...newShop, priceRange: e.target.value })}
-                          className="w-full px-4 py-3 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                          placeholder="e.g. P50 - P100"
-                        />
-                      </div>
-                    </div>
+                    <input
+                      type="text"
+                      value={newShop.hours}
+                      onChange={(e) => setNewShop({ ...newShop, hours: e.target.value })}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                      placeholder="e.g. 9:00 AM - 6:00 PM"
+                    />
+                    <label className="block text-gray-800 font-medium mt-4 mb-2">Price Range</label>
+                    <input
+                      type="text"
+                      value={newShop.priceRange}
+                      onChange={(e) => setNewShop({ ...newShop, priceRange: e.target.value })}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                      placeholder="e.g. P50 - P100"
+                    />
                   </div>
                 </div>
 
@@ -225,7 +214,9 @@ function AdminPage({ user }) {
                           }}
                           className="w-4 h-4 text-green-600 focus:ring-green-500 border-gray-300 rounded"
                         />
-                        <span className="text-sm text-gray-700">{type.charAt(0).toUpperCase() + type.slice(1)}</span>
+                        <span className="text-sm text-gray-700">
+                          {type.charAt(0).toUpperCase() + type.slice(1)}
+                        </span>
                       </label>
                     ))}
                   </div>
@@ -261,8 +252,11 @@ function AdminPage({ user }) {
               </form>
             </div>
 
+            {/* Manage Thrift Shops */}
             <div className="bg-white rounded-lg p-6 shadow-sm border border-gray-200">
-              <h2 className="text-xl font-bold text-gray-800 mb-6">Manage Thrift Shops ({shops.length})</h2>
+              <h2 className="text-xl font-bold text-gray-800 mb-6">
+                Manage Thrift Shops ({shops.length})
+              </h2>
               <div className="space-y-6">
                 {shops.map(shop => (
                   <div key={shop.id} className="border border-gray-200 rounded-lg p-5 hover:shadow-md transition-shadow">
