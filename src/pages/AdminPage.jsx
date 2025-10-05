@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 
-
 function AdminPage({ user }) {
   const [activeTab, setActiveTab] = useState('shops');
   const [shops, setShops] = useState([]);
@@ -25,20 +24,20 @@ function AdminPage({ user }) {
         id: 1,
         name: "Green Threads Ukay",
         address: "123 Calle Street, Dumaguete City",
-        latitude: 9.3057,
-        longitude: 123.3055,
+        latitude: "9:30:57",
+        longitude: "123:36:55",
         hours: "9:00 AM - 6:00 PM",
-        priceRange: "₱50 - ₱300",
+        priceRange: "P50 - P100",
         itemTypes: ["clothing", "shoes"]
       },
       {
         id: 2,
         name: "Eco Fashion Hub",
         address: "456 Rizal Avenue, Dumaguete City",
-        latitude: 9.3080,
-        longitude: 123.3070,
+        latitude: "9:30:62",
+        longitude: "123:30:7",
         hours: "8:00 AM - 7:00 PM",
-        priceRange: "₱80 - ₱500",
+        priceRange: "P80 - P500",
         itemTypes: ["clothing", "bags", "accessories"]
       }
     ]);
@@ -132,31 +131,28 @@ function AdminPage({ user }) {
   };
 
   return (
-    <div className="min-h-[calc(100vh-200px)] bg-gray-100 py-10">
+    <div className="min-h-[calc(100vh-200px)] bg-gray-50 py-8">
       <div className="max-w-6xl mx-auto px-5">
-        <div className="text-center mb-10">
-          <h1 className="text-gray-800 text-4xl font-bold mb-2">Admin Dashboard</h1>
-          <p className="text-gray-600 text-lg">Manage thrift shops, moderate comments, and oversee platform activities</p>
+        <div className="text-center mb-8">
+          <h1 className="text-gray-800 text-3xl font-bold mb-2">Admin Dashboard</h1>
+          <p className="text-gray-600">Welcome, Administrator! Manage thrift shops, moderate comments, and oversee platform activities</p>
         </div>
 
-        <div className="flex bg-white rounded-lg p-2 mb-8 shadow-lg">
+        <div className="flex mb-8 border-b border-gray-200">
           <button
-            className={`flex-1 py-4 px-5 border-none bg-transparent cursor-pointer text-base font-medium rounded-md transition-all ${activeTab === 'shops' ? 'bg-blue-500 text-white' : 'hover:bg-gray-100'
-              }`}
+            className={`py-3 px-6 border-b-2 font-medium text-sm ${activeTab === 'shops' ? 'border-green-700 text-green-700' : 'border-transparent text-gray-500 hover:text-gray-700'}`}
             onClick={() => setActiveTab('shops')}
           >
             Thrift Shops
           </button>
           <button
-            className={`flex-1 py-4 px-5 border-none bg-transparent cursor-pointer text-base font-medium rounded-md transition-all ${activeTab === 'comments' ? 'bg-blue-500 text-white' : 'hover:bg-gray-100'
-              }`}
+            className={`py-3 px-6 border-b-2 font-medium text-sm ${activeTab === 'comments' ? 'border-green-700 text-green-700' : 'border-transparent text-gray-500 hover:text-gray-700'}`}
             onClick={() => setActiveTab('comments')}
           >
             Comment Moderation
           </button>
           <button
-            className={`flex-1 py-4 px-5 border-none bg-transparent cursor-pointer text-base font-medium rounded-md transition-all ${activeTab === 'users' ? 'bg-blue-500 text-white' : 'hover:bg-gray-100'
-              }`}
+            className={`py-3 px-6 border-b-2 font-medium text-sm ${activeTab === 'users' ? 'border-green-700 text-green-700' : 'border-transparent text-gray-500 hover:text-gray-700'}`}
             onClick={() => setActiveTab('users')}
           >
             User Management
@@ -165,84 +161,78 @@ function AdminPage({ user }) {
 
         {/* Thrift Shops Management */}
         {activeTab === 'shops' && (
-          <div className="bg-white rounded-lg p-8 shadow-lg">
-            <div className="mb-10">
-              <h2 className="text-gray-800 mb-5 text-2xl font-bold border-b-2 border-gray-100 pb-2">Add New Thrift Shop</h2>
-              <form onSubmit={editingShop ? handleUpdateShop : handleAddShop} className="bg-gray-100 p-6 rounded-lg mb-8">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
-                  <div className="mb-5">
-                    <label className="block mb-2 text-gray-800 font-medium">Shop Name</label>
-                    <input
-                      type="text"
-                      value={newShop.name}
-                      onChange={(e) => setNewShop({ ...newShop, name: e.target.value })}
-                      className="w-full px-3 py-3 border-2 border-gray-200 rounded-md text-sm transition-colors focus:outline-none focus:border-blue-500"
-                      required
-                    />
+          <div className="space-y-8">
+            <div className="bg-white rounded-lg p-6 shadow-sm border border-gray-200">
+              <h2 className="text-xl font-bold text-gray-800 mb-6">Add New Thrift Shop</h2>
+              <form onSubmit={editingShop ? handleUpdateShop : handleAddShop} className="space-y-6">
+                <div>
+                  <label className="block text-gray-800 font-medium mb-2">Shop Name*</label>
+                  <input
+                    type="text"
+                    value={newShop.name}
+                    onChange={(e) => setNewShop({ ...newShop, name: e.target.value })}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                    placeholder="Enter shop name"
+                    required
+                  />
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <label className="block text-gray-800 font-medium mb-2">Location*</label>
+                    <div className="space-y-3">
+                      <div>
+                        <input
+                          type="text"
+                          value={newShop.latitude}
+                          onChange={(e) => setNewShop({ ...newShop, latitude: e.target.value })}
+                          className="w-full px-4 py-3 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                          placeholder="e.g. 9:30:57"
+                          required
+                        />
+                      </div>
+                      <div>
+                        <input
+                          type="text"
+                          value={newShop.longitude}
+                          onChange={(e) => setNewShop({ ...newShop, longitude: e.target.value })}
+                          className="w-full px-4 py-3 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                          placeholder="e.g. 123:36:55"
+                          required
+                        />
+                      </div>
+                    </div>
                   </div>
-                  <div className="mb-5">
-                    <label className="block mb-2 text-gray-800 font-medium">Address</label>
-                    <input
-                      type="text"
-                      value={newShop.address}
-                      onChange={(e) => setNewShop({ ...newShop, address: e.target.value })}
-                      className="w-full px-3 py-3 border-2 border-gray-200 rounded-md text-sm transition-colors focus:outline-none focus:border-blue-500"
-                      required
-                    />
+
+                  <div>
+                    <label className="block text-gray-800 font-medium mb-2">Operating Hours</label>
+                    <div className="space-y-3">
+                      <div>
+                        <input
+                          type="text"
+                          value={newShop.hours}
+                          onChange={(e) => setNewShop({ ...newShop, hours: e.target.value })}
+                          className="w-full px-4 py-3 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                          placeholder="e.g. 9:00 AM - 6:00 PM"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-gray-800 font-medium mb-2">Price Range</label>
+                        <input
+                          type="text"
+                          value={newShop.priceRange}
+                          onChange={(e) => setNewShop({ ...newShop, priceRange: e.target.value })}
+                          className="w-full px-4 py-3 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                          placeholder="e.g. P50 - P100"
+                        />
+                      </div>
+                    </div>
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
-                  <div className="mb-5">
-                    <label className="block mb-2 text-gray-800 font-medium">Latitude</label>
-                    <input
-                      type="number"
-                      step="any"
-                      value={newShop.latitude}
-                      onChange={(e) => setNewShop({ ...newShop, latitude: e.target.value })}
-                      className="w-full px-3 py-3 border-2 border-gray-200 rounded-md text-sm transition-colors focus:outline-none focus:border-blue-500"
-                      required
-                    />
-                  </div>
-                  <div className="mb-5">
-                    <label className="block mb-2 text-gray-800 font-medium">Longitude</label>
-                    <input
-                      type="number"
-                      step="any"
-                      value={newShop.longitude}
-                      onChange={(e) => setNewShop({ ...newShop, longitude: e.target.value })}
-                      className="w-full px-3 py-3 border-2 border-gray-200 rounded-md text-sm transition-colors focus:outline-none focus:border-blue-500"
-                      required
-                    />
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
-                  <div className="mb-5">
-                    <label className="block mb-2 text-gray-800 font-medium">Operating Hours</label>
-                    <input
-                      type="text"
-                      value={newShop.hours}
-                      onChange={(e) => setNewShop({ ...newShop, hours: e.target.value })}
-                      className="w-full px-3 py-3 border-2 border-gray-200 rounded-md text-sm transition-colors focus:outline-none focus:border-blue-500"
-                      placeholder="e.g., 9:00 AM - 6:00 PM"
-                    />
-                  </div>
-                  <div className="mb-5">
-                    <label className="block mb-2 text-gray-800 font-medium">Price Range</label>
-                    <input
-                      type="text"
-                      value={newShop.priceRange}
-                      onChange={(e) => setNewShop({ ...newShop, priceRange: e.target.value })}
-                      className="w-full px-3 py-3 border-2 border-gray-200 rounded-md text-sm transition-colors focus:outline-none focus:border-blue-500"
-                      placeholder="e.g., ₱50 - ₱300"
-                    />
-                  </div>
-                </div>
-
-                <div className="mb-5">
-                  <label className="block mb-2 text-gray-800 font-medium">Item Types</label>
-                  <div className="flex gap-5 flex-wrap">
+                <div>
+                  <label className="block text-gray-800 font-medium mb-3">Item Types</label>
+                  <div className="flex flex-wrap gap-4">
                     {['clothing', 'shoes', 'bags', 'accessories'].map(type => (
                       <label key={type} className="flex items-center gap-2 cursor-pointer">
                         <input
@@ -254,65 +244,79 @@ function AdminPage({ user }) {
                               : newShop.itemTypes.filter(t => t !== type);
                             setNewShop({ ...newShop, itemTypes: types });
                           }}
-                          className="w-auto"
+                          className="w-4 h-4 text-green-600 focus:ring-green-500 border-gray-300 rounded"
                         />
-                        {type.charAt(0).toUpperCase() + type.slice(1)}
+                        <span className="text-sm text-gray-700">{type.charAt(0).toUpperCase() + type.slice(1)}</span>
                       </label>
                     ))}
                   </div>
                 </div>
 
-                <button type="submit" className="px-6 py-3 border-none rounded-md cursor-pointer text-sm font-medium transition-all mr-2 bg-[#4c5f0d] text-white hover:bg-[#4c5f0d]">
-                  {editingShop ? 'Update Shop' : 'Add Shop'}
-                </button>
-                {editingShop && (
-                  <button
-                    type="button"
-                    className="px-6 py-3 bg-transparent border-2 border-[#4c5f0d] text-[#4c5f0d] rounded-md cursor-pointer text-sm font-medium transition-all hover:bg-[#4c5f0d] hover:text-white"
-                    onClick={() => {
-                      setEditingShop(null);
-                      setNewShop({
-                        name: '',
-                        address: '',
-                        latitude: '',
-                        longitude: '',
-                        hours: '',
-                        priceRange: '',
-                        itemTypes: []
-                      });
-                    }}
+                <div className="pt-4">
+                  <button 
+                    type="submit" 
+                    className="px-8 py-3 bg-green-700 text-white font-medium rounded-md hover:bg-green-800 transition-colors"
                   >
-                    Cancel
+                    {editingShop ? 'Update Shop' : 'Add Shop'}
                   </button>
-                )}
+                  {editingShop && (
+                    <button
+                      type="button"
+                      className="ml-3 px-8 py-3 bg-gray-200 text-gray-700 font-medium rounded-md hover:bg-gray-300 transition-colors"
+                      onClick={() => {
+                        setEditingShop(null);
+                        setNewShop({
+                          name: '',
+                          address: '',
+                          latitude: '',
+                          longitude: '',
+                          hours: '',
+                          priceRange: '',
+                          itemTypes: []
+                        });
+                      }}
+                    >
+                      Cancel
+                    </button>
+                  )}
+                </div>
               </form>
             </div>
 
-            <div className="mb-10">
-              <h2 className="text-gray-800 mb-5 text-2xl font-bold border-b-2 border-gray-100 pb-2">Manage Thrift Shops</h2>
-              <div className="grid gap-5">
+            <div className="bg-white rounded-lg p-6 shadow-sm border border-gray-200">
+              <h2 className="text-xl font-bold text-gray-800 mb-6">Manage Thrift Shops ({shops.length})</h2>
+              <div className="space-y-6">
                 {shops.map(shop => (
-                  <div key={shop.id} className="bg-gray-100 p-5 rounded-lg border-l-4 border-blue-500 flex justify-between items-center">
-                    <div className="flex-1">
-                      <h3 className="text-gray-800 mb-2">{shop.name}</h3>
-                      <p className="my-1 text-gray-600"><strong>Address:</strong> {shop.address}</p>
-                      <p className="my-1 text-gray-600"><strong>Hours:</strong> {shop.hours}</p>
-                      <p className="my-1 text-gray-600"><strong>Price Range:</strong> {shop.priceRange}</p>
-                      <p className="my-1 text-gray-600"><strong>Items:</strong> {shop.itemTypes.join(', ')}</p>
-                    </div>
-                    <div className="flex gap-2">
-                      <button
-                        className="px-6 py-3 bg-transparent border-2 border-[#4c5f0d] text-[#4c5f0d] rounded-md cursor-pointer text-sm font-medium transition-all hover:bg-[#4c5f0d] hover:text-white"
-                        onClick={() => handleEditShop(shop)}
-                      >
-                        Edit
-                      </button>
-                      <button
-                        className="px-6 py-3 bg-red-500 text-white border-none rounded-md cursor-pointer text-sm font-medium transition-all hover:bg-red-600"
-                        onClick={() => handleDeleteShop(shop.id)}
-                      >
-                        Delete
-                      </button>
+                  <div key={shop.id} className="border border-gray-200 rounded-lg p-5 hover:shadow-md transition-shadow">
+                    <div className="flex justify-between items-start">
+                      <div className="space-y-3 flex-1">
+                        <h3 className="text-lg font-semibold text-gray-800">{shop.name}</h3>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                          <div>
+                            <p className="text-gray-600"><span className="font-medium">Address:</span> {shop.address}</p>
+                            <p className="text-gray-600"><span className="font-medium">Hours:</span> {shop.hours}</p>
+                            <p className="text-gray-600"><span className="font-medium">Price Range:</span> {shop.priceRange}</p>
+                          </div>
+                          <div>
+                            <p className="text-gray-600"><span className="font-medium">Items:</span> {shop.itemTypes.join(', ')}</p>
+                            <p className="text-gray-600"><span className="font-medium">Location:</span> {shop.latitude}, {shop.longitude}</p>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="flex gap-2 ml-4">
+                        <button
+                          className="px-4 py-2 bg-green-700 text-white text-sm font-medium rounded hover:bg-green-800 transition-colors"
+                          onClick={() => handleEditShop(shop)}
+                        >
+                          Edit
+                        </button>
+                        <button
+                          className="px-4 py-2 bg-red-600 text-white text-sm font-medium rounded hover:bg-red-700 transition-colors"
+                          onClick={() => handleDeleteShop(shop.id)}
+                        >
+                          Delete
+                        </button>
+                      </div>
                     </div>
                   </div>
                 ))}
@@ -323,73 +327,72 @@ function AdminPage({ user }) {
 
         {/* Comment Moderation */}
         {activeTab === 'comments' && (
-          <div className="bg-white rounded-lg p-8 shadow-lg">
-            <div className="mb-10">
-              <h2 className="text-gray-800 mb-5 text-2xl font-bold border-b-2 border-gray-100 pb-2">Comment Moderation</h2>
-              <div className="grid gap-5">
-                {comments.map(comment => (
-                  <div key={comment.id} className="bg-gray-100 p-5 rounded-lg border-l-4 border-blue-500 flex justify-between items-center">
-                    <div className="flex-1">
-                      <div className="flex justify-between items-center mb-2">
-                        <strong className="text-gray-800">{comment.user}</strong>
-                        <span className={`px-2 py-1 rounded text-xs font-medium ${comment.status === 'pending' ? 'bg-yellow-100 text-yellow-800' : 'bg-blue-100 text-blue-800'
-                          }`}>
+          <div className="bg-white rounded-lg p-6 shadow-sm border border-gray-200">
+            <h2 className="text-xl font-bold text-gray-800 mb-6">Comment Moderation</h2>
+            <div className="space-y-6">
+              {comments.map(comment => (
+                <div key={comment.id} className="border border-gray-200 rounded-lg p-5 hover:shadow-md transition-shadow">
+                  <div className="flex justify-between items-start">
+                    <div className="space-y-3 flex-1">
+                      <div className="flex justify-between items-center">
+                        <h3 className="text-lg font-semibold text-gray-800">{comment.user}</h3>
+                        <span className={`px-2 py-1 rounded text-xs font-medium ${comment.status === 'pending' ? 'bg-yellow-100 text-yellow-800' : 'bg-green-100 text-green-800'}`}>
                           {comment.status}
                         </span>
                       </div>
-                      <p className="text-gray-600 mb-2">{comment.content}</p>
-                      <div className="flex gap-4 text-xs text-gray-500">
+                      <p className="text-gray-600">{comment.content}</p>
+                      <div className="flex gap-4 text-sm text-gray-500">
                         <span>Shop: {comment.shop}</span>
                         <span>Date: {comment.date}</span>
                       </div>
                     </div>
-                    <div className="flex gap-2">
+                    <div className="flex gap-2 ml-4">
                       {comment.status === 'pending' && (
                         <button
-                          className="px-6 py-3 bg-green-500 text-white border-none rounded-md cursor-pointer text-sm font-medium transition-all hover:bg-green-600"
+                          className="px-4 py-2 bg-green-700 text-white text-sm font-medium rounded hover:bg-green-800 transition-colors"
                           onClick={() => handleApproveComment(comment.id)}
                         >
                           Approve
                         </button>
                       )}
                       <button
-                        className="px-6 py-3 bg-red-500 text-white border-none rounded-md cursor-pointer text-sm font-medium transition-all hover:bg-red-600"
+                        className="px-4 py-2 bg-red-600 text-white text-sm font-medium rounded hover:bg-red-700 transition-colors"
                         onClick={() => handleDeleteComment(comment.id)}
                       >
                         Delete
                       </button>
                     </div>
                   </div>
-                ))}
-              </div>
+                </div>
+              ))}
             </div>
           </div>
         )}
 
         {/* User Management */}
         {activeTab === 'users' && (
-          <div className="bg-white rounded-lg p-8 shadow-lg">
-            <div className="mb-10">
-              <h2 className="text-gray-800 mb-5 text-2xl font-bold border-b-2 border-gray-100 pb-2">User Management</h2>
-              <div className="grid gap-5">
-                {users.map(user => (
-                  <div key={user.id} className="bg-gray-100 p-5 rounded-lg border-l-4 border-blue-500 flex justify-between items-center">
-                    <div className="flex-1">
-                      <h3 className="text-gray-800 mb-2">{user.username}</h3>
-                      <p className="my-1 text-gray-600">Email: {user.email}</p>
-                      <p className="my-1 text-gray-600">Role: {user.role}</p>
+          <div className="bg-white rounded-lg p-6 shadow-sm border border-gray-200">
+            <h2 className="text-xl font-bold text-gray-800 mb-6">User Management</h2>
+            <div className="space-y-6">
+              {users.map(user => (
+                <div key={user.id} className="border border-gray-200 rounded-lg p-5 hover:shadow-md transition-shadow">
+                  <div className="flex justify-between items-start">
+                    <div className="space-y-2 flex-1">
+                      <h3 className="text-lg font-semibold text-gray-800">{user.username}</h3>
+                      <p className="text-gray-600">Email: {user.email}</p>
+                      <p className="text-gray-600">Role: {user.role}</p>
                     </div>
-                    <div className="flex gap-2">
+                    <div className="flex gap-2 ml-4">
                       <button
-                        className="px-6 py-3 bg-yellow-500 text-white border-none rounded-md cursor-pointer text-sm font-medium transition-all hover:bg-yellow-600"
+                        className="px-4 py-2 bg-green-700 text-white text-sm font-medium rounded hover:bg-green-800 transition-colors"
                         onClick={() => handleResetPassword(user.id)}
                       >
                         Reset Password
                       </button>
                     </div>
                   </div>
-                ))}
-              </div>
+                </div>
+              ))}
             </div>
           </div>
         )}
