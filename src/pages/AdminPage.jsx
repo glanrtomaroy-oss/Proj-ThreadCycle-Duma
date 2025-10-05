@@ -20,7 +20,6 @@ function AdminPage({ user }) {
       {
         id: 1,
         name: "Green Threads Ukay",
-        address: "123 Calle Street, Dumaguete City",
         latitude: 9.3057,
         longitude: 123.3055,
         hours: "9:00 AM - 6:00 PM",
@@ -30,7 +29,6 @@ function AdminPage({ user }) {
       {
         id: 2,
         name: "Eco Fashion Hub",
-        address: "456 Rizal Avenue, Dumaguete City",
         latitude: 9.3080,
         longitude: 123.3070,
         hours: "8:00 AM - 7:00 PM",
