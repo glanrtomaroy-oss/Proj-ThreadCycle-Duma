@@ -15,9 +15,8 @@ function AdminPage({ user }) {
   const [editingShop, setEditingShop] = useState(null);
   const [message, setMessage] = useState('');
 
-  // Sample data - replace with API calls
   useEffect(() => {
-    // Mock data for demonstration
+
     setShops([
       {
         id: 1,
@@ -69,7 +68,6 @@ function AdminPage({ user }) {
     ]);
   }, []);
 
-  // Thrift Shop Management
   const handleAddShop = (e) => {
     e.preventDefault();
     const shop = {
@@ -121,7 +119,6 @@ function AdminPage({ user }) {
     }
   };
 
-  // Comment Moderation
   const handleApproveComment = (commentId) => {
     setComments(comments.map(comment =>
       comment.id === commentId ? { ...comment, status: 'approved' } : comment
@@ -141,7 +138,7 @@ function AdminPage({ user }) {
   return (
     <div className="min-h-[calc(100vh-200px)] bg-gray-100 py-10">
       <div className="max-w-6xl mx-auto px-5">
-        {/* Header */}
+     
         <div className="text-center mb-10">
           <h1 className="text-gray-800 text-4xl font-bold mb-2">Admin Dashboard</h1>
           <p className="text-gray-600 text-lg">
@@ -154,7 +151,7 @@ function AdminPage({ user }) {
           )}
         </div>
 
-        {/* Tab Navigation */}
+    
         <div className="flex bg-white rounded-lg p-2 mb-8 shadow-lg">
           <button
             className={`flex-1 py-4 px-5 border-none bg-transparent cursor-pointer text-base font-medium rounded-md transition-all ${
@@ -174,10 +171,10 @@ function AdminPage({ user }) {
           </button>
         </div>
 
-        {/* Thrift Shops Management */}
+     
         {activeTab === 'shops' && (
           <div className="bg-white rounded-lg p-8 shadow-lg">
-            {/* Add/Edit Shop Form */}
+          
             <div className="mb-10">
               <h2 className="text-gray-800 mb-5 text-2xl font-bold border-b-2 border-gray-100 pb-2">
                 {editingShop ? 'Edit Thrift Shop' : 'Add New Thrift Shop'}
@@ -299,7 +296,7 @@ function AdminPage({ user }) {
               </form>
             </div>
 
-            {/* Shop List */}
+          
             <div className="mb-10">
               <h2 className="text-gray-800 mb-5 text-2xl font-bold border-b-2 border-gray-100 pb-2">
                 Manage Thrift Shops ({shops.length})
@@ -335,7 +332,7 @@ function AdminPage({ user }) {
           </div>
         )}
 
-        {/* Comment Moderation */}
+      
         {activeTab === 'comments' && (
           <div className="bg-white rounded-lg p-8 shadow-lg">
             <div className="mb-10">
