@@ -12,7 +12,7 @@ function ThriftMapPage() {
   const [activeCategory, setActiveCategory] = useState("all");
   const [activePrice, setActivePrice] = useState("all");
 
-  // 🟢 Fetch thrift shops
+  // Fetch thrift shops
   const fetchShops = async () => {
     try {
       const { data, error } = await supabase.from("THRIFT SHOP").select("*");
@@ -23,7 +23,7 @@ function ThriftMapPage() {
     }
   };
 
-  // 🟢 Fetch approved comments
+  // Fetch approved comments
   const fetchComments = async () => {
     try {
       const { data, error } = await supabase
@@ -44,7 +44,7 @@ function ThriftMapPage() {
     }
   };
 
-  // 🟢 Submit a comment
+  // Submit a comment
   const submitComment = async (shopId) => {
     if (!currentUser) return;
     const text = draftComments[shopId]?.trim();
@@ -83,7 +83,7 @@ function ThriftMapPage() {
     fetchComments();
   }, []);
 
-  // 🟢 Filter helpers
+  // Filter helpers
   const getPriceBucket = (priceText) => {
     if (!priceText) return "all";
     const text = priceText.replace(/\s|₱/g, "");
@@ -104,7 +104,7 @@ function ThriftMapPage() {
 
   return (
     <div className="bg-[#FEFEE3] min-h-screen pb-20">
-      {/* 🟣 Hero Section */}
+      {/* Hero Section */}
       <section className="bg-[#2C6E49] text-white text-center py-20 px-6">
         <h1 className="text-4xl md:text-5xl font-bold mb-4">
           Discover Local Thrift Shops
@@ -114,14 +114,14 @@ function ThriftMapPage() {
         </p>
       </section>
 
-      {/* 🟢 Map Placeholder */}
+      {/* Map Placeholder */}
       <section className="max-w-6xl mx-auto mt-10 px-4">
         <div className="bg-white shadow-lg rounded-xl h-[400px] flex items-center justify-center text-gray-500">
-          <p>🗺️ Map view coming soon (Mapbox integration pending)</p>
+          <p>Map view coming soon (Mapbox integration pending)</p>
         </div>
       </section>
 
-      {/* 🟢 Filters */}
+      {/* Filters */}
       <section className="max-w-6xl mx-auto mt-10 px-4">
         <div className="bg-white rounded-xl shadow p-6">
           <div className="mb-6">
@@ -166,7 +166,7 @@ function ThriftMapPage() {
         </div>
       </section>
 
-      {/* 🟢 Shop Cards */}
+      {/* Shop Cards */}
       <section className="max-w-6xl mx-auto mt-12 px-4">
         <h3 className="text-center text-gray-800 font-semibold text-2xl mb-8">
           Thrift Shop Listings
@@ -174,96 +174,109 @@ function ThriftMapPage() {
 
         <div className="grid md:grid-cols-2 gap-6">
           {shops.filter(isShopInActiveFilters).map((shop) => (
-            <div
-              key={shop.ShopID}
-              className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition"
-            >
-              <div className="grid grid-cols-[1fr_auto]">
-                <div className="p-5">
-                  <div className="flex items-center gap-4">
-                    <div className="w-28 h-28 bg-gray-100 rounded overflow-hidden flex-shrink-0">
-                      <img
-                        src={shop.Image || "/thriftshop.webp"}
-                        alt={shop.Name}
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-                    <div>
-                      <h4 className="text-xl font-semibold text-[#2C6E49]">
-                        {shop.Name}
-                      </h4>
-                      <div className="flex gap-2 mt-1 mb-1.5 text-sm">
-                        <span className="bg-gray-100 px-2 py-[2px] rounded">
-                          {shop.Category}
-                        </span>
-                        <span className="bg-gray-100 px-2 py-[2px] rounded">
-                          {shop.PriceRange}
-                        </span>
-                      </div>
-                      <p className="text-sm text-gray-600">
-                        {shop.StoreHours || ""}
-                      </p>
-                    </div>
-                  </div>
-
-                  {/* Comments */}
-                  <div className="mt-4 border-t pt-3">
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="text-sm font-medium text-gray-800">
-                        Comments ({comments[shop.ShopID]?.length || 0})
-                      </span>
-                    </div>
-
-                    {comments[shop.ShopID]?.length > 0 ? (
-                      <div className="space-y-2 max-h-[120px] overflow-y-auto pr-1">
-                        {comments[shop.ShopID].map((c) => (
-                          <div
-                            key={c.CommentID}
-                            className="text-sm bg-gray-50 rounded px-3 py-2"
-                          >
-                            <p className="text-gray-700">{c.CommentText}</p>
+              <div
+                key={shop.ShopID}
+                className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition"
+              >
+                <div className="grid grid-cols-[1fr_auto]">
+                  <div className="p-5">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-4">
+                        <div className="w-28 h-28 bg-gray-100 rounded overflow-hidden flex-shrink-0">
+                          <img
+                            src={shop.Image || "/thriftshop.webp"}
+                            alt={shop.Name}
+                            className="w-full h-full object-cover"
+                          />
+                        </div>
+                        <div>
+                          <h4 className="text-xl font-semibold text-[#2C6E49]">
+                            {shop.Name}
+                          </h4>
+                          <div className="flex gap-2 mt-1 mb-1.5 text-sm">
+                            <span className="bg-gray-100 px-2 py-[2px] rounded">
+                              {shop.Category}
+                            </span>
+                            <span className="bg-gray-100 px-2 py-[2px] rounded">
+                              {shop.PriceRange}
+                            </span>
                           </div>
-                        ))}
+                          <p className="text-sm text-gray-600">
+                            {shop.StoreHours || ""}
+                          </p>
+                        </div>
                       </div>
-                    ) : (
-                      <p className="text-xs text-gray-500">No comments yet</p>
-                    )}
 
-                    {currentUser ? (
-                      <div className="mt-3 flex items-end gap-2">
-                        <input
-                          className="flex-1 border rounded px-3 py-2 text-sm"
-                          placeholder="Add a comment..."
-                          value={draftComments[shop.ShopID] || ""}
-                          onChange={(e) =>
-                            setDraftComments((p) => ({
-                              ...p,
-                              [shop.ShopID]: e.target.value,
-                            }))
-                          }
-                          onKeyDown={(e) => {
-                            if (e.key === "Enter" && !e.shiftKey) {
-                              e.preventDefault();
-                              submitComment(shop.ShopID);
-                            }
-                          }}
-                        />
-                        <button
-                          className="bg-[#2C6E49] text-white px-4 py-2 rounded hover:opacity-90"
-                          onClick={() => submitComment(shop.ShopID)}
-                        >
-                          Post
-                        </button>
+                      {/* Directions button */}
+                      <a
+                        href={`https://www.google.com/maps?q=${shop.Latitude},${shop.Longitude}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-sm bg-[#2C6E49] text-white px-4 py-2 rounded hover:bg-[#265a3e] transition"
+                      >
+                        Directions
+                      </a>
+                    </div>
+
+                    {/* Comments */}
+                    <div className="mt-4 border-t pt-3">
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="text-sm font-medium text-gray-800">
+                          Comments ({comments[shop.ShopID]?.length || 0})
+                        </span>
                       </div>
-                    ) : (
-                      <p className="text-xs text-gray-500 mt-2">
-                        Login to add a comment
-                      </p>
-                    )}
+
+                      {comments[shop.ShopID]?.length > 0 ? (
+                        <div className="space-y-2 max-h-[120px] overflow-y-auto pr-1">
+                          {comments[shop.ShopID].map((c) => (
+                            <div
+                              key={c.CommentID}
+                              className="text-sm bg-gray-50 rounded px-3 py-2"
+                            >
+                              <p className="text-gray-700">{c.CommentText}</p>
+                            </div>
+                          ))}
+                        </div>
+                      ) : (
+                        <p className="text-xs text-gray-500">No comments yet</p>
+                      )}
+
+                      {currentUser ? (
+                        <div className="mt-3 flex items-end gap-2">
+                          <input
+                            className="flex-1 border rounded px-3 py-2 text-sm"
+                            placeholder="Add a comment..."
+                            value={draftComments[shop.ShopID] || ""}
+                            onChange={(e) =>
+                              setDraftComments((p) => ({
+                                ...p,
+                                [shop.ShopID]: e.target.value,
+                              }))
+                            }
+                            onKeyDown={(e) => {
+                              if (e.key === "Enter" && !e.shiftKey) {
+                                e.preventDefault();
+                                submitComment(shop.ShopID);
+                              }
+                            }}
+                          />
+                          <button
+                            className="bg-[#2C6E49] text-white px-4 py-2 rounded hover:opacity-90"
+                            onClick={() => submitComment(shop.ShopID)}
+                          >
+                            Post
+                          </button>
+                        </div>
+                      ) : (
+                        <p className="text-xs text-gray-500 mt-2">
+                          Login to add a comment
+                        </p>
+                      )}
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
+
           ))}
         </div>
 
