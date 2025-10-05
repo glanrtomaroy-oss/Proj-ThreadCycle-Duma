@@ -32,7 +32,7 @@ function AdminPage({ user }) {
       {
         id: 2,
         name: "Eco Fashion Hub",
-        address: "456 Rizal Avenue, Dumaguete City",
+        : "456 Rizal Avenue, Dumaguete City",
         latitude: 9.3080,
         longitude: 123.3070,
         hours: "8:00 AM - 7:00 PM",
@@ -77,7 +77,6 @@ function AdminPage({ user }) {
     setShops([...shops, shop]);
     setNewShop({
       name: '',
-      address: '',
       latitude: '',
       longitude: '',
       hours: '',
@@ -99,7 +98,6 @@ function AdminPage({ user }) {
     setEditingShop(null);
     setNewShop({
       name: '',
-      address: '',
       latitude: '',
       longitude: '',
       hours: '',
@@ -166,16 +164,7 @@ function AdminPage({ user }) {
                       required
                     />
                   </div>
-                  <div className="mb-5">
-                    <label className="block mb-2 text-gray-800 font-medium">Address</label>
-                    <input
-                      type="text"
-                      value={newShop.address}
-                      onChange={(e) => setNewShop({ ...newShop, address: e.target.value })}
-                      className="w-full px-3 py-3 border-2 border-gray-200 rounded-md text-sm transition-colors focus:outline-none focus:border-blue-500"
-                      required
-                    />
-                  </div>
+                 
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
