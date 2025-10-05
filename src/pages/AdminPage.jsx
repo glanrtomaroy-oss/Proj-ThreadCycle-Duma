@@ -123,7 +123,7 @@ function AdminPage({ user }) {
         <div className="flex bg-white rounded-lg p-2 mb-8 shadow-lg">
           <button
             className={`flex-1 py-4 px-5 border-none bg-transparent cursor-pointer text-base font-medium rounded-md transition-all ${
-              activeTab === 'shops' ? 'bg-blue-500 text-white' : 'hover:bg-gray-100'
+              activeTab === 'shops' ? 'bg-[#2C6E49] text-white' : 'hover:bg-gray-100'
             }`}
             onClick={() => setActiveTab('shops')}
           >
@@ -131,7 +131,7 @@ function AdminPage({ user }) {
           </button>
           <button
             className={`flex-1 py-4 px-5 border-none bg-transparent cursor-pointer text-base font-medium rounded-md transition-all ${
-              activeTab === 'comments' ? 'bg-blue-500 text-white' : 'hover:bg-gray-100'
+              activeTab === 'comments' ? 'bg-[#2C6E49] text-white' : 'hover:bg-gray-100'
             }`}
             onClick={() => setActiveTab('comments')}
           >
@@ -238,7 +238,7 @@ function AdminPage({ user }) {
 
                 <button
                   type="submit"
-                  className="px-6 py-3 border-none rounded-md cursor-pointer text-sm font-medium transition-all mr-2 bg-[#4c5f0d] text-white hover:bg-[#3a4b0a]"
+                  className="px-6 py-3 border-none rounded-md cursor-pointer text-sm font-medium transition-all mr-2 bg-[#2C6E49] text-white hover:bg-[#2C6E49]"
                 >
                   {editingShop ? 'Update Shop' : 'Add Shop'}
                 </button>
@@ -320,7 +320,7 @@ function AdminPage({ user }) {
                 {comments.map((comment) => (
                   <div
                     key={comment.id}
-                    className="bg-gray-100 p-5 rounded-lg border-l-4 border-blue-500 flex justify-between items-center"
+                    className="bg-gray-100 p-5 rounded-lg border-l-4 border-[#2C6E49] flex justify-between items-center"
                   >
                     <div className="flex-1">
                       <div className="flex justify-between items-center mb-2">
