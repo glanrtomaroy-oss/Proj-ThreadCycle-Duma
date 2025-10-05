@@ -122,7 +122,7 @@ function AdminPage({ user }) {
 
         <div className="flex bg-white rounded-lg p-2 mb-8 shadow-lg">
           <button
-            className={`flex-1 py-4 px-5 border-none bg-transparent cursor-pointer text-base font-medium rounded-md transition-all ${
+            className={`flex-1 py-4 px-5 border-none bg-[#2C6E49] cursor-pointer text-base font-medium rounded-md transition-all ${
               activeTab === 'shops' ? 'bg-[#2C6E49] text-white' : 'hover:bg-gray-100'
             }`}
             onClick={() => setActiveTab('shops')}
@@ -130,7 +130,7 @@ function AdminPage({ user }) {
             Thrift Shops
           </button>
           <button
-            className={`flex-1 py-4 px-5 border-none bg-transparent cursor-pointer text-base font-medium rounded-md transition-all ${
+            className={`flex-1 py-4 px-5 border-none bg-[#2C6E49] cursor-pointer text-base font-medium rounded-md transition-all ${
               activeTab === 'comments' ? 'bg-[#2C6E49] text-white' : 'hover:bg-gray-100'
             }`}
             onClick={() => setActiveTab('comments')}
