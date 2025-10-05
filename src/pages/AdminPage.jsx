@@ -14,7 +14,7 @@ function AdminPage({ user }) {
   });
   const [editingShop, setEditingShop] = useState(null);
 
-  // Sample data - replace with API calls
+  // Sample data (address removed)
   useEffect(() => {
     setShops([
       {
@@ -283,15 +283,17 @@ function AdminPage({ user }) {
                         <strong>Items:</strong> {shop.itemTypes.join(', ')}
                       </p>
                     </div>
-                    <div className="flex gap-2">
+
+                    {/* Updated Button Styling */}
+                    <div className="flex flex-col gap-2">
                       <button
-                        className="px-6 py-3 bg-transparent border-2 border-[#4c5f0d] text-[#4c5f0d] rounded-md cursor-pointer text-sm font-medium transition-all hover:bg-[#4c5f0d] hover:text-white"
+                        className="px-6 py-2 border-2 border-green-700 text-green-700 bg-white rounded-md cursor-pointer text-sm font-medium transition-all hover:bg-green-700 hover:text-white"
                         onClick={() => handleEditShop(shop)}
                       >
                         Edit
                       </button>
                       <button
-                        className="px-6 py-3 bg-red-500 text-white border-none rounded-md cursor-pointer text-sm font-medium transition-all hover:bg-red-600"
+                        className="px-6 py-2 bg-red-500 text-white border-none rounded-md cursor-pointer text-sm font-medium transition-all hover:bg-red-600"
                         onClick={() => handleDeleteShop(shop.id)}
                       >
                         Delete
