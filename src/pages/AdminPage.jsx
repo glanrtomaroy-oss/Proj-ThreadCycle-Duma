@@ -121,27 +121,28 @@ function AdminPage({ user }) {
         </div>
 
         <div className="flex bg-white rounded-lg p-2 mb-8 shadow-lg">
-          <button
-              className={`flex-1 py-4 px-5 border-none cursor-pointer text-base font-medium rounded-md transition-all
-              ${activeTab === 'shops'
-                ? 'bg-white text-black shadow-md'
-                : 'bg-[#2C6E49] text-white hover:bg-[#25573A]'
+        <button
+          onClick={() => setActiveTab('shops')}
+          className={`flex-1 py-4 px-5 cursor-pointer text-base font-medium rounded-md transition-all
+            ${activeTab === 'shops'
+              ? 'bg-white text-[#2C6E49] border border-[#2C6E49] shadow-sm'
+              : 'bg-[#2C6E49] text-white hover:bg-[#25573A]'
             }`}
-            onClick={() => setActiveTab('shops')}
-          >
-            Thrift Shops
-          </button>
-          <button
-              className={`flex-1 py-4 px-5 border-none cursor-pointer text-base font-medium rounded-md transition-all
-              ${activeTab === 'shops'
-                ? 'bg-white text-black shadow-md'
-                : 'bg-[#2C6E49] text-white hover:bg-[#25573A]'
+        >
+          Thrift Shops
+        </button>
+      
+        <button
+          onClick={() => setActiveTab('comments')}
+          className={`flex-1 py-4 px-5 cursor-pointer text-base font-medium rounded-md transition-all
+            ${activeTab === 'comments'
+              ? 'bg-white text-[#2C6E49] border border-[#2C6E49] shadow-sm'
+              : 'bg-[#2C6E49] text-white hover:bg-[#25573A]'
             }`}
-            onClick={() => setActiveTab('comments')}
-          >
-            Comment Moderation
-          </button>
-        </div>
+        >
+          Comment Moderation
+        </button>
+      </div>
 
         {/* Thrift Shops Management */}
         {activeTab === 'shops' && (
