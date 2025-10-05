@@ -157,7 +157,7 @@ function AdminPage({ user }) {
                       type="text"
                       value={newShop.name}
                       onChange={(e) => setNewShop({ ...newShop, name: e.target.value })}
-                      className="w-full px-3 py-3 border-2 border-gray-200 rounded-md text-sm transition-colors focus:outline-none focus:border-blue-500"
+                      className="w-full px-3 py-3 border-2 border-gray-200 rounded-md text-sm transition-colors focus:outline-none focus:border-[#2C6E49]"
                       required
                       placeholder="Enter a shop name"
                     />
@@ -172,7 +172,7 @@ function AdminPage({ user }) {
                       step="any"
                       value={newShop.latitude}
                       onChange={(e) => setNewShop({ ...newShop, latitude: e.target.value })}
-                      className="w-full px-3 py-3 border-2 border-gray-200 rounded-md text-sm transition-colors focus:outline-none focus:border-blue-500"
+                      className="w-full px-3 py-3 border-2 border-gray-200 rounded-md text-sm transition-colors focus:outline-none focus:border-[#2C6E49]"
                       required
                       placeholder="e.g., 9.3057"
                     />
@@ -184,7 +184,7 @@ function AdminPage({ user }) {
                       step="any"
                       value={newShop.longitude}
                       onChange={(e) => setNewShop({ ...newShop, longitude: e.target.value })}
-                      className="w-full px-3 py-3 border-2 border-gray-200 rounded-md text-sm transition-colors focus:outline-none focus:border-blue-500"
+                      className="w-full px-3 py-3 border-2 border-gray-200 rounded-md text-sm transition-colors focus:outline-none focus:border-[#2C6E49]"
                       required
                       placeholder="e.g., 123.3055"
                     />
@@ -198,7 +198,7 @@ function AdminPage({ user }) {
                       type="text"
                       value={newShop.hours}
                       onChange={(e) => setNewShop({ ...newShop, hours: e.target.value })}
-                      className="w-full px-3 py-3 border-2 border-gray-200 rounded-md text-sm transition-colors focus:outline-none focus:border-blue-500"
+                      className="w-full px-3 py-3 border-2 border-gray-200 rounded-md text-sm transition-colors focus:outline-none focus:border-[#2C6E49]"
                       placeholder="e.g., 9:00 AM - 6:00 PM"
                     />
                   </div>
@@ -208,7 +208,7 @@ function AdminPage({ user }) {
                       type="text"
                       value={newShop.priceRange}
                       onChange={(e) => setNewShop({ ...newShop, priceRange: e.target.value })}
-                      className="w-full px-3 py-3 border-2 border-gray-200 rounded-md text-sm transition-colors focus:outline-none focus:border-blue-500"
+                      className="w-full px-3 py-3 border-2 border-gray-200 rounded-md text-sm transition-colors focus:outline-none focus:border-[#2C6E49]"
                       placeholder="e.g., ₱50 - ₱300"
                     />
                   </div>
@@ -272,7 +272,7 @@ function AdminPage({ user }) {
                 {shops.map((shop) => (
                   <div
                     key={shop.id}
-                    className="bg-gray-100 p-5 rounded-lg border-l-4 border-blue-500 flex justify-between items-center"
+                    className="bg-gray-100 p-5 rounded-lg border-l-4 border-[#2C6E49] flex justify-between items-center"
                   >
                     <div className="flex-1">
                       <h3 className="text-gray-800 mb-2">{shop.name}</h3>
