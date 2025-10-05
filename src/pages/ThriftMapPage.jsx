@@ -32,7 +32,6 @@ function ThriftMapPage() {
         .eq("Status", "visible");
       if (error) throw error;
 
-      // group by shop id
       const grouped = {};
       data.forEach((c) => {
         if (!grouped[c.ShopID]) grouped[c.ShopID] = [];
@@ -63,16 +62,17 @@ function ThriftMapPage() {
       }
 
       const { error } = await supabase.from("COMMENT").insert({
-        CommentText: text,
+        Content: text,
         ShopID: shopId,
         CustID: customer.CustID,
         Status: "visible",
+        CreationDate: new Date().toISOString(),
       });
 
       if (error) throw error;
 
-      setDraftComments((p) => ({ ...p, [shopId]: "" }));
-      fetchComments(); // refresh comments
+      setDraftComments((prev) => ({ ...prev, [shopId]: "" }));
+      fetchComments();
     } catch (err) {
       console.error("Error adding comment:", err.message);
     }
@@ -83,7 +83,6 @@ function ThriftMapPage() {
     fetchComments();
   }, []);
 
-  // Filter helpers
   const getPriceBucket = (priceText) => {
     if (!priceText) return "all";
     const text = priceText.replace(/\s|₱/g, "");
@@ -106,18 +105,15 @@ function ThriftMapPage() {
     <div className="bg-[#FEFEE3] min-h-screen pb-20">
       {/* Hero Section */}
       <section className="relative bg-[url('https://images.unsplash.com/photo-1558769132-cb1aea458c5e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1500&q=80')] bg-cover bg-center bg-no-repeat">
+        <div className="absolute inset-0 bg-gradient-to-r from-[#7a8450]/70 to-[rgba(38,70,83,0.8)]"></div>
 
-            {/* Gradient overlay */}
-            <div className="absolute inset-0 bg-gradient-to-r from-[#7a8450]/70 to-[rgba(38,70,83,0.8)]"></div>
-
-              <div className="relative w-full max-w-6xl mx-auto px-4 text-white py-20 text-center">
-                <h1 className="text-4xl font-bold mb-5">Thrift Shop Map</h1>
-                <p className="text-xl max-w-3xl mx-auto mb-8">
-                  Discover local ukay-ukay stores in Dumaguete City with interactive maps, details, price ranges, and user reviews
-                </p>
-              </div>
-            </section>
-
+        <div className="relative w-full max-w-6xl mx-auto px-4 text-white py-20 text-center">
+          <h1 className="text-4xl font-bold mb-5">Thrift Shop Map</h1>
+          <p className="text-xl max-w-3xl mx-auto mb-8">
+            Discover local ukay-ukay stores in Dumaguete City with interactive maps, details, price ranges, and user reviews
+          </p>
+        </div>
+      </section>
 
       {/* Map Placeholder */}
       <section className="max-w-6xl mx-auto mt-10 px-4">
@@ -179,109 +175,108 @@ function ThriftMapPage() {
 
         <div className="grid md:grid-cols-2 gap-6">
           {shops.filter(isShopInActiveFilters).map((shop) => (
-              <div
-                key={shop.ShopID}
-                className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition"
-              >
-                <div className="grid grid-cols-[1fr_auto]">
-                  <div className="p-5">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-4">
-                        <div className="w-28 h-28 bg-gray-100 rounded overflow-hidden flex-shrink-0">
-                          <img
-                            src={shop.Image || "/thriftshop.webp"}
-                            alt={shop.Name}
-                            className="w-full h-full object-cover"
-                          />
-                        </div>
-                        <div>
-                          <h4 className="text-xl font-semibold text-[#2C6E49]">
-                            {shop.Name}
-                          </h4>
-                          <div className="flex gap-2 mt-1 mb-1.5 text-sm">
-                            <span className="bg-gray-100 px-2 py-[2px] rounded">
-                              {shop.Category}
-                            </span>
-                            <span className="bg-gray-100 px-2 py-[2px] rounded">
-                              {shop.PriceRange}
-                            </span>
-                          </div>
-                          <p className="text-sm text-gray-600">
-                            {shop.StoreHours || ""}
-                          </p>
-                        </div>
+            <div
+              key={shop.ShopID}
+              className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition"
+            >
+              <div className="grid grid-cols-[1fr_auto]">
+                <div className="p-5">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-4">
+                      <div className="w-28 h-28 bg-gray-100 rounded overflow-hidden flex-shrink-0">
+                        <img
+                          src={shop.Image || "/thriftshop.webp"}
+                          alt={shop.Name}
+                          className="w-full h-full object-cover"
+                        />
                       </div>
-
-                      {/* Directions button */}
-                      <a
-                        href={`https://www.google.com/maps?q=${shop.Latitude},${shop.Longitude}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-sm bg-[#2C6E49] text-white px-4 py-2 rounded hover:bg-[#265a3e] transition"
-                      >
-                        Directions
-                      </a>
-                    </div>
-
-                    {/* Comments */}
-                    <div className="mt-4 border-t pt-3">
-                      <div className="flex items-center justify-between mb-2">
-                        <span className="text-sm font-medium text-gray-800">
-                          Comments ({comments[shop.ShopID]?.length || 0})
-                        </span>
-                      </div>
-
-                      {comments[shop.ShopID]?.length > 0 ? (
-                        <div className="space-y-2 max-h-[120px] overflow-y-auto pr-1">
-                          {comments[shop.ShopID].map((c) => (
-                            <div
-                              key={c.CommentID}
-                              className="text-sm bg-gray-50 rounded px-3 py-2"
-                            >
-                              <p className="text-gray-700">{c.CommentText}</p>
-                            </div>
-                          ))}
+                      <div>
+                        <h4 className="text-xl font-semibold text-[#2C6E49]">
+                          {shop.Name}
+                        </h4>
+                        <div className="flex gap-2 mt-1 mb-1.5 text-sm">
+                          <span className="bg-gray-100 px-2 py-[2px] rounded">
+                            {shop.Category}
+                          </span>
+                          <span className="bg-gray-100 px-2 py-[2px] rounded">
+                            {shop.PriceRange}
+                          </span>
                         </div>
-                      ) : (
-                        <p className="text-xs text-gray-500">No comments yet</p>
-                      )}
-
-                      {currentUser ? (
-                        <div className="mt-3 flex items-end gap-2">
-                          <input
-                            className="flex-1 border rounded px-3 py-2 text-sm"
-                            placeholder="Add a comment..."
-                            value={draftComments[shop.ShopID] || ""}
-                            onChange={(e) =>
-                              setDraftComments((p) => ({
-                                ...p,
-                                [shop.ShopID]: e.target.value,
-                              }))
-                            }
-                            onKeyDown={(e) => {
-                              if (e.key === "Enter" && !e.shiftKey) {
-                                e.preventDefault();
-                                submitComment(shop.ShopID);
-                              }
-                            }}
-                          />
-                          <button
-                            className="bg-[#2C6E49] text-white px-4 py-2 rounded hover:opacity-90"
-                            onClick={() => submitComment(shop.ShopID)}
-                          >
-                            Post
-                          </button>
-                        </div>
-                      ) : (
-                        <p className="text-xs text-gray-500 mt-2">
-                          Login to add a comment
+                        <p className="text-sm text-gray-600">
+                          {shop.StoreHours || ""}
                         </p>
-                      )}
+                      </div>
                     </div>
+
+                    {/* Directions Button */}
+                    <a
+                      href={`https://www.google.com/maps?q=${shop.Latitude},${shop.Longitude}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-sm bg-[#2C6E49] text-white px-4 py-2 rounded hover:bg-[#265a3e] transition"
+                    >
+                      Directions
+                    </a>
+                  </div>
+
+                  {/* Comments */}
+                  <div className="mt-4 border-t pt-3">
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-sm font-medium text-gray-800">
+                        Comments ({comments[shop.ShopID]?.length || 0})
+                      </span>
+                    </div>
+
+                    {comments[shop.ShopID]?.length > 0 ? (
+                      <div className="space-y-2 max-h-[120px] overflow-y-auto pr-1">
+                        {comments[shop.ShopID].map((c) => (
+                          <div
+                            key={c.ComID}
+                            className="text-sm bg-gray-50 rounded px-3 py-2"
+                          >
+                            <p className="text-gray-700">{c.Content}</p>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <p className="text-xs text-gray-500">No comments yet</p>
+                    )}
+
+                    {currentUser ? (
+                      <div className="mt-3 flex items-end gap-2">
+                        <input
+                          className="flex-1 border rounded px-3 py-2 text-sm"
+                          placeholder="Add a comment..."
+                          value={draftComments[shop.ShopID] || ""}
+                          onChange={(e) =>
+                            setDraftComments((p) => ({
+                              ...p,
+                              [shop.ShopID]: e.target.value,
+                            }))
+                          }
+                          onKeyDown={(e) => {
+                            if (e.key === "Enter" && !e.shiftKey) {
+                              e.preventDefault();
+                              submitComment(shop.ShopID);
+                            }
+                          }}
+                        />
+                        <button
+                          className="bg-[#2C6E49] text-white px-4 py-2 rounded hover:opacity-90"
+                          onClick={() => submitComment(shop.ShopID)}
+                        >
+                          Post
+                        </button>
+                      </div>
+                    ) : (
+                      <p className="text-xs text-gray-500 mt-2">
+                        Login to add a comment
+                      </p>
+                    )}
                   </div>
                 </div>
               </div>
-
+            </div>
           ))}
         </div>
 
@@ -294,4 +289,5 @@ function ThriftMapPage() {
     </div>
   );
 }
+
 export default ThriftMapPage;
