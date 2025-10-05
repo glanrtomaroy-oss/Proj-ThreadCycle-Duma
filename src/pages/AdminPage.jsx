@@ -7,7 +7,6 @@ function AdminPage({ user }) {
   const [users, setUsers] = useState([]);
   const [newShop, setNewShop] = useState({
     name: '',
-    address: '',
     latitude: '',
     longitude: '',
     hours: '',
