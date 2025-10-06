@@ -11,7 +11,7 @@ function AdminPage() {
     longitude: '',
     hours: '',
     priceRange: '',
-    Category: [],
+    itemTypes: [],
     Image: '',
   });
   const [editingShop, setEditingShop] = useState(null);
@@ -57,7 +57,7 @@ function AdminPage() {
           Longitude: parseFloat(newShop.longitude),
           OperatingHours: newShop.hours,
           PriceRange: newShop.priceRange,
-          Category: newShop.Category,
+          itemTypes: newShop.itemTypes,
           Image: newShop.Image || null
         }]);
 
@@ -69,7 +69,7 @@ function AdminPage() {
         longitude: '',
         hours: '',
         priceRange: '',
-        Category: [],
+        itemTypes: [],
         Image: '',
       });
      
@@ -92,7 +92,7 @@ function AdminPage() {
           Longitude: parseFloat(newShop.longitude),
           OperatingHours: newShop.hours,
           PriceRange: newShop.priceRange,
-          Category: newShop.Category,
+          itemTypes: newShop.itemTypes,
           Image: newShop.Image || null
         })
         .eq('ShopID', editingShop.ShopID);
@@ -106,7 +106,7 @@ function AdminPage() {
         longitude: '',
         hours: '',
         priceRange: '',
-        Category: [],
+        itemTypes: [],
         Image: '',
       });
      
@@ -181,7 +181,7 @@ function AdminPage() {
       longitude: shop.Longitude?.toString() || '',
       hours: shop.OperatingHours || '',
       priceRange: shop.PriceRange || '',
-      Category: shop.Category || [],
+      itemTypes: shop.itemTypes || [],
       Image: shop.Image || '',
     });
   };
@@ -325,12 +325,12 @@ function AdminPage() {
                       <label key={type} className="flex items-center gap-2 cursor-pointer">
                         <input
                           type="checkbox"
-                          checked={newShop.Category.includes(type)}
+                          checked={newShop.itemTypes.includes(type)}
                           onChange={(e) => {
                             const types = e.target.checked
-                              ? [...newShop.Category, type]
-                              : newShop.Category.filter((t) => t !== type);
-                            setNewShop({ ...newShop, Category: types });
+                              ? [...newShop.itemTypes, type]
+                              : newShop.itemTypes.filter((t) => t !== type);
+                            setNewShop({ ...newShop, itemTypes: types });
                           }}
                         />
                         {type.charAt(0).toUpperCase() + type.slice(1)}
@@ -357,7 +357,7 @@ function AdminPage() {
                         longitude: '',
                         hours: '',
                         priceRange: '',
-                        Category: [],
+                        itemTypes: [],
                         Image: ''
                       });
                     }}
@@ -382,7 +382,7 @@ function AdminPage() {
                       <h3 className="text-gray-800 mb-2">{shop.ShopName}</h3>
                       <p className="my-1 text-gray-600"><strong>Hours:</strong> {shop.OperatingHours}</p>
                       <p className="my-1 text-gray-600"><strong>Price Range:</strong> {shop.PriceRange}</p>
-                      <p className="my-1 text-gray-600"><strong>Items:</strong> {shop.Category?.join(', ') || 'None'}</p>
+                      <p className="my-1 text-gray-600"><strong>Items:</strong> {shop.itemTypes?.join(', ') || 'None'}</p>
                       <p className="my-1 text-gray-600 text-sm">
                         <strong>Location:</strong> {shop.Latitude}, {shop.Longitude}
                       </p>
