@@ -12,7 +12,7 @@ function AdminPage() {
     hours: '',
     priceRange: '',
     itemTypes: [],
-    image: '',
+    Image: '',
   });
   const [editingShop, setEditingShop] = useState(null);
 
@@ -58,7 +58,7 @@ function AdminPage() {
           OperatingHours: newShop.hours,
           PriceRange: newShop.priceRange,
           ItemTypes: newShop.itemTypes,
-          ImageURL: newShop.image || null
+          Image: newShop.Image || null
         }]);
 
       if (error) throw error;
@@ -70,7 +70,7 @@ function AdminPage() {
         hours: '',
         priceRange: '',
         itemTypes: [],
-        image: '',
+        Image: '',
       });
       
       fetchShops(); // Refresh the list
@@ -93,7 +93,7 @@ function AdminPage() {
           OperatingHours: newShop.hours,
           PriceRange: newShop.priceRange,
           ItemTypes: newShop.itemTypes,
-          ImageURL: newShop.image || null
+          Image: newShop.Image || null
         })
         .eq('ShopID', editingShop.ShopID);
 
@@ -107,7 +107,7 @@ function AdminPage() {
         hours: '',
         priceRange: '',
         itemTypes: [],
-        image: '',
+        Image: '',
       });
       
       fetchShops(); // Refresh the list
@@ -182,7 +182,7 @@ function AdminPage() {
       hours: shop.OperatingHours || '',
       priceRange: shop.PriceRange || '',
       itemTypes: shop.ItemTypes || [],
-      image: shop.ImageURL || '',
+      Image: shop.Image || '',
     });
   };
 
@@ -256,10 +256,10 @@ function AdminPage() {
                     <label className="block mb-2 text-gray-800 font-medium">Image URL</label>
                     <input
                       type="text"
-                      value={newShop.image}
-                      onChange={(e) => setNewShop({ ...newShop, image: e.target.value })}
+                      value={newShop.Image}
+                      onChange={(e) => setNewShop({ ...newShop, Image: e.target.value })}
                       className="w-full px-3 py-3 border-2 border-gray-200 rounded-md text-sm focus:outline-none focus:border-[#2C6E49]"
-                      placeholder="Paste image link (e.g., https://example.com/shop.jpg)"
+                      placeholder="Paste Image link (e.g., https://example.com/shop.jpg)"
                     />
                   </div>
 
@@ -358,7 +358,7 @@ function AdminPage() {
                         hours: '',
                         priceRange: '',
                         itemTypes: [],
-                        image: ''
+                        Image: ''
                       });
                     }}
                   >
