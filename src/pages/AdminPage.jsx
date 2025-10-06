@@ -11,6 +11,7 @@ function AdminPage({ user }) {
     hours: '',
     priceRange: '',
     itemTypes: []
+    image: '',
   });
   const [editingShop, setEditingShop] = useState(null);
 
@@ -175,32 +176,44 @@ function AdminPage({ user }) {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
-                  <div>
-                    <label className="block mb-2 text-gray-800 font-medium">Latitude</label>
-                    <input
-                      type="number"
-                      step="any"
-                      value={newShop.latitude}
-                      onChange={(e) => setNewShop({ ...newShop, latitude: e.target.value })}
-                      className="w-full px-3 py-3 border-2 border-gray-200 rounded-md text-sm focus:outline-none focus:border-[#2C6E49]"
-                      required
-                      placeholder="e.g., 9.3057"
-                    />
-                  </div>
-                  <div>
-                    <label className="block mb-2 text-gray-800 font-medium">Longitude</label>
-                    <input
-                      type="number"
-                      step="any"
-                      value={newShop.longitude}
-                      onChange={(e) => setNewShop({ ...newShop, longitude: e.target.value })}
-                      className="w-full px-3 py-3 border-2 border-gray-200 rounded-md text-sm focus:outline-none focus:border-[#2C6E49]"
-                      required
-                      placeholder="e.g., 123.3055"
-                    />
-                  </div>
-                </div>
+               <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-5">
+  <div>
+    <label className="block mb-2 text-gray-800 font-medium">Latitude</label>
+    <input
+      type="number"
+      step="any"
+      value={newShop.latitude}
+      onChange={(e) => setNewShop({ ...newShop, latitude: e.target.value })}
+      className="w-full px-3 py-3 border-2 border-gray-200 rounded-md text-sm focus:outline-none focus:border-[#2C6E49]"
+      required
+      placeholder="e.g., 9.3057"
+    />
+  </div>
+
+  <div>
+    <label className="block mb-2 text-gray-800 font-medium">Image URL</label>
+    <input
+      type="text"
+      value={newShop.image || ''}
+      onChange={(e) => setNewShop({ ...newShop, image: e.target.value })}
+      className="w-full px-3 py-3 border-2 border-gray-200 rounded-md text-sm focus:outline-none focus:border-[#2C6E49]"
+      placeholder="Paste image link (e.g., https://example.com/image.jpg)"
+    />
+  </div>
+
+  <div>
+    <label className="block mb-2 text-gray-800 font-medium">Longitude</label>
+    <input
+      type="number"
+      step="any"
+      value={newShop.longitude}
+      onChange={(e) => setNewShop({ ...newShop, longitude: e.target.value })}
+      className="w-full px-3 py-3 border-2 border-gray-200 rounded-md text-sm focus:outline-none focus:border-[#2C6E49]"
+      required
+      placeholder="e.g., 123.3055"
+    />
+  </div>
+</div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
                   <div>
