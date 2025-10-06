@@ -187,7 +187,7 @@ function AdminPage() {
       const { error } = await supabase
         .from("COMMENT")
         .delete()
-        .eq('CommentID', commentId);
+        .eq('ComID', commentId);
 
       if (error) throw error;
      
@@ -204,7 +204,7 @@ function AdminPage() {
       const { error } = await supabase
         .from("COMMENT")
         .update({ Status: status })
-        .eq('CommentID', commentId);
+        .eq('ComID', commentId);
 
       if (error) throw error;
      
