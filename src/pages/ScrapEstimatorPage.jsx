@@ -54,11 +54,11 @@ function ScrapEstimatorPage() {
           FabricType: fabricType,
           OriginalLength: originalLength,
           UsedLength: usedLength,
-          FabricSaved: fabricSaved, // ✅ match column name
+          FabricSaved: fabricSaved, // match column name
           CO2Reduction: 5,
           CustID: custId,
         }])
-        .select(); // ✅ return the inserted row
+        .select(); // return the inserted row
 
       if (error) throw error;
       return data;
