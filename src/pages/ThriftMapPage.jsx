@@ -19,7 +19,25 @@ function ThriftMapPage() {
   const mapContainerRef = useRef(null);
   const mapRef = useRef(null);
   const markersRef = useRef([]);
-  const mapboxToken = "pk.eyJ1IjoiZ2xhbnRvbSIsImEiOiJjbWdkZ293cXgxbnpnMm1zZ2FiZmhpdjU4In0.cebB2Cqp7oZJC2_oL9sfog";
+  const mapboxToken = import.meta.env.VITE_MAPBOX_TOKEN;
+
+  const getPriceBucket = (priceText) => {
+    if (!priceText) return "all";
+    const text = priceText.replace(/\s|₱/g, "");
+    if (/250\+/.test(text)) return "250+";
+    if (/50-100/.test(text)) return "50-100";
+    if (/100-250/.test(text)) return "100-250";
+    return "all";
+  };
+
+  const isShopInActiveFilters = (shop) => {
+    const categoryMatch =
+      activeCategory === "all" ||
+      (shop.Category || "").toLowerCase() === activeCategory;
+    const priceMatch =
+      activePrice === "all" || getPriceBucket(shop.PriceRange) === activePrice;
+    return categoryMatch && priceMatch;
+  };
 
   // Fetch thrift shops
   const fetchShops = async () => {
@@ -180,23 +198,7 @@ function ThriftMapPage() {
     }
   }, [filteredShops]);
 
-  const getPriceBucket = (priceText) => {
-    if (!priceText) return "all";
-    const text = priceText.replace(/\s|₱/g, "");
-    if (/250\+/.test(text)) return "250+";
-    if (/50-100/.test(text)) return "50-100";
-    if (/100-250/.test(text)) return "100-250";
-    return "all";
-  };
-
-  const isShopInActiveFilters = (shop) => {
-    const categoryMatch =
-      activeCategory === "all" ||
-      (shop.Category || "").toLowerCase() === activeCategory;
-    const priceMatch =
-      activePrice === "all" || getPriceBucket(shop.PriceRange) === activePrice;
-    return categoryMatch && priceMatch;
-  };
+  
 
   return (
     <div className="bg-[#FEFEE3] min-h-screen pb-20">
