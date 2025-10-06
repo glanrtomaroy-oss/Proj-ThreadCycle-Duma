@@ -3,6 +3,7 @@ import { supabase } from "../util/supabase";
 import { UserAuth } from "../context/AuthContext";
 import toast from "react-hot-toast";
 import mapboxgl from "mapbox-gl";
+import "mapbox-gl/dist/mapbox-gl.css";
 
 function ThriftMapPage() {
   const { session } = UserAuth();
