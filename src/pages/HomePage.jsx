@@ -1,9 +1,102 @@
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { supabase } from '../util/supabase';
 import { useNavigate } from 'react-router-dom';
+import mapboxgl from 'mapbox-gl';
+import 'mapbox-gl/dist/mapbox-gl.css';
+import toast from 'react-hot-toast';
 
 
 const HomePage = () => {
   const navigate = useNavigate();
+
+  // Map + data state
+  const [shops, setShops] = useState([]);
+  const mapContainerRef = useRef(null);
+  const mapRef = useRef(null);
+  const markersRef = useRef({}); // ShopID -> marker
+  const mapboxToken = import.meta.env.VITE_MAPBOX_TOKEN;
+
+  const fetchShops = async () => {
+    try {
+      const { data, error } = await supabase.from('THRIFT SHOP').select('*');
+      if (error) throw error;
+      setShops(data || []);
+    } catch (err) {
+      toast.error(`Unable to load store details. ${err?.message ?? ''}`);
+    }
+  };
+
+  useEffect(() => {
+    fetchShops();
+  }, []);
+
+  // Initialize Mapbox map once
+  useEffect(() => {
+    if (!mapContainerRef.current) return;
+    if (mapRef.current) return;
+
+    if (!mapboxToken) {
+      toast.error('Missing Mapbox token. Check your .env or Vercel settings.');
+      return;
+    }
+
+    mapboxgl.accessToken = mapboxToken;
+
+    const initialCenter = [123.3, 9.307];
+    mapRef.current = new mapboxgl.Map({
+      container: mapContainerRef.current,
+      style: 'mapbox://styles/mapbox/streets-v12',
+      center: initialCenter,
+      zoom: 12,
+    });
+
+    mapRef.current.addControl(new mapboxgl.NavigationControl({ showCompass: false }));
+    mapRef.current.on('load', () => {
+      mapRef.current?.resize();
+    });
+    mapRef.current.on('error', (e) => {
+      console.error('Mapbox error', e?.error || e);
+      toast.error('Map failed to load. Please refresh.');
+    });
+  }, [mapboxToken]);
+
+  // Render markers when shops change
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map) return;
+
+    // Clear existing markers
+    Object.values(markersRef.current).forEach((marker) => marker.remove());
+    markersRef.current = {};
+
+    const validShops = (shops || []).filter((s) =>
+      isFinite(Number(s.Latitude)) && isFinite(Number(s.Longitude))
+    );
+
+    validShops.forEach((shop) => {
+      const lat = Number(shop.Latitude);
+      const lng = Number(shop.Longitude);
+
+      const popupHtml = `
+        <div style="min-width:200px">
+          <div style=\"font-weight:600;color:#2C6E49;margin-bottom:4px\">${shop.Name ?? 'Thrift Shop'}</div>
+          <div style=\"font-size:12px;color:#555;margin-bottom:6px\">${(shop.Category ?? '').toString()} • ${(shop.PriceRange ?? '').toString()}</div>
+        </div>`;
+
+      const popup = new mapboxgl.Popup({ offset: 16 }).setHTML(popupHtml);
+      const marker = new mapboxgl.Marker({ color: '#2C6E49' })
+        .setLngLat([lng, lat])
+        .setPopup(popup)
+        .addTo(map);
+      markersRef.current[shop.ShopID] = marker;
+    });
+
+    if (validShops.length > 0) {
+      const bounds = new mapboxgl.LngLatBounds();
+      Object.values(markersRef.current).forEach((m) => bounds.extend(m.getLngLat()));
+      map.fitBounds(bounds, { padding: 40, maxZoom: 15 });
+    }
+  }, [shops]);
 
   return (
     <>
@@ -29,13 +122,13 @@ const HomePage = () => {
           </div>
 
           {/* Map Container */}
-          <div className="bg-white rounded-lg overflow-hidden shadow-lg mb-10 h-96 flex items-center justify-center relative">
-            <div className="text-center text-gray-600">
-              <i className="fas fa-map-marked-alt text-5xl mb-4 text-[#4c5f0d]"></i>
-              <h3 className="mb-2 text-gray-800">Interactive Thrift Shop Map</h3>
-              <p>Explore thrift shops in Dumaguete City</p>
-              <p className="text-sm"><small>Map integration with Google Maps API would be implemented here</small></p>
-              <button className="mt-4 px-4 py-2 bg-transparent border border-[#4c5f0d] text-[#4c5f0d] rounded hover:bg-[#4c5f0d] hover:text-white transition-colors" onClick={() => alert('Full screen map view would open here')}>
+          <div className="bg-white rounded-lg overflow-hidden shadow-lg mb-10 h-96 relative">
+            <div ref={mapContainerRef} className="absolute inset-0" />
+            <div className="absolute bottom-3 right-3 z-10">
+              <button
+                className="px-4 py-2 bg-transparent border border-[#4c5f0d] text-[#4c5f0d] rounded hover:bg-[#4c5f0d] hover:text-white transition-colors"
+                onClick={() => navigate('/thrift-map')}
+              >
                 View Larger Map
               </button>
             </div>
