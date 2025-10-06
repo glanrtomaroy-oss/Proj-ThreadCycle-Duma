@@ -130,7 +130,7 @@ function ThriftMapPage() {
     if (mapRef.current) return; // already initialized
 
     if (!mapboxToken) {
-      toast.error("Mapbox token missing. Set VITE_MAPBOX_TOKEN in your .env");
+      toast.error("Mapbox token missing.");
       return;
     }
 
