@@ -18,7 +18,8 @@ function ThriftMapPage() {
   // Mapbox setup
   const mapContainerRef = useRef(null);
   const mapRef = useRef(null);
-  const markersRef = useRef([]);
+  // Track markers by ShopID for quick focus
+  const markersRef = useRef({});
   const mapboxToken = import.meta.env.VITE_MAPBOX_TOKEN;
 
   const getPriceBucket = (priceText) => {
@@ -166,8 +167,8 @@ function ThriftMapPage() {
     if (!map) return;
 
     // Remove existing markers
-    markersRef.current.forEach((m) => m.remove());
-    markersRef.current = [];
+    Object.values(markersRef.current).forEach((m) => m.remove());
+    markersRef.current = {};
 
     filteredShops.forEach((shop) => {
       const lat = Number(shop.Latitude);
@@ -180,7 +181,6 @@ function ThriftMapPage() {
           <div style="font-size:12px;color:#555;margin-bottom:6px">
             ${(shop.Category ?? "").toString()} • ${(shop.PriceRange ?? "").toString()}
           </div>
-          <a href="https://www.google.com/maps?q=${lat},${lng}" target="_blank" rel="noopener noreferrer" style="font-size:12px;color:#2C6E49;text-decoration:underline">Directions</a>
         </div>`;
 
       const popup = new mapboxgl.Popup({ offset: 16 }).setHTML(popupHtml);
@@ -188,15 +188,41 @@ function ThriftMapPage() {
         .setLngLat([lng, lat])
         .setPopup(popup)
         .addTo(map);
-      markersRef.current.push(marker);
+      markersRef.current[shop.ShopID] = marker;
     });
 
-    if (markersRef.current.length > 0) {
+    const markerList = Object.values(markersRef.current);
+    if (markerList.length > 0) {
       const bounds = new mapboxgl.LngLatBounds();
-      markersRef.current.forEach((m) => bounds.extend(m.getLngLat()));
+      markerList.forEach((m) => bounds.extend(m.getLngLat()));
       map.fitBounds(bounds, { padding: 40, maxZoom: 15 });
     }
   }, [filteredShops]);
+
+  // Focus map on a shop and open its popup inline
+  const focusShopOnMap = (shop) => {
+    const map = mapRef.current;
+    if (!map) return;
+    const lat = Number(shop.Latitude);
+    const lng = Number(shop.Longitude);
+    if (!isFinite(lat) || !isFinite(lng)) {
+      toast.error("Location unavailable for this shop");
+      return;
+    }
+    map.flyTo({ center: [lng, lat], zoom: 15, essential: true });
+    const marker = markersRef.current[shop.ShopID];
+    if (marker) {
+      const popup = marker.getPopup?.();
+      // Open popup shortly after flyTo
+      setTimeout(() => {
+        if (popup && !popup.isOpen()) {
+          try {
+            marker.togglePopup();
+          } catch {}
+        }
+      }, 300);
+    }
+  };
 
   
 
@@ -307,15 +333,14 @@ function ThriftMapPage() {
                       </div>
                     </div>
 
-                    {/* Directions Button */}
-                    <a
-                      href={`https://www.google.com/maps?q=${shop.Latitude},${shop.Longitude}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
+                    {/* Directions Button - focus map inline (no new tab) */}
+                    <button
+                      type="button"
+                      onClick={() => focusShopOnMap(shop)}
                       className="text-sm bg-[#2C6E49] text-white px-4 py-2 rounded hover:bg-[#265a3e] transition"
                     >
                       Directions
-                    </a>
+                    </button>
                   </div>
 
                   {/* Comments */}
