@@ -1,18 +1,22 @@
-import { useEffect, useState } from "react";
-import { supabase } from "../util/supabase";
-import { UserAuth } from "../context/AuthContext";
+import { useState, useEffect } from "react";
+import supabase from "../supabase"; // ✅ make sure your supabase.js file is correct
 
-function ThriftMapPage() {
-  const { session } = UserAuth();
-  const currentUser = session?.user ?? null;
-
+function AdminPage({ user }) {
+  const [activeTab, setActiveTab] = useState("shops");
   const [shops, setShops] = useState([]);
   const [comments, setComments] = useState({});
-  const [draftComments, setDraftComments] = useState({});
-  const [activeCategory, setActiveCategory] = useState("all");
-  const [activePrice, setActivePrice] = useState("all");
+  const [newShop, setNewShop] = useState({
+    name: "",
+    latitude: "",
+    longitude: "",
+    hours: "",
+    priceRange: "",
+    itemTypes: [],
+    image: "",
+  });
+  const [editingShop, setEditingShop] = useState(null);
 
-  // Fetch thrift shops
+  // ✅ Fetch thrift shops from Supabase
   const fetchShops = async () => {
     try {
       const { data, error } = await supabase.from("THRIFT SHOP").select("*");
@@ -23,7 +27,7 @@ function ThriftMapPage() {
     }
   };
 
-  // Fetch approved comments
+  // ✅ Fetch approved comments (Status = "visible")
   const fetchComments = async () => {
     try {
       const { data, error } = await supabase
@@ -37,257 +41,179 @@ function ThriftMapPage() {
         if (!grouped[c.ShopID]) grouped[c.ShopID] = [];
         grouped[c.ShopID].push(c);
       });
+
       setComments(grouped);
     } catch (err) {
       console.error("Error fetching comments:", err.message);
     }
   };
 
-  // Submit a comment
-  const submitComment = async (shopId) => {
-    if (!currentUser) return;
-    const text = draftComments[shopId]?.trim();
-    if (!text) return;
-
-    try {
-      const { data: customer } = await supabase
-        .from("CUSTOMER")
-        .select("CustID")
-        .eq("Customer_uid", currentUser.id)
-        .maybeSingle();
-
-      if (!customer) {
-        alert("Customer record not found.");
-        return;
-      }
-
-      const { error } = await supabase.from("COMMENT").insert({
-        Content: text,
-        ShopID: shopId,
-        CustID: customer.CustID,
-        Status: "visible",
-        CreationDate: new Date().toISOString(),
-      });
-
-      if (error) throw error;
-
-      setDraftComments((prev) => ({ ...prev, [shopId]: "" }));
-      fetchComments();
-    } catch (err) {
-      console.error("Error adding comment:", err.message);
-    }
-  };
-
+  // ✅ Initial data load
   useEffect(() => {
     fetchShops();
     fetchComments();
   }, []);
 
-  const getPriceBucket = (priceText) => {
-    if (!priceText) return "all";
-    const text = priceText.replace(/\s|₱/g, "");
-    if (/250\+/.test(text)) return "250+";
-    if (/50-100/.test(text)) return "50-100";
-    if (/100-250/.test(text)) return "100-250";
-    return "all";
+  // 🔹 Handle Delete Shop
+  const handleDeleteShop = async (shopId) => {
+    try {
+      const { error } = await supabase
+        .from("THRIFT SHOP")
+        .delete()
+        .eq("ShopID", shopId);
+      if (error) throw error;
+      fetchShops();
+    } catch (err) {
+      console.error("Error deleting shop:", err.message);
+    }
   };
 
-  const isShopInActiveFilters = (shop) => {
-    const categoryMatch =
-      activeCategory === "all" ||
-      (shop.Category || "").toLowerCase() === activeCategory;
-    const priceMatch =
-      activePrice === "all" || getPriceBucket(shop.PriceRange) === activePrice;
-    return categoryMatch && priceMatch;
+  // 🔹 Handle Delete Comment
+  const handleDeleteComment = async (commentId) => {
+    try {
+      const { error } = await supabase
+        .from("COMMENT")
+        .delete()
+        .eq("ComID", commentId);
+      if (error) throw error;
+      fetchComments();
+    } catch (err) {
+      console.error("Error deleting comment:", err.message);
+    }
   };
 
   return (
-    <div className="bg-[#FEFEE3] min-h-screen pb-20">
-      {/* Hero Section */}
-      <section className="relative bg-[url('https://images.unsplash.com/photo-1558769132-cb1aea458c5e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1500&q=80')] bg-cover bg-center bg-no-repeat">
-        <div className="absolute inset-0 bg-gradient-to-r from-[#7a8450]/70 to-[rgba(38,70,83,0.8)]"></div>
-
-        <div className="relative w-full max-w-6xl mx-auto px-4 text-white py-20 text-center">
-          <h1 className="text-4xl font-bold mb-5">Thrift Shop Map</h1>
-          <p className="text-xl max-w-3xl mx-auto mb-8">
-            Discover local ukay-ukay stores in Dumaguete City with interactive maps, details, price ranges, and user reviews
+    <div className="min-h-[calc(100vh-200px)] bg-gray-100 py-10">
+      <div className="max-w-6xl mx-auto px-5">
+        <div className="text-center mb-10">
+          <h1 className="text-gray-800 text-4xl font-bold mb-2">Admin Dashboard</h1>
+          <p className="text-gray-600 text-lg">
+            Manage thrift shops and moderate comments
           </p>
         </div>
-      </section>
 
-      {/* Map Placeholder */}
-      <section className="max-w-6xl mx-auto mt-10 px-4">
-        <div className="bg-white shadow-lg rounded-xl h-[400px] flex items-center justify-center text-gray-500">
-          <p>Map view coming soon (Mapbox integration pending)</p>
+        {/* Tabs */}
+        <div className="flex bg-white rounded-lg p-2 mb-8 shadow-lg">
+          <button
+            onClick={() => setActiveTab("shops")}
+            className={`flex-1 py-4 px-5 cursor-pointer text-base font-medium rounded-md transition-all
+              ${
+                activeTab === "shops"
+                  ? "bg-white text-[#2C6E49] border border-[#2C6E49] shadow-sm"
+                  : "bg-[#2C6E49] text-white hover:bg-[#25573A]"
+              }`}
+          >
+            Thrift Shops
+          </button>
+
+          <button
+            onClick={() => setActiveTab("comments")}
+            className={`flex-1 py-4 px-5 cursor-pointer text-base font-medium rounded-md transition-all
+              ${
+                activeTab === "comments"
+                  ? "bg-white text-[#2C6E49] border border-[#2C6E49] shadow-sm"
+                  : "bg-[#2C6E49] text-white hover:bg-[#25573A]"
+              }`}
+          >
+            Comment Moderation
+          </button>
         </div>
-      </section>
 
-      {/* Filters */}
-      <section className="max-w-6xl mx-auto mt-10 px-4">
-        <div className="bg-white rounded-xl shadow p-6">
-          <div className="mb-6">
-            <h3 className="font-medium text-gray-800 mb-2">Category</h3>
-            <div className="flex flex-wrap gap-3">
-              {["all", "clothing", "shoes", "accessories"].map((c) => (
-                <button
-                  key={c}
-                  onClick={() => setActiveCategory(c)}
-                  className={`px-4 py-2 rounded-full border ${
-                    activeCategory === c
-                      ? "bg-[#2C6E49] text-white border-[#2C6E49]"
-                      : "bg-gray-100 border-gray-200 hover:bg-[#2C6E49] hover:text-white"
-                  }`}
-                >
-                  {c === "all"
-                    ? "All Shops"
-                    : c.charAt(0).toUpperCase() + c.slice(1)}
-                </button>
-              ))}
-            </div>
-          </div>
+        {/* 🏪 Thrift Shop Management */}
+        {activeTab === "shops" && (
+          <div className="bg-white rounded-lg p-8 shadow-lg">
+            <h2 className="text-gray-800 mb-5 text-2xl font-bold border-b-2 border-gray-100 pb-2">
+              Manage Thrift Shops
+            </h2>
 
-          <div>
-            <h3 className="font-medium text-gray-800 mb-2">Price Range</h3>
-            <div className="flex flex-wrap gap-3">
-              {["all", "50-100", "100-250", "250+"].map((p) => (
-                <button
-                  key={p}
-                  onClick={() => setActivePrice(p)}
-                  className={`px-4 py-2 rounded-full border ${
-                    activePrice === p
-                      ? "bg-[#2C6E49] text-white border-[#2C6E49]"
-                      : "bg-gray-100 border-gray-200 hover:bg-[#2C6E49] hover:text-white"
-                  }`}
-                >
-                  {p === "all" ? "Any Price" : `₱${p}`}
-                </button>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Shop Cards */}
-      <section className="max-w-6xl mx-auto mt-12 px-4">
-        <h3 className="text-center text-gray-800 font-semibold text-2xl mb-8">
-          Thrift Shop Listings
-        </h3>
-
-        <div className="grid md:grid-cols-2 gap-6">
-          {shops.filter(isShopInActiveFilters).map((shop) => (
-            <div
-              key={shop.ShopID}
-              className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition"
-            >
-              <div className="grid grid-cols-[1fr_auto]">
-                <div className="p-5">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-4">
-                      <div className="w-28 h-28 bg-gray-100 rounded overflow-hidden flex-shrink-0">
-                        <img
-                          src={shop.Image || "/thriftshop.webp"}
-                          alt={shop.Name}
-                          className="w-full h-full object-cover"
-                        />
-                      </div>
-                      <div>
-                        <h4 className="text-xl font-semibold text-[#2C6E49]">
-                          {shop.Name}
-                        </h4>
-                        <div className="flex gap-2 mt-1 mb-1.5 text-sm">
-                          <span className="bg-gray-100 px-2 py-[2px] rounded">
-                            {shop.Category}
-                          </span>
-                          <span className="bg-gray-100 px-2 py-[2px] rounded">
-                            {shop.PriceRange}
-                          </span>
-                        </div>
-                        <p className="text-sm text-gray-600">
-                          {shop.StoreHours || ""}
-                        </p>
-                      </div>
+            <div className="grid gap-5">
+              {shops.length === 0 ? (
+                <p className="text-gray-500">No thrift shops found.</p>
+              ) : (
+                shops.map((shop) => (
+                  <div
+                    key={shop.ShopID}
+                    className="bg-gray-100 p-5 rounded-lg border-l-4 border-[#2C6E49] flex justify-between items-center"
+                  >
+                    <div className="flex-1">
+                      <h3 className="text-gray-800 mb-2 font-semibold">
+                        {shop.Name}
+                      </h3>
+                      <p className="my-1 text-gray-600">
+                        <strong>Hours:</strong> {shop.StoreHours}
+                      </p>
+                      <p className="my-1 text-gray-600">
+                        <strong>Price Range:</strong> {shop.PriceRange}
+                      </p>
+                      <p className="my-1 text-gray-600">
+                        <strong>Category:</strong> {shop.Category}
+                      </p>
                     </div>
 
-                    {/* Directions Button */}
-                    <a
-                      href={`https://www.google.com/maps?q=${shop.Latitude},${shop.Longitude}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-sm bg-[#2C6E49] text-white px-4 py-2 rounded hover:bg-[#265a3e] transition"
-                    >
-                      Directions
-                    </a>
+                    <div className="flex flex-col gap-2">
+                      <button
+                        className="px-6 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition-all"
+                        onClick={() => handleDeleteShop(shop.ShopID)}
+                      >
+                        Delete
+                      </button>
+                    </div>
                   </div>
+                ))
+              )}
+            </div>
+          </div>
+        )}
 
-                  {/* Comments */}
-                  <div className="mt-4 border-t pt-3">
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="text-sm font-medium text-gray-800">
-                        Comments ({comments[shop.ShopID]?.length || 0})
-                      </span>
-                    </div>
+        {/* 💬 Comment Moderation */}
+        {activeTab === "comments" && (
+          <div className="bg-white rounded-lg p-8 shadow-lg">
+            <h2 className="text-gray-800 mb-5 text-2xl font-bold border-b-2 border-gray-100 pb-2">
+              Comment Moderation
+            </h2>
 
-                    {comments[shop.ShopID]?.length > 0 ? (
-                      <div className="space-y-2 max-h-[120px] overflow-y-auto pr-1">
-                        {comments[shop.ShopID].map((c) => (
-                          <div
-                            key={c.ComID}
-                            className="text-sm bg-gray-50 rounded px-3 py-2"
-                          >
-                            <p className="text-gray-700">{c.Content}</p>
-                          </div>
-                        ))}
-                      </div>
-                    ) : (
-                      <p className="text-xs text-gray-500">No comments yet</p>
-                    )}
+            {Object.keys(comments).length === 0 ? (
+              <p className="text-gray-500">No visible comments yet.</p>
+            ) : (
+              Object.entries(comments).map(([shopId, shopComments]) => (
+                <div key={shopId} className="mb-8">
+                  <h3 className="text-xl font-semibold text-[#2C6E49] mb-3">
+                    Shop ID: {shopId}
+                  </h3>
 
-                    {currentUser ? (
-                      <div className="mt-3 flex items-end gap-2">
-                        <input
-                          className="flex-1 border rounded px-3 py-2 text-sm"
-                          placeholder="Add a comment..."
-                          value={draftComments[shop.ShopID] || ""}
-                          onChange={(e) =>
-                            setDraftComments((p) => ({
-                              ...p,
-                              [shop.ShopID]: e.target.value,
-                            }))
-                          }
-                          onKeyDown={(e) => {
-                            if (e.key === "Enter" && !e.shiftKey) {
-                              e.preventDefault();
-                              submitComment(shop.ShopID);
-                            }
-                          }}
-                        />
+                  <div className="grid gap-5">
+                    {shopComments.map((comment) => (
+                      <div
+                        key={comment.ComID}
+                        className="bg-gray-100 p-5 rounded-lg border-l-4 border-[#2C6E49] flex justify-between items-center"
+                      >
+                        <div className="flex-1">
+                          <p className="text-gray-800 mb-1">
+                            <strong>Content:</strong> {comment.Content}
+                          </p>
+                          <p className="text-gray-600 text-sm">
+                            <strong>Date:</strong>{" "}
+                            {new Date(comment.CreationDate).toLocaleDateString()}
+                          </p>
+                        </div>
+
                         <button
-                          className="bg-[#2C6E49] text-white px-4 py-2 rounded hover:opacity-90"
-                          onClick={() => submitComment(shop.ShopID)}
+                          className="bg-[#E63946] hover:bg-[#C92D39] text-white px-4 py-2 rounded-md text-sm font-medium"
+                          onClick={() => handleDeleteComment(comment.ComID)}
                         >
-                          Post
+                          Delete
                         </button>
                       </div>
-                    ) : (
-                      <p className="text-xs text-gray-500 mt-2">
-                        Login to add a comment
-                      </p>
-                    )}
+                    ))}
                   </div>
                 </div>
-              </div>
-            </div>
-          ))}
-        </div>
-
-        {shops.length === 0 && (
-          <p className="text-center text-gray-500 mt-8">
-            No thrift shops found.
-          </p>
+              ))
+            )}
+          </div>
         )}
-      </section>
+      </div>
     </div>
   );
 }
 
-export default ThriftMapPage;
+export default AdminPage;
