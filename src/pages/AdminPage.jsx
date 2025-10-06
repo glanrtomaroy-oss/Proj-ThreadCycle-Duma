@@ -479,34 +479,10 @@ function AdminPage() {
                       <div className="text-sm text-gray-600 mt-2">
                         <span className="font-semibold">Shop:</span> {comment['THRIFT SHOP']?.Name || 'Unknown Shop'} &nbsp;
                         <span className="font-semibold">Date:</span> {new Date(comment.CreationDate).toLocaleDateString()} &nbsp;
-                        //<span className="font-semibold">Status:</span>
-                        //<span className={`ml-1 px-2 py-1 rounded text-xs ${
-                        //   comment.Status === 'visible'
-                        //     ? 'bg-green-100 text-green-800'
-                        //     : 'bg-yellow-100 text-yellow-800'
-                        // }`}>
-                        //   {comment.Status}
-                        // </span>
                       </div>
                     </div>
 
                     <div className="flex gap-2 flex-wrap">
-                      {comment.Status !== 'visible' && (
-                        <button
-                          className="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded text-sm"
-                          onClick={() => handleUpdateCommentStatus(comment.CommentID, 'visible')}
-                        >
-                          Approve
-                        </button>
-                      )}
-                      {comment.Status !== 'hidden' && (
-                        <button
-                          className="bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-1 rounded text-sm"
-                          onClick={() => handleUpdateCommentStatus(comment.CommentID, 'hidden')}
-                        >
-                          Hide
-                        </button>
-                      )}
                       <button
                         className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm"
                         onClick={() => handleDeleteComment(comment.CommentID)}
