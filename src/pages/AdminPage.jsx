@@ -9,9 +9,9 @@ function AdminPage() {
     name: '',
     latitude: '',
     longitude: '',
-    StoreHours: '',
-    PriceRange: '',
-    Category: [],
+    hours: '',
+    priceRange: '',
+    ItemTypes: [],
     image: '',
   });
   const [editingShop, setEditingShop] = useState(null);
@@ -52,13 +52,13 @@ function AdminPage() {
       const { error } = await supabase
         .from("THRIFT SHOP")
         .insert([{
-          ShopName: newShop.name,
+          Name: newShop.name,
           Latitude: parseFloat(newShop.latitude),
           Longitude: parseFloat(newShop.longitude),
-          OperatingHours: newShop.hours,
+          StoreHours: newShop.hours,
           PriceRange: newShop.priceRange,
-          ItemTypes: newShop.itemTypes,
-          Image: newShop.Image || null
+          Category: newShop.itemTypes,
+          Image: newShop.image || null
         }]);
 
       if (error) throw error;
@@ -87,13 +87,13 @@ function AdminPage() {
       const { error } = await supabase
         .from("THRIFT SHOP")
         .update({
-          ShopName: newShop.name,
+          Name: newShop.name,
           Latitude: parseFloat(newShop.latitude),
           Longitude: parseFloat(newShop.longitude),
-          OperatingHours: newShop.hours,
+          StoreHours: newShop.hours,
           PriceRange: newShop.priceRange,
-          ItemTypes: newShop.itemTypes,
-          Image: newShop.Image || null
+          Category: newShop.itemTypes,
+          Image: newShop.image || null
         })
         .eq('ShopID', editingShop.ShopID);
 
@@ -179,10 +179,10 @@ function AdminPage() {
       name: shop.ShopName || '',
       latitude: shop.Latitude?.toString() || '',
       longitude: shop.Longitude?.toString() || '',
-      hours: shop.OperatingHours || '',
+      hours: shop.StoreHours || '',
       priceRange: shop.PriceRange || '',
-      itemTypes: shop.ItemTypes || [],
-      Image: shop.Image || '',
+      itemTypes: shop.Category || [],
+      image: shop.Image || '',
     });
   };
 
