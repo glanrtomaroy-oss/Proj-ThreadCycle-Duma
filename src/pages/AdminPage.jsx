@@ -1,25 +1,24 @@
-import { useState, useEffect } from 'react';
-import { supabase } from '../util/supabase'; // Adjust import path as needed
+import { useState, useEffect } from "react";
+import { supabase } from "../util/supabase"; // ✅ Adjust path as needed
 
 function AdminPage() {
-  const [activeTab, setActiveTab] = useState('shops');
+  const [activeTab, setActiveTab] = useState("shops");
   const [shops, setShops] = useState([]);
   const [comments, setComments] = useState([]);
   const [newShop, setNewShop] = useState({
-    name: '',
-    latitude: '',
-    longitude: '',
-    hours: '',
-    priceRange: '',
-    ItemTypes: [],
-    image: '',
+    name: "",
+    latitude: "",
+    category: "",
+    hours: "",
+    priceRange: "",
+    image: "",
   });
   const [editingShop, setEditingShop] = useState(null);
 
-  // Fetch thrift shops
+  // ✅ Fetch thrift shops
   const fetchShops = async () => {
     try {
-      const { data, error } = await supabase.from("THRIFT SHOP").select("*");
+      const { data, error } = await supabase.from("THRIFTSHOP").select("*");
       if (error) throw error;
       setShops(data || []);
     } catch (err) {
@@ -27,17 +26,16 @@ function AdminPage() {
     }
   };
 
-  // Fetch all comments for moderation
+  // ✅ Fetch all comments (with relationships)
   const fetchComments = async () => {
     try {
       const { data, error } = await supabase
         .from("COMMENT")
         .select(`
           *,
-          THRIFT SHOP (ShopName),
-          CUSTOMER (Username)
+          THRIFTSHOP(Name),
+          CUSTOMER(Username)
         `);
-     
       if (error) throw error;
       setComments(data || []);
     } catch (err) {
@@ -45,144 +43,113 @@ function AdminPage() {
     }
   };
 
-  // Add new thrift shop
+  // ✅ Add new thrift shop
   const handleAddShop = async (e) => {
     e.preventDefault();
     try {
-      const { error } = await supabase
-        .from("THRIFT SHOP")
-        .insert([{
+      const { error } = await supabase.from("THRIFTSHOP").insert([
+        {
           Name: newShop.name,
           Latitude: parseFloat(newShop.latitude),
-          Longitude: parseFloat(newShop.longitude),
+          Category: newShop.category,
           StoreHours: newShop.hours,
           PriceRange: newShop.priceRange,
-          Category: newShop.itemTypes,
-          Image: newShop.image || null
-        }]);
+          Image: newShop.image || null,
+        },
+      ]);
 
       if (error) throw error;
-
       setNewShop({
-        name: '',
-        latitude: '',
-        longitude: '',
-        hours: '',
-        priceRange: '',
-        itemTypes: [],
-        Image: '',
+        name: "",
+        latitude: "",
+        category: "",
+        hours: "",
+        priceRange: "",
+        image: "",
       });
-     
-      fetchShops(); // Refresh the list
+      fetchShops();
     } catch (err) {
       console.error("Error adding shop:", err.message);
       alert("Error adding shop: " + err.message);
     }
   };
 
-  // Update existing shop
+  // ✅ Update existing shop
   const handleUpdateShop = async (e) => {
     e.preventDefault();
     try {
       const { error } = await supabase
-        .from("THRIFT SHOP")
+        .from("THRIFTSHOP")
         .update({
           Name: newShop.name,
           Latitude: parseFloat(newShop.latitude),
-          Longitude: parseFloat(newShop.longitude),
+          Category: newShop.category,
           StoreHours: newShop.hours,
           PriceRange: newShop.priceRange,
-          Category: newShop.itemTypes,
-          Image: newShop.image || null
+          Image: newShop.image || null,
         })
-        .eq('ShopID', editingShop.ShopID);
+        .eq("ShopID", editingShop.ShopID);
 
       if (error) throw error;
 
       setEditingShop(null);
       setNewShop({
-        name: '',
-        latitude: '',
-        longitude: '',
-        hours: '',
-        priceRange: '',
-        itemTypes: [],
-        Image: '',
+        name: "",
+        latitude: "",
+        category: "",
+        hours: "",
+        priceRange: "",
+        image: "",
       });
-     
-      fetchShops(); // Refresh the list
+      fetchShops();
     } catch (err) {
       console.error("Error updating shop:", err.message);
       alert("Error updating shop: " + err.message);
     }
   };
 
-  // Delete shop
+  // ✅ Delete thrift shop
   const handleDeleteShop = async (shopId) => {
     if (!window.confirm("Are you sure you want to delete this shop?")) return;
-   
     try {
       const { error } = await supabase
-        .from("THRIFT SHOP")
+        .from("THRIFTSHOP")
         .delete()
-        .eq('ShopID', shopId);
-
+        .eq("ShopID", shopId);
       if (error) throw error;
-     
-      fetchShops(); // Refresh the list
+      fetchShops();
     } catch (err) {
       console.error("Error deleting shop:", err.message);
       alert("Error deleting shop: " + err.message);
     }
   };
 
-  // Comment moderation - delete comment
+  // ✅ Delete comment
   const handleDeleteComment = async (commentId) => {
     if (!window.confirm("Are you sure you want to delete this comment?")) return;
-   
     try {
       const { error } = await supabase
         .from("COMMENT")
         .delete()
-        .eq('CommentID', commentId);
-
+        .eq("ComID", commentId);
       if (error) throw error;
-     
-      fetchComments(); // Refresh the list
+      fetchComments();
     } catch (err) {
       console.error("Error deleting comment:", err.message);
       alert("Error deleting comment: " + err.message);
     }
   };
 
-  // Comment moderation - update comment status
-  const handleUpdateCommentStatus = async (commentId, status) => {
-    try {
-      const { error } = await supabase
-        .from("COMMENT")
-        .update({ Status: status })
-        .eq('CommentID', commentId);
-
-      if (error) throw error;
-     
-      fetchComments(); // Refresh the list
-    } catch (err) {
-      console.error("Error updating comment status:", err.message);
-      alert("Error updating comment status: " + err.message);
-    }
-  };
-
-  // Set editing shop
+  // ✅ Set edit mode
   const handleEditShop = (shop) => {
     setEditingShop(shop);
     setNewShop({
-      name: shop.ShopName || '',
-      latitude: shop.Latitude?.toString() || '',
-      longitude: shop.Longitude?.toString() || '',
-      hours: shop.StoreHours || '',
-      priceRange: shop.PriceRange || '',
-      itemTypes: shop.Category || [],
-      image: shop.Image || '',
+      name: shop.Name || "",
+      latitude: shop.Latitude?.toString() || "",
+      category: shop.Category || "",
+      hours: shop.StoreHours || "",
+      priceRange: shop.PriceRange || "",
+      image: shop.Image || "",
     });
   };
 
@@ -192,185 +159,176 @@ function AdminPage() {
   }, []);
 
   return (
-    <div className="min-h-[calc(100vh-200px)] bg-gray-100 py-10">
+    <div className="min-h-screen bg-gray-100 py-10">
       <div className="max-w-6xl mx-auto px-5">
         <div className="text-center mb-10">
-          <h1 className="text-gray-800 text-4xl font-bold mb-2">Admin Dashboard</h1>
-          <p className="text-gray-600 text-lg">Manage thrift shops and moderate comments</p>
+          <h1 className="text-4xl font-bold text-gray-800 mb-2">Admin Dashboard</h1>
+          <p className="text-gray-600 text-lg">
+            Manage thrift shops and moderate comments
+          </p>
         </div>
 
         {/* Tabs */}
         <div className="flex bg-white rounded-lg p-2 mb-8 shadow-lg gap-2">
           <button
-            onClick={() => setActiveTab('shops')}
-            className={`flex-1 py-4 px-5 cursor-pointer text-base font-medium rounded-md transition-all
-              ${
-                activeTab === 'shops'
-                  ? 'bg-white text-[#2C6E49] border border-[#2C6E49] shadow-sm'
-                  : 'bg-[#2C6E49] text-white hover:bg-[#25573A]'
-              }`}
+            onClick={() => setActiveTab("shops")}
+            className={`flex-1 py-4 px-5 rounded-md font-medium transition-all ${
+              activeTab === "shops"
+                ? "bg-white text-[#2C6E49] border border-[#2C6E49]"
+                : "bg-[#2C6E49] text-white hover:bg-[#25573A]"
+            }`}
           >
             Thrift Shops
           </button>
-
           <button
-            onClick={() => setActiveTab('comments')}
-            className={`flex-1 py-4 px-5 cursor-pointer text-base font-medium rounded-md transition-all
-              ${
-                activeTab === 'comments'
-                  ? 'bg-white text-[#2C6E49] border border-[#2C6E49] shadow-sm'
-                  : 'bg-[#2C6E49] text-white hover:bg-[#25573A]'
-              }`}
+            onClick={() => setActiveTab("comments")}
+            className={`flex-1 py-4 px-5 rounded-md font-medium transition-all ${
+              activeTab === "comments"
+                ? "bg-white text-[#2C6E49] border border-[#2C6E49]"
+                : "bg-[#2C6E49] text-white hover:bg-[#25573A]"
+            }`}
           >
-            Comment Moderation
+            Comments
           </button>
         </div>
 
-        {/* Thrift Shops Management */}
-        {activeTab === 'shops' && (
+        {/* Thrift Shop Management */}
+        {activeTab === "shops" && (
           <div className="bg-white rounded-lg p-8 shadow-lg">
-            <div className="mb-10">
-              <h2 className="text-gray-800 mb-5 text-2xl font-bold border-b-2 border-gray-100 pb-2">
-                {editingShop ? 'Edit Thrift Shop' : 'Add New Thrift Shop'}
-              </h2>
-              <form
-                onSubmit={editingShop ? handleUpdateShop : handleAddShop}
-                className="bg-gray-100 p-6 rounded-lg mb-8"
+            <h2 className="text-2xl font-bold mb-5 text-gray-800">
+              {editingShop ? "Edit Thrift Shop" : "Add New Thrift Shop"}
+            </h2>
+
+            <form
+              onSubmit={editingShop ? handleUpdateShop : handleAddShop}
+              className="bg-gray-100 p-6 rounded-lg mb-8"
+            >
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <div>
+                  <label className="block mb-2 font-medium text-gray-800">
+                    Shop Name
+                  </label>
+                  <input
+                    type="text"
+                    value={newShop.name}
+                    onChange={(e) =>
+                      setNewShop({ ...newShop, name: e.target.value })
+                    }
+                    className="w-full px-3 py-3 border-2 border-gray-200 rounded-md focus:border-[#2C6E49]"
+                    required
+                  />
+                </div>
+
+                <div>
+                  <label className="block mb-2 font-medium text-gray-800">
+                    Image URL
+                  </label>
+                  <input
+                    type="text"
+                    value={newShop.image}
+                    onChange={(e) =>
+                      setNewShop({ ...newShop, image: e.target.value })
+                    }
+                    className="w-full px-3 py-3 border-2 border-gray-200 rounded-md focus:border-[#2C6E49]"
+                    placeholder="https://example.com/image.jpg"
+                  />
+                </div>
+
+                <div>
+                  <label className="block mb-2 font-medium text-gray-800">
+                    Latitude
+                  </label>
+                  <input
+                    type="number"
+                    step="any"
+                    value={newShop.latitude}
+                    onChange={(e) =>
+                      setNewShop({ ...newShop, latitude: e.target.value })
+                    }
+                    className="w-full px-3 py-3 border-2 border-gray-200 rounded-md focus:border-[#2C6E49]"
+                    required
+                  />
+                </div>
+
+                <div>
+                  <label className="block mb-2 font-medium text-gray-800">
+                    Category
+                  </label>
+                  <input
+                    type="text"
+                    value={newShop.category}
+                    onChange={(e) =>
+                      setNewShop({ ...newShop, category: e.target.value })
+                    }
+                    className="w-full px-3 py-3 border-2 border-gray-200 rounded-md focus:border-[#2C6E49]"
+                    placeholder="e.g., Clothing, Bags, Shoes"
+                  />
+                </div>
+
+                <div>
+                  <label className="block mb-2 font-medium text-gray-800">
+                    Store Hours
+                  </label>
+                  <input
+                    type="text"
+                    value={newShop.hours}
+                    onChange={(e) =>
+                      setNewShop({ ...newShop, hours: e.target.value })
+                    }
+                    className="w-full px-3 py-3 border-2 border-gray-200 rounded-md focus:border-[#2C6E49]"
+                    placeholder="e.g., 9AM - 6PM"
+                    required
+                  />
+                </div>
+
+                <div>
+                  <label className="block mb-2 font-medium text-gray-800">
+                    Price Range
+                  </label>
+                  <input
+                    type="text"
+                    value={newShop.priceRange}
+                    onChange={(e) =>
+                      setNewShop({ ...newShop, priceRange: e.target.value })
+                    }
+                    className="w-full px-3 py-3 border-2 border-gray-200 rounded-md focus:border-[#2C6E49]"
+                    placeholder="e.g., ₱100 - ₱500"
+                  />
+                </div>
+              </div>
+
+              <button
+                type="submit"
+                className="mt-6 px-6 py-3 bg-[#2C6E49] text-white rounded-md hover:bg-[#25573A]"
               >
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
-                  {/* Shop Name */}
-                  <div>
-                    <label className="block mb-2 text-gray-800 font-medium">Shop Name</label>
-                    <input
-                      type="text"
-                      value={newShop.name}
-                      onChange={(e) => setNewShop({ ...newShop, name: e.target.value })}
-                      className="w-full px-3 py-3 border-2 border-gray-200 rounded-md text-sm focus:outline-none focus:border-[#2C6E49]"
-                      required
-                      placeholder="Enter shop name"
-                    />
-                  </div>
+                {editingShop ? "Update Shop" : "Add Shop"}
+              </button>
 
-                  {/* Image URL */}
-                  <div>
-                    <label className="block mb-2 text-gray-800 font-medium">Image URL</label>
-                    <input
-                      type="text"
-                      value={newShop.Image}
-                      onChange={(e) => setNewShop({ ...newShop, Image: e.target.value })}
-                      className="w-full px-3 py-3 border-2 border-gray-200 rounded-md text-sm focus:outline-none focus:border-[#2C6E49]"
-                      placeholder="Paste Image link (e.g., https://example.com/shop.jpg)"
-                    />
-                  </div>
-
-                  {/* Latitude */}
-                  <div>
-                    <label className="block mb-2 text-gray-800 font-medium">Latitude</label>
-                    <input
-                      type="number"
-                      step="any"
-                      value={newShop.latitude}
-                      onChange={(e) => setNewShop({ ...newShop, latitude: e.target.value })}
-                      className="w-full px-3 py-3 border-2 border-gray-200 rounded-md text-sm focus:outline-none focus:border-[#2C6E49]"
-                      required
-                      placeholder="e.g., 9.3057"
-                    />
-                  </div>
-
-                  {/* Longitude */}
-                  <div>
-                    <label className="block mb-2 text-gray-800 font-medium">Longitude</label>
-                    <input
-                      type="number"
-                      step="any"
-                      value={newShop.longitude}
-                      onChange={(e) => setNewShop({ ...newShop, longitude: e.target.value })}
-                      className="w-full px-3 py-3 border-2 border-gray-200 rounded-md text-sm focus:outline-none focus:border-[#2C6E49]"
-                      required
-                      placeholder="e.g., 123.3055"
-                    />
-                  </div>
-
-                  {/* Operating Hours */}
-                  <div>
-                    <label className="block mb-2 text-gray-800 font-medium">Operating Hours</label>
-                    <input
-                      type="text"
-                      value={newShop.hours}
-                      onChange={(e) => setNewShop({ ...newShop, hours: e.target.value })}
-                      className="w-full px-3 py-3 border-2 border-gray-200 rounded-md text-sm focus:outline-none focus:border-[#2C6E49]"
-                      required
-                      placeholder="e.g., 9:00 AM - 6:00 PM"
-                    />
-                  </div>
-
-                  {/* Price Range */}
-                  <div>
-                    <label className="block mb-2 text-gray-800 font-medium">Price Range</label>
-                    <input
-                      type="text"
-                      value={newShop.priceRange}
-                      onChange={(e) => setNewShop({ ...newShop, priceRange: e.target.value })}
-                      className="w-full px-3 py-3 border-2 border-gray-200 rounded-md text-sm focus:outline-none focus:border-[#2C6E49]"
-                      required
-                      placeholder="e.g., ₱100 - ₱500"
-                    />
-                  </div>
-                </div>
-
-                <div className="mb-5">
-                  <label className="block mb-2 text-gray-800 font-medium">Item Types</label>
-                  <div className="flex gap-5 flex-wrap">
-                    {['clothing', 'shoes', 'bags', 'accessories'].map((type) => (
-                      <label key={type} className="flex items-center gap-2 cursor-pointer">
-                        <input
-                          type="checkbox"
-                          checked={newShop.itemTypes.includes(type)}
-                          onChange={(e) => {
-                            const types = e.target.checked
-                              ? [...newShop.itemTypes, type]
-                              : newShop.itemTypes.filter((t) => t !== type);
-                            setNewShop({ ...newShop, itemTypes: types });
-                          }}
-                        />
-                        {type.charAt(0).toUpperCase() + type.slice(1)}
-                      </label>
-                    ))}
-                  </div>
-                </div>
-
+              {editingShop && (
                 <button
-                  type="submit"
-                  className="px-6 py-3 rounded-md text-sm font-medium transition-all bg-[#2C6E49] text-white hover:bg-[#25573A]"
+                  type="button"
+                  className="ml-3 px-6 py-3 border-2 border-[#2C6E49] text-[#2C6E49] rounded-md hover:bg-[#2C6E49] hover:text-white"
+                  onClick={() => {
+                    setEditingShop(null);
+                    setNewShop({
+                      name: "",
+                      latitude: "",
+                      category: "",
+                      hours: "",
+                      priceRange: "",
+                      image: "",
+                    });
+                  }}
                 >
-                  {editingShop ? 'Update Shop' : 'Add Shop'}
+                  Cancel
                 </button>
-                {editingShop && (
-                  <button
-                    type="button"
-                    className="ml-3 px-6 py-3 border-2 border-[#2C6E49] text-[#2C6E49] rounded-md hover:bg-[#2C6E49] hover:text-white transition-all"
-                    onClick={() => {
-                      setEditingShop(null);
-                      setNewShop({
-                        name: '',
-                        latitude: '',
-                        longitude: '',
-                        hours: '',
-                        priceRange: '',
-                        itemTypes: [],
-                        Image: ''
-                      });
-                    }}
-                  >
-                    Cancel
-                  </button>
-                )}
-              </form>
-            </div>
+              )}
+            </form>
 
+            {/* Display shops */}
             <div>
-              <h2 className="text-gray-800 mb-5 text-2xl font-bold border-b-2 border-gray-100 pb-2">
-                Manage Thrift Shops ({shops.length} total)
+              <h2 className="text-2xl font-bold mb-5 text-gray-800">
+                Manage Thrift Shops ({shops.length})
               </h2>
               <div className="grid gap-5">
                 {shops.map((shop) => (
@@ -378,106 +336,76 @@ function AdminPage() {
                     key={shop.ShopID}
                     className="bg-gray-100 p-5 rounded-lg border-l-4 border-[#2C6E49] flex justify-between items-center"
                   >
-                    <div className="flex-1">
-                      <h3 className="text-gray-800 mb-2">{shop.ShopName}</h3>
-                      <p className="my-1 text-gray-600"><strong>Hours:</strong> {shop.OperatingHours}</p>
-                      <p className="my-1 text-gray-600"><strong>Price Range:</strong> {shop.PriceRange}</p>
-                      <p className="my-1 text-gray-600"><strong>Items:</strong> {shop.ItemTypes?.join(', ') || 'None'}</p>
-                      <p className="my-1 text-gray-600 text-sm">
-                        <strong>Location:</strong> {shop.Latitude}, {shop.Longitude}
+                    <div>
+                      <h3 className="font-semibold text-gray-800">
+                        {shop.Name}
+                      </h3>
+                      <p className="text-gray-600">Hours: {shop.StoreHours}</p>
+                      <p className="text-gray-600">
+                        Category: {shop.Category || "N/A"}
+                      </p>
+                      <p className="text-gray-600">
+                        Price Range: {shop.PriceRange}
+                      </p>
+                      <p className="text-sm text-gray-500">
+                        Location: {shop.Latitude}
                       </p>
                     </div>
 
                     <div className="flex flex-col gap-2">
                       <button
-                        className="px-6 py-2 border-2 border-[#2C6E49] text-[#2C6E49] bg-white rounded-md hover:bg-[#2C6E49] hover:text-white transition-all"
                         onClick={() => handleEditShop(shop)}
+                        className="px-5 py-2 border-2 border-[#2C6E49] text-[#2C6E49] rounded-md hover:bg-[#2C6E49] hover:text-white"
                       >
                         Edit
                       </button>
                       <button
-                        className="px-6 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition-all"
                         onClick={() => handleDeleteShop(shop.ShopID)}
+                        className="px-5 py-2 bg-red-500 text-white rounded-md hover:bg-red-600"
                       >
                         Delete
                       </button>
                     </div>
                   </div>
                 ))}
-                {shops.length === 0 && (
-                  <div className="text-center py-8 text-gray-500">
-                    No thrift shops found. Add your first shop above.
-                  </div>
-                )}
               </div>
             </div>
           </div>
         )}
 
-        {/* Comment Moderation */}
-        {activeTab === 'comments' && (
+        {/* ✅ Comment Moderation */}
+        {activeTab === "comments" && (
           <div className="bg-white rounded-lg p-8 shadow-lg">
-            <h2 className="text-gray-800 mb-5 text-2xl font-bold border-b-2 border-gray-100 pb-2">
-              Comment Moderation ({comments.length} total)
+            <h2 className="text-2xl font-bold mb-5 text-gray-800">
+              Comments ({comments.length})
             </h2>
             <div className="grid gap-5">
               {comments.map((comment) => (
                 <div
-                  key={comment.CommentID}
+                  key={comment.ComID}
                   className="bg-gray-100 p-5 rounded-lg border-l-4 border-[#2C6E49]"
                 >
-                  <div className="flex justify-between items-start mb-3">
-                    <div className="flex-1">
-                      <p className="font-semibold text-gray-800">
-                        @{comment.CUSTOMER?.Username || 'Unknown User'}
-                      </p>
-                      <p className="text-gray-700 mt-1 italic">"{comment.Content}"</p>
-                      <div className="text-sm text-gray-600 mt-2">
-                        <span className="font-semibold">Shop:</span> {comment['THRIFT SHOP']?.ShopName || 'Unknown Shop'} &nbsp;
-                        <span className="font-semibold">Date:</span> {new Date(comment.CreationDate).toLocaleDateString()} &nbsp;
-                        <span className="font-semibold">Status:</span>
-                        <span className={`ml-1 px-2 py-1 rounded text-xs ${
-                          comment.Status === 'visible'
-                            ? 'bg-green-100 text-green-800'
-                            : 'bg-yellow-100 text-yellow-800'
-                        }`}>
-                          {comment.Status}
-                        </span>
-                      </div>
-                    </div>
+                  <p className="font-semibold text-gray-800">
+                    @{comment.CUSTOMER?.Username || "Unknown User"}
+                  </p>
+                  <p className="italic text-gray-700 mt-1">
+                    "{comment.Content}"
+                  </p>
+                  <p className="text-sm text-gray-500 mt-2">
+                    <strong>Shop:</strong>{" "}
+                    {comment.THRIFTSHOP?.Name || "Unknown"} <br />
+                    <strong>Date:</strong>{" "}
+                    {new Date(comment.CreationDate).toLocaleDateString()}
+                  </p>
 
-                    <div className="flex gap-2 flex-wrap">
-                      {comment.Status !== 'visible' && (
-                        <button
-                          className="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded text-sm"
-                          onClick={() => handleUpdateCommentStatus(comment.CommentID, 'visible')}
-                        >
-                          Approve
-                        </button>
-                      )}
-                      {comment.Status !== 'hidden' && (
-                        <button
-                          className="bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-1 rounded text-sm"
-                          onClick={() => handleUpdateCommentStatus(comment.CommentID, 'hidden')}
-                        >
-                          Hide
-                        </button>
-                      )}
-                      <button
-                        className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm"
-                        onClick={() => handleDeleteComment(comment.CommentID)}
-                      >
-                        Delete
-                      </button>
-                    </div>
-                  </div>
+                  <button
+                    className="mt-3 px-5 py-2 bg-red-500 text-white rounded-md hover:bg-red-600"
+                    onClick={() => handleDeleteComment(comment.ComID)}
+                  >
+                    Delete
+                  </button>
                 </div>
               ))}
-              {comments.length === 0 && (
-                <div className="text-center py-8 text-gray-500">
-                  No comments found.
-                </div>
-              )}
             </div>
           </div>
         )}
