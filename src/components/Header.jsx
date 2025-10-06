@@ -105,23 +105,9 @@ const Header = () => {
               </NavLink>
             </li>
             {/* Admin Link */}
-            {!loading && userRole === "admin" && (
-              <li className="ml-6">
-                <NavLink 
-                  className={({isActive}) => 
-                    `text-gray-800 font-medium transition-colors no-underline hover:text-[#4c5f0d] ${
-                      isActive ? 'text-[#4c5f0d] border-b-2 border-[#4c5f0d]' : ''
-                    }`
-                  } 
-                  to="/admin"
-                >
-                  Admin
-                </NavLink>
-              </li>
-            )}
           </ul>
           <div className="flex items-center">
-            {!loading && userRole === "customer" ? (
+            {!loading && userRole === "customer" || userRole === "admin" ? (
               <div className="flex items-center">
                 <NavLink
                   className={({ isActive }) =>

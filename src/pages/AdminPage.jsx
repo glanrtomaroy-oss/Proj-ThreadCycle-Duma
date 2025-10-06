@@ -200,7 +200,7 @@ function AdminPage() {
         </div>
 
         {/* Tabs */}
-        <div className="flex bg-white rounded-lg p-2 mb-8 shadow-lg">
+        <div className="flex bg-white rounded-lg p-2 mb-8 shadow-lg gap-2">
           <button
             onClick={() => setActiveTab('shops')}
             className={`flex-1 py-4 px-5 cursor-pointer text-base font-medium rounded-md transition-all
