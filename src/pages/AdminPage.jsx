@@ -62,15 +62,31 @@ function AdminPage({ user }) {
     ]);
   }, []);
 
-  // Thrift Shop Management
+    // Thrift Shop Management
   const handleAddShop = (e) => {
     e.preventDefault();
+
+    if (!newShop.name || !newShop.latitude || !newShop.longitude) {
+      alert("Please fill out all required fields.");
+      return;
+    }
+
+    const newId =
+      shops.length > 0 ? Math.max(...shops.map((s) => s.id)) + 1 : 1;
+
     const shop = {
-      id: shops.length + 1,
-      ...newShop,
-      itemTypes: newShop.itemTypes
+      id: newId,
+      name: newShop.name.trim(),
+      latitude: parseFloat(newShop.latitude),
+      longitude: parseFloat(newShop.longitude),
+      hours: newShop.hours.trim(),
+      priceRange: newShop.priceRange.trim(),
+      itemTypes: [...newShop.itemTypes],
     };
-    setShops([...shops, shop]);
+
+    setShops((prev) => [...prev, shop]);
+
+    // Reset form fields after adding
     setNewShop({
       name: '',
       latitude: '',
@@ -79,33 +95,9 @@ function AdminPage({ user }) {
       priceRange: '',
       itemTypes: []
     });
-  };
 
-  const handleEditShop = (shop) => {
-    setEditingShop(shop);
-    setNewShop(shop);
+    alert("Shop added successfully!");
   };
-
-  const handleUpdateShop = (e) => {
-    e.preventDefault();
-    setShops(shops.map(shop =>
-      shop.id === editingShop.id ? { ...newShop, id: shop.id } : shop
-    ));
-    setEditingShop(null);
-    setNewShop({
-      name: '',
-      latitude: '',
-      longitude: '',
-      hours: '',
-      priceRange: '',
-      itemTypes: []
-    });
-  };
-
-  const handleDeleteShop = (shopId) => {
-    setShops(shops.filter(shop => shop.id !== shopId));
-  };
-
   // Comment Moderation
   const handleApproveComment = (commentId) => {
     setComments(comments.filter(comment => comment.id !== commentId));
