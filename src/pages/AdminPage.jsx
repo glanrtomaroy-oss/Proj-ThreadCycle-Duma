@@ -467,7 +467,7 @@ function AdminPage() {
             <div className="grid gap-5">
               {comments.map((comment) => (
                 <div
-                  key={comment.CommentID}
+                  key={comment.ComID}
                   className="bg-gray-100 p-5 rounded-lg border-l-4 border-[#2C6E49]"
                 >
                   <div className="flex justify-between items-start mb-3">
@@ -485,7 +485,7 @@ function AdminPage() {
                     <div className="flex gap-2 flex-wrap">
                       <button
                         className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm"
-                        onClick={() => handleDeleteComment(comment.CommentID)}
+                        onClick={() => handleDeleteComment(comment.ComID)}
                       >
                         Delete
                       </button>
