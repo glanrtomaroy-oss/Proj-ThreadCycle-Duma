@@ -296,14 +296,13 @@ function AdminPage() {
 
                   {/* Image URL */}
                   <div>
-                    <label className="block mb-2 text-gray-800 font-medium">Image</label>
+                    <label className="block mb-2 text-gray-800 font-medium">Upload Image</label>
                     <input
-                      type="text"
+                      type="file"
+                      accept="image/*"
                       required
-                      value={newShop.Image}
-                      onChange={(e) => setNewShop({ ...newShop, Image: e.target.value })}
+                      onChange={(e) => setNewShop({ ...newShop, Image: e.target.files[0] })}
                       className="w-full px-3 py-3 border-2 border-gray-200 rounded-md text-sm focus:outline-none focus:border-[#2C6E49]"
-                      placeholder="Paste Image link (e.g., https://example.com/shop.jpg)"
                     />
                   </div>
 
