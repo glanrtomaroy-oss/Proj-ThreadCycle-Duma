@@ -206,8 +206,8 @@ function AdminPage() {
             className={`flex-1 py-4 px-5 cursor-pointer text-base font-medium rounded-md transition-all
               ${
                 activeTab === 'shops'
-                  ? 'bg-white text-[#2C6E49] border border-[#2C6E49] shadow-sm'
-                  : 'bg-[#2C6E49] text-white hover:bg-[#25573A]'
+                  ? 'bg-[#2C6E49] text-[#2C6E49] border border-[#2C6E49] shadow-sm'
+                  : 'bg-white text-white hover:bg-[#25573A]'
               }`}
           >
             Thrift Shops
