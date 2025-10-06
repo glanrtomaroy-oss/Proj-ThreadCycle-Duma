@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '../util/supabase'; // Adjust import path as needed
+import toast from 'react-hot-toast'
 
 function AdminPage() {
   const [activeTab, setActiveTab] = useState('shops');
@@ -96,7 +97,7 @@ function AdminPage() {
         itemTypes: [],
         Image: '',
       });
-  
+      toast.success("Successfully Added Shop!");
       fetchShops();
     } catch (err) {
       console.error("Error adding shop:", err.message);
