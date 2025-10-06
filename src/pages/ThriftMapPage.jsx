@@ -20,7 +20,7 @@ function ThriftMapPage() {
   const mapRef = useRef(null);
   const markersRef = useRef([]);
 
-  const mapboxToken = import.meta.env.VITE_MAPBOX_TOKEN;
+  const mapboxToken = "pk.eyJ1IjoiZ2xhbnRvbSIsImEiOiJjbWdkZ293cXgxbnpnMm1zZ2FiZmhpdjU4In0.cebB2Cqp7oZJC2_oL9sfog";
 
   // Fetch thrift shops
   const fetchShops = async () => {
