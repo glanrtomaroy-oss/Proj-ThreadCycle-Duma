@@ -129,6 +129,13 @@ function ThriftMapPage() {
     });
 
     mapRef.current.addControl(new mapboxgl.NavigationControl({ showCompass: false }));
+    mapRef.current.on("load", () => {
+      mapRef.current?.resize();
+    });
+    mapRef.current.on("error", (e) => {
+      console.error("Mapbox error", e?.error || e);
+      toast.error("Map failed to load. Please refresh.");
+    });
   }, [mapboxToken]);
 
   // Filtered shops for both UI and map markers
