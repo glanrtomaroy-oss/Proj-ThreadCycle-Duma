@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { supabase } from '../supabaseClient'; // Adjust path to your supabase client
 
 function AdminPage({ user }) {
   const [activeTab, setActiveTab] = useState('shops');
@@ -15,160 +14,105 @@ function AdminPage({ user }) {
   });
   const [editingShop, setEditingShop] = useState(null);
 
-  // Fetch shops from Supabase
+  // Sample data (address removed)
   useEffect(() => {
-    fetchShops();
-    fetchComments();
+    setShops([
+      {
+        id: 1,
+        name: "Green Threads Ukay",
+        latitude: 9.3057,
+        longitude: 123.3055,
+        hours: "9:00 AM - 6:00 PM",
+        priceRange: "₱50 - ₱300",
+        itemTypes: ["clothing", "shoes"]
+      },
+      {
+        id: 2,
+        name: "Eco Fashion Hub",
+        latitude: 9.3080,
+        longitude: 123.3070,
+        hours: "8:00 AM - 7:00 PM",
+        priceRange: "₱80 - ₱500",
+        itemTypes: ["clothing", "bags", "accessories"]
+      }
+    ]);
+
+    setComments([
+      {
+        id: 1,
+        user: "thrift_queen",
+        content: "Found amazing dresses here! Highly recommended!",
+        shop: "Green Threads Ukay",
+        date: "2024-01-16"
+      },
+      {
+        id: 2,
+        user: "fashion_lover",
+        content: "Great selection of vintage jeans!",
+        shop: "Green Threads Ukay",
+        date: "2024-01-15"
+      },
+      {
+        id: 3,
+        user: "eco_warrior",
+        content: "Prices are reasonable and quality is good",
+        shop: "Eco Fashion Hub",
+        date: "2024-01-14"
+      }
+    ]);
   }, []);
 
-  const fetchShops = async () => {
-    try {
-      const { data, error } = await supabase
-        .from('shops')
-        .select('*');
-      
-      if (error) throw error;
-      setShops(data || []);
-    } catch (error) {
-      console.error('Error fetching shops:', error);
-    }
-  };
-
-  const fetchComments = async () => {
-    try {
-      const { data, error } = await supabase
-        .from('comments')
-        .select('*');
-      
-      if (error) throw error;
-      setComments(data || []);
-    } catch (error) {
-      console.error('Error fetching comments:', error);
-    }
-  };
-
   // Thrift Shop Management
-  const handleAddShop = async (e) => {
+  const handleAddShop = (e) => {
     e.preventDefault();
-    try {
-      const { data, error } = await supabase
-        .from('shops')
-        .insert([
-          {
-            name: newShop.name,
-            latitude: parseFloat(newShop.latitude),
-            longitude: parseFloat(newShop.longitude),
-            hours: newShop.hours,
-            price_range: newShop.priceRange,
-            item_types: newShop.itemTypes
-          }
-        ])
-        .select();
-
-      if (error) throw error;
-
-      setShops([...shops, data[0]]);
-      setNewShop({
-        name: '',
-        latitude: '',
-        longitude: '',
-        hours: '',
-        priceRange: '',
-        itemTypes: []
-      });
-    } catch (error) {
-      console.error('Error adding shop:', error);
-    }
+    const shop = {
+      id: shops.length + 1,
+      ...newShop,
+      itemTypes: newShop.itemTypes
+    };
+    setShops([...shops, shop]);
+    setNewShop({
+      name: '',
+      latitude: '',
+      longitude: '',
+      hours: '',
+      priceRange: '',
+      itemTypes: []
+    });
   };
 
   const handleEditShop = (shop) => {
     setEditingShop(shop);
+    setNewShop(shop);
+  };
+
+  const handleUpdateShop = (e) => {
+    e.preventDefault();
+    setShops(shops.map(shop =>
+      shop.id === editingShop.id ? { ...newShop, id: shop.id } : shop
+    ));
+    setEditingShop(null);
     setNewShop({
-      name: shop.name,
-      latitude: shop.latitude.toString(),
-      longitude: shop.longitude.toString(),
-      hours: shop.hours,
-      priceRange: shop.price_range,
-      itemTypes: shop.item_types
+      name: '',
+      latitude: '',
+      longitude: '',
+      hours: '',
+      priceRange: '',
+      itemTypes: []
     });
   };
 
-  const handleUpdateShop = async (e) => {
-    e.preventDefault();
-    try {
-      const { error } = await supabase
-        .from('shops')
-        .update({
-          name: newShop.name,
-          latitude: parseFloat(newShop.latitude),
-          longitude: parseFloat(newShop.longitude),
-          hours: newShop.hours,
-          price_range: newShop.priceRange,
-          item_types: newShop.itemTypes
-        })
-        .eq('id', editingShop.id);
-
-      if (error) throw error;
-
-      await fetchShops(); // Refresh the shops list
-      setEditingShop(null);
-      setNewShop({
-        name: '',
-        latitude: '',
-        longitude: '',
-        hours: '',
-        priceRange: '',
-        itemTypes: []
-      });
-    } catch (error) {
-      console.error('Error updating shop:', error);
-    }
-  };
-
-  const handleDeleteShop = async (shopId) => {
-    try {
-      const { error } = await supabase
-        .from('shops')
-        .delete()
-        .eq('id', shopId);
-
-      if (error) throw error;
-
-      setShops(shops.filter(shop => shop.id !== shopId));
-    } catch (error) {
-      console.error('Error deleting shop:', error);
-    }
+  const handleDeleteShop = (shopId) => {
+    setShops(shops.filter(shop => shop.id !== shopId));
   };
 
   // Comment Moderation
-  const handleApproveComment = async (commentId) => {
-    try {
-      const { error } = await supabase
-        .from('comments')
-        .update({ approved: true })
-        .eq('id', commentId);
-
-      if (error) throw error;
-
-      setComments(comments.filter(comment => comment.id !== commentId));
-    } catch (error) {
-      console.error('Error approving comment:', error);
-    }
+  const handleApproveComment = (commentId) => {
+    setComments(comments.filter(comment => comment.id !== commentId));
   };
 
-  const handleDeleteComment = async (commentId) => {
-    try {
-      const { error } = await supabase
-        .from('comments')
-        .delete()
-        .eq('id', commentId);
-
-      if (error) throw error;
-
-      setComments(comments.filter(comment => comment.id !== commentId));
-    } catch (error) {
-      console.error('Error deleting comment:', error);
-    }
+  const handleDeleteComment = (commentId) => {
+    setComments(comments.filter(comment => comment.id !== commentId));
   };
 
   return (
@@ -343,8 +287,8 @@ function AdminPage({ user }) {
                     <div className="flex-1">
                       <h3 className="text-gray-800 mb-2">{shop.name}</h3>
                       <p className="my-1 text-gray-600"><strong>Hours:</strong> {shop.hours}</p>
-                      <p className="my-1 text-gray-600"><strong>Price Range:</strong> {shop.price_range}</p>
-                      <p className="my-1 text-gray-600"><strong>Items:</strong> {shop.item_types?.join(', ')}</p>
+                      <p className="my-1 text-gray-600"><strong>Price Range:</strong> {shop.priceRange}</p>
+                      <p className="my-1 text-gray-600"><strong>Items:</strong> {shop.itemTypes.join(', ')}</p>
                     </div>
 
                     <div className="flex flex-col gap-2">
@@ -368,7 +312,7 @@ function AdminPage({ user }) {
           </div>
         )}
 
-        {/* Comment Moderation */}
+        {/* Comment Moderation (Updated Section) */}
         {activeTab === 'comments' && (
           <div className="bg-white rounded-lg p-8 shadow-lg">
             <h2 className="text-gray-800 mb-5 text-2xl font-bold border-b-2 border-gray-100 pb-2">
