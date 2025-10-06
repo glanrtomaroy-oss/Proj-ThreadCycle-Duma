@@ -23,25 +23,38 @@ function ThriftMapPage() {
     }
   };
 
-  // Fetch approved comments
+  // Fetch comments with Username (joined from CUSTOMER) and CreationDate
   const fetchComments = async () => {
     try {
       const { data, error } = await supabase
         .from("COMMENT")
-        .select("*")
-        .eq("Status", "visible");
+        .select(`
+          ComID,
+          Content,
+          CreationDate,
+          ShopID,
+          CustID,
+          CUSTOMER ( Username )
+        `)
+        .order("CreationDate", { ascending: false });
+
       if (error) throw error;
 
+      // Group by shop id
       const grouped = {};
       data.forEach((c) => {
         if (!grouped[c.ShopID]) grouped[c.ShopID] = [];
-        grouped[c.ShopID].push(c);
+        grouped[c.ShopID].push({
+          ...c,
+          Username: c.CUSTOMER?.Username || "Anonymous",
+        });
       });
       setComments(grouped);
     } catch (err) {
       console.error("Error fetching comments:", err.message);
     }
   };
+
 
   // Submit a comment
   const submitComment = async (shopId) => {
@@ -227,20 +240,28 @@ function ThriftMapPage() {
                       </span>
                     </div>
 
-                    {comments[shop.ShopID]?.length > 0 ? (
-                      <div className="space-y-2 max-h-[120px] overflow-y-auto pr-1">
-                        {comments[shop.ShopID].map((c) => (
-                          <div
-                            key={c.ComID}
-                            className="text-sm bg-gray-50 rounded px-3 py-2"
-                          >
-                            <p className="text-gray-700">{c.Content}</p>
+                  {comments[shop.ShopID]?.length > 0 ? (
+                    <div className="space-y-2 max-h-[120px] overflow-y-auto pr-1">
+                      {comments[shop.ShopID].map((c) => (
+                        <div
+                          key={c.ComID}
+                          className="text-sm bg-gray-50 rounded px-3 py-2"
+                        >
+                          <div className="flex justify-between items-center mb-1">
+                            <span className="font-medium text-[#2C6E49]">
+                              {c.Username}
+                            </span>
+                            <span className="text-xs text-gray-400">
+                              {new Date(c.CreationDate).toLocaleString()}
+                            </span>
                           </div>
-                        ))}
-                      </div>
-                    ) : (
-                      <p className="text-xs text-gray-500">No comments yet</p>
-                    )}
+                          <p className="text-gray-700">{c.Content}</p>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <p className="text-xs text-gray-500">No comments yet</p>
+                  )}
 
                     {currentUser ? (
                       <div className="mt-3 flex items-end gap-2">
