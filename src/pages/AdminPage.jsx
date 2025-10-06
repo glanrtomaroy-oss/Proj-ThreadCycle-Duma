@@ -6,12 +6,12 @@ function AdminPage() {
   const [shops, setShops] = useState([]);
   const [comments, setComments] = useState([]);
   const [newShop, setNewShop] = useState({
-    name: '',
-    latitude: '',
-    longitude: '',
-    hours: '',
-    priceRange: '',
-    itemTypes: [],
+    Name: '',
+    Latitude: '',
+    Longitude: '',
+    StoreHours: '',
+    PriceRange: '',
+    Category: [],
     Image: '',
   });
   const [editingShop, setEditingShop] = useState(null);
@@ -35,7 +35,7 @@ function AdminPage() {
         .select(`
           *,
           THRIFT SHOP (ShopName),
-          CUSTOMER (Username)
+          CUSTOMER (UserName)
         `);
       
       if (error) throw error;
@@ -52,11 +52,11 @@ function AdminPage() {
       const { error } = await supabase
         .from("THRIFT SHOP")
         .insert([{
-          ShopName: newShop.name,
-          Latitude: parseFloat(newShop.latitude),
-          Longitude: parseFloat(newShop.longitude),
-          OperatingHours: newShop.hours,
-          PriceRange: newShop.priceRange,
+          ShopName: newShop.Name,
+          Latitude: parseFloat(newShop.Latitude),
+          Longitude: parseFloat(newShop.Longitude),
+          OperatingStoreHours: newShop.StoreHours,
+          PriceRange: newShop.PriceRange,
           ItemTypes: newShop.itemTypes,
           Image: newShop.Image || null
         }]);
@@ -64,11 +64,11 @@ function AdminPage() {
       if (error) throw error;
 
       setNewShop({
-        name: '',
-        latitude: '',
-        longitude: '',
-        hours: '',
-        priceRange: '',
+        Name: '',
+        Latitude: '',
+        Longitude: '',
+        StoreHours: '',
+        PriceRange: '',
         itemTypes: [],
         Image: '',
       });
@@ -87,11 +87,11 @@ function AdminPage() {
       const { error } = await supabase
         .from("THRIFT SHOP")
         .update({
-          ShopName: newShop.name,
-          Latitude: parseFloat(newShop.latitude),
-          Longitude: parseFloat(newShop.longitude),
-          OperatingHours: newShop.hours,
-          PriceRange: newShop.priceRange,
+          ShopName: newShop.Name,
+          Latitude: parseFloat(newShop.Latitude),
+          Longitude: parseFloat(newShop.Longitude),
+          OperatingStoreHours: newShop.StoreHours,
+          PriceRange: newShop.PriceRange,
           ItemTypes: newShop.itemTypes,
           Image: newShop.Image || null
         })
@@ -101,11 +101,11 @@ function AdminPage() {
 
       setEditingShop(null);
       setNewShop({
-        name: '',
-        latitude: '',
-        longitude: '',
-        hours: '',
-        priceRange: '',
+        Name: '',
+        Latitude: '',
+        Longitude: '',
+        StoreHours: '',
+        PriceRange: '',
         itemTypes: [],
         Image: '',
       });
@@ -176,11 +176,11 @@ function AdminPage() {
   const handleEditShop = (shop) => {
     setEditingShop(shop);
     setNewShop({
-      name: shop.ShopName || '',
-      latitude: shop.Latitude?.toString() || '',
-      longitude: shop.Longitude?.toString() || '',
-      hours: shop.OperatingHours || '',
-      priceRange: shop.PriceRange || '',
+      Name: shop.ShopName || '',
+      Latitude: shop.Latitude?.toString() || '',
+      Longitude: shop.Longitude?.toString() || '',
+      StoreHours: shop.OperatingStoreHours || '',
+      PriceRange: shop.PriceRange || '',
       itemTypes: shop.ItemTypes || [],
       Image: shop.Image || '',
     });
@@ -243,11 +243,11 @@ function AdminPage() {
                     <label className="block mb-2 text-gray-800 font-medium">Shop Name</label>
                     <input
                       type="text"
-                      value={newShop.name}
-                      onChange={(e) => setNewShop({ ...newShop, name: e.target.value })}
+                      value={newShop.Name}
+                      onChange={(e) => setNewShop({ ...newShop, Name: e.target.value })}
                       className="w-full px-3 py-3 border-2 border-gray-200 rounded-md text-sm focus:outline-none focus:border-[#2C6E49]"
                       required
-                      placeholder="Enter shop name"
+                      placeholder="Enter shop Name"
                     />
                   </div>
 
@@ -269,8 +269,8 @@ function AdminPage() {
                     <input
                       type="number"
                       step="any"
-                      value={newShop.latitude}
-                      onChange={(e) => setNewShop({ ...newShop, latitude: e.target.value })}
+                      value={newShop.Latitude}
+                      onChange={(e) => setNewShop({ ...newShop, Latitude: e.target.value })}
                       className="w-full px-3 py-3 border-2 border-gray-200 rounded-md text-sm focus:outline-none focus:border-[#2C6E49]"
                       required
                       placeholder="e.g., 9.3057"
@@ -283,21 +283,21 @@ function AdminPage() {
                     <input
                       type="number"
                       step="any"
-                      value={newShop.longitude}
-                      onChange={(e) => setNewShop({ ...newShop, longitude: e.target.value })}
+                      value={newShop.Longitude}
+                      onChange={(e) => setNewShop({ ...newShop, Longitude: e.target.value })}
                       className="w-full px-3 py-3 border-2 border-gray-200 rounded-md text-sm focus:outline-none focus:border-[#2C6E49]"
                       required
                       placeholder="e.g., 123.3055"
                     />
                   </div>
 
-                  {/* Operating Hours */}
+                  {/* Operating StoreHours */}
                   <div>
-                    <label className="block mb-2 text-gray-800 font-medium">Operating Hours</label>
+                    <label className="block mb-2 text-gray-800 font-medium">Operating StoreHours</label>
                     <input
                       type="text"
-                      value={newShop.hours}
-                      onChange={(e) => setNewShop({ ...newShop, hours: e.target.value })}
+                      value={newShop.StoreHours}
+                      onChange={(e) => setNewShop({ ...newShop, StoreHours: e.target.value })}
                       className="w-full px-3 py-3 border-2 border-gray-200 rounded-md text-sm focus:outline-none focus:border-[#2C6E49]"
                       required
                       placeholder="e.g., 9:00 AM - 6:00 PM"
@@ -309,8 +309,8 @@ function AdminPage() {
                     <label className="block mb-2 text-gray-800 font-medium">Price Range</label>
                     <input
                       type="text"
-                      value={newShop.priceRange}
-                      onChange={(e) => setNewShop({ ...newShop, priceRange: e.target.value })}
+                      value={newShop.PriceRange}
+                      onChange={(e) => setNewShop({ ...newShop, PriceRange: e.target.value })}
                       className="w-full px-3 py-3 border-2 border-gray-200 rounded-md text-sm focus:outline-none focus:border-[#2C6E49]"
                       required
                       placeholder="e.g., ₱100 - ₱500"
@@ -352,11 +352,11 @@ function AdminPage() {
                     onClick={() => {
                       setEditingShop(null);
                       setNewShop({
-                        name: '',
-                        latitude: '',
-                        longitude: '',
-                        hours: '',
-                        priceRange: '',
+                        Name: '',
+                        Latitude: '',
+                        Longitude: '',
+                        StoreHours: '',
+                        PriceRange: '',
                         itemTypes: [],
                         Image: ''
                       });
@@ -380,7 +380,7 @@ function AdminPage() {
                   >
                     <div className="flex-1">
                       <h3 className="text-gray-800 mb-2">{shop.ShopName}</h3>
-                      <p className="my-1 text-gray-600"><strong>Hours:</strong> {shop.OperatingHours}</p>
+                      <p className="my-1 text-gray-600"><strong>StoreHours:</strong> {shop.OperatingStoreHours}</p>
                       <p className="my-1 text-gray-600"><strong>Price Range:</strong> {shop.PriceRange}</p>
                       <p className="my-1 text-gray-600"><strong>Items:</strong> {shop.ItemTypes?.join(', ') || 'None'}</p>
                       <p className="my-1 text-gray-600 text-sm">
@@ -429,7 +429,7 @@ function AdminPage() {
                   <div className="flex justify-between items-start mb-3">
                     <div className="flex-1">
                       <p className="font-semibold text-gray-800">
-                        @{comment.CUSTOMER?.Username || 'Unknown User'}
+                        @{comment.CUSTOMER?.UserName || 'Unknown User'}
                       </p>
                       <p className="text-gray-700 mt-1 italic">"{comment.Content}"</p>
                       <div className="text-sm text-gray-600 mt-2">
