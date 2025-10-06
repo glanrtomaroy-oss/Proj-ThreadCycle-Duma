@@ -108,10 +108,6 @@ function AdminPage({ user }) {
   };
 
   // Comment Moderation
-  const handleApproveComment = (commentId) => {
-    setComments(comments.filter(comment => comment.id !== commentId));
-  };
-
   const handleDeleteComment = (commentId) => {
     setComments(comments.filter(comment => comment.id !== commentId));
   };
@@ -353,12 +349,6 @@ function AdminPage({ user }) {
                   </div>
 
                   <div className="flex gap-2">
-                    <button
-                      className="bg-[#2C6E49] hover:bg-[#25573A] text-white px-4 py-2 rounded-md text-sm font-medium"
-                      onClick={() => handleApproveComment(comment.id)}
-                    >
-                      Approve
-                    </button>
                     <button
                       className="bg-[#E63946] hover:bg-[#C92D39] text-white px-4 py-2 rounded-md text-sm font-medium"
                       onClick={() => handleDeleteComment(comment.id)}
