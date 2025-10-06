@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import supabase from '../supabase'; // ✅ make sure path matches your project
 
 function AdminPage({ user }) {
   const [activeTab, setActiveTab] = useState('shops');
@@ -15,101 +16,136 @@ function AdminPage({ user }) {
   });
   const [editingShop, setEditingShop] = useState(null);
 
-  // Sample data (address removed)
-  useEffect(() => {
-    setShops([
-      {
-        id: 1,
-        name: "Green Threads Ukay",
-        latitude: 9.3057,
-        longitude: 123.3055,
-        hours: "9:00 AM - 6:00 PM",
-        priceRange: "₱50 - ₱300",
-        itemTypes: ["clothing", "shoes"]
-      },
-      {
-        id: 2,
-        name: "Eco Fashion Hub",
-        latitude: 9.3080,
-        longitude: 123.3070,
-        hours: "8:00 AM - 7:00 PM",
-        priceRange: "₱80 - ₱500",
-        itemTypes: ["clothing", "bags", "accessories"]
-      }
-    ]);
+  // ✅ Fetch thrift shops from Supabase
+  const fetchShops = async () => {
+    try {
+      const { data, error } = await supabase.from('THRIFT SHOP').select('*');
+      if (error) throw error;
+      setShops(data || []);
+    } catch (err) {
+      console.error('Error fetching thrift shops:', err.message);
+    }
+  };
 
-    setComments([
-      {
-        id: 1,
-        user: "thrift_queen",
-        content: "Found amazing dresses here! Highly recommended!",
-        shop: "Green Threads Ukay",
-        date: "2024-01-16"
-      },
-      {
-        id: 2,
-        user: "fashion_lover",
-        content: "Great selection of vintage jeans!",
-        shop: "Green Threads Ukay",
-        date: "2024-01-15"
-      },
-      {
-        id: 3,
-        user: "eco_warrior",
-        content: "Prices are reasonable and quality is good",
-        shop: "Eco Fashion Hub",
-        date: "2024-01-14"
-      }
-    ]);
+  // ✅ Fetch comments (Status = visible)
+  const fetchComments = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('COMMENT')
+        .select('*')
+        .eq('Status', 'visible');
+      if (error) throw error;
+      setComments(data || []);
+    } catch (err) {
+      console.error('Error fetching comments:', err.message);
+    }
+  };
+
+  useEffect(() => {
+    fetchShops();
+    fetchComments();
   }, []);
 
-  // Thrift Shop Management
-  const handleAddShop = (e) => {
-    e.preventDefault();
-    const shop = {
-      id: shops.length + 1,
-      ...newShop,
-      itemTypes: newShop.itemTypes
-    };
-    setShops([...shops, shop]);
-    setNewShop({
-      name: '',
-      latitude: '',
-      longitude: '',
-      hours: '',
-      priceRange: '',
-      itemTypes: []
-    });
+  // ✅ Delete shop (also remove from Supabase)
+  const handleDeleteShop = async (shopId) => {
+    try {
+      const { error } = await supabase.from('THRIFT SHOP').delete().eq('ShopID', shopId);
+      if (error) throw error;
+      setShops((prev) => prev.filter((s) => s.ShopID !== shopId));
+    } catch (err) {
+      console.error('Error deleting shop:', err.message);
+    }
   };
 
+  // ✅ Add new shop
+  const handleAddShop = async (e) => {
+    e.preventDefault();
+    try {
+      const { error } = await supabase.from('THRIFT SHOP').insert([
+        {
+          Name: newShop.name,
+          Latitude: parseFloat(newShop.latitude),
+          Longitude: parseFloat(newShop.longitude),
+          StoreHours: newShop.hours,
+          PriceRange: newShop.priceRange,
+          Category: newShop.itemTypes.join(', '),
+          Image: newShop.image,
+          AdminID: user?.id || null,
+        },
+      ]);
+      if (error) throw error;
+      setNewShop({
+        name: '',
+        latitude: '',
+        longitude: '',
+        hours: '',
+        priceRange: '',
+        itemTypes: [],
+        image: '',
+      });
+      fetchShops();
+    } catch (err) {
+      console.error('Error adding shop:', err.message);
+    }
+  };
+
+  // ✅ Edit/update shop
   const handleEditShop = (shop) => {
     setEditingShop(shop);
-    setNewShop(shop);
-  };
-
-  const handleUpdateShop = (e) => {
-    e.preventDefault();
-    setShops(shops.map(shop =>
-      shop.id === editingShop.id ? { ...newShop, id: shop.id } : shop
-    ));
-    setEditingShop(null);
     setNewShop({
-      name: '',
-      latitude: '',
-      longitude: '',
-      hours: '',
-      priceRange: '',
-      itemTypes: []
+      name: shop.Name,
+      latitude: shop.Latitude,
+      longitude: shop.Longitude,
+      hours: shop.StoreHours,
+      priceRange: shop.PriceRange,
+      itemTypes: shop.Category ? shop.Category.split(', ') : [],
+      image: shop.Image,
     });
   };
 
-  const handleDeleteShop = (shopId) => {
-    setShops(shops.filter(shop => shop.id !== shopId));
+  const handleUpdateShop = async (e) => {
+    e.preventDefault();
+    try {
+      const { error } = await supabase
+        .from('THRIFT SHOP')
+        .update({
+          Name: newShop.name,
+          Latitude: parseFloat(newShop.latitude),
+          Longitude: parseFloat(newShop.longitude),
+          StoreHours: newShop.hours,
+          PriceRange: newShop.priceRange,
+          Category: newShop.itemTypes.join(', '),
+          Image: newShop.image,
+        })
+        .eq('ShopID', editingShop.ShopID);
+
+      if (error) throw error;
+
+      setEditingShop(null);
+      setNewShop({
+        name: '',
+        latitude: '',
+        longitude: '',
+        hours: '',
+        priceRange: '',
+        itemTypes: [],
+        image: '',
+      });
+      fetchShops();
+    } catch (err) {
+      console.error('Error updating shop:', err.message);
+    }
   };
 
-  // Comment Moderation
-  const handleDeleteComment = (commentId) => {
-    setComments(comments.filter(comment => comment.id !== commentId));
+  // ✅ Delete comment
+  const handleDeleteComment = async (commentId) => {
+    try {
+      const { error } = await supabase.from('COMMENT').delete().eq('CommentID', commentId);
+      if (error) throw error;
+      setComments((prev) => prev.filter((c) => c.CommentID !== commentId));
+    } catch (err) {
+      console.error('Error deleting comment:', err.message);
+    }
   };
 
   return (
@@ -124,24 +160,21 @@ function AdminPage({ user }) {
         <div className="flex bg-white rounded-lg p-2 mb-8 shadow-lg">
           <button
             onClick={() => setActiveTab('shops')}
-            className={`flex-1 py-4 px-5 cursor-pointer text-base font-medium rounded-md transition-all
-              ${
-                activeTab === 'shops'
-                  ? 'bg-white text-[#2C6E49] border border-[#2C6E49] shadow-sm'
-                  : 'bg-[#2C6E49] text-white hover:bg-[#25573A]'
-              }`}
+            className={`flex-1 py-4 px-5 text-base font-medium rounded-md transition-all ${
+              activeTab === 'shops'
+                ? 'bg-white text-[#2C6E49] border border-[#2C6E49] shadow-sm'
+                : 'bg-[#2C6E49] text-white hover:bg-[#25573A]'
+            }`}
           >
             Thrift Shops
           </button>
-
           <button
             onClick={() => setActiveTab('comments')}
-            className={`flex-1 py-4 px-5 cursor-pointer text-base font-medium rounded-md transition-all
-              ${
-                activeTab === 'comments'
-                  ? 'bg-white text-[#2C6E49] border border-[#2C6E49] shadow-sm'
-                  : 'bg-[#2C6E49] text-white hover:bg-[#25573A]'
-              }`}
+            className={`flex-1 py-4 px-5 text-base font-medium rounded-md transition-all ${
+              activeTab === 'comments'
+                ? 'bg-white text-[#2C6E49] border border-[#2C6E49] shadow-sm'
+                : 'bg-[#2C6E49] text-white hover:bg-[#25573A]'
+            }`}
           >
             Comment Moderation
           </button>
@@ -152,94 +185,88 @@ function AdminPage({ user }) {
           <div className="bg-white rounded-lg p-8 shadow-lg">
             <div className="mb-10">
               <h2 className="text-gray-800 mb-5 text-2xl font-bold border-b-2 border-gray-100 pb-2">
-                Add New Thrift Shop
+                {editingShop ? 'Edit Thrift Shop' : 'Add New Thrift Shop'}
               </h2>
               <form
                 onSubmit={editingShop ? handleUpdateShop : handleAddShop}
                 className="bg-gray-100 p-6 rounded-lg mb-8"
               >
-               <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
-  {/* Shop Name */}
-  <div>
-    <label className="block mb-2 text-gray-800 font-medium">Shop Name</label>
-    <input
-      type="text"
-      value={newShop.name}
-      onChange={(e) => setNewShop({ ...newShop, name: e.target.value })}
-      className="w-full px-3 py-3 border-2 border-gray-200 rounded-md text-sm focus:outline-none focus:border-[#2C6E49]"
-      required
-      placeholder="Enter shop name"
-    />
-  </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
+                  {/* Shop Name */}
+                  <div>
+                    <label className="block mb-2 text-gray-800 font-medium">Shop Name</label>
+                    <input
+                      type="text"
+                      value={newShop.name}
+                      onChange={(e) => setNewShop({ ...newShop, name: e.target.value })}
+                      className="w-full px-3 py-3 border-2 border-gray-200 rounded-md text-sm focus:outline-none focus:border-[#2C6E49]"
+                      required
+                    />
+                  </div>
 
-  {/* Image URL */}
-  <div>
-    <label className="block mb-2 text-gray-800 font-medium">Image URL</label>
-    <input
-      type="text"
-      value={newShop.image}
-      onChange={(e) => setNewShop({ ...newShop, image: e.target.value })}
-      className="w-full px-3 py-3 border-2 border-gray-200 rounded-md text-sm focus:outline-none focus:border-[#2C6E49]"
-      placeholder="Paste image link (e.g., https://example.com/shop.jpg)"
-    />
-  </div>
+                  {/* Image URL */}
+                  <div>
+                    <label className="block mb-2 text-gray-800 font-medium">Image URL</label>
+                    <input
+                      type="text"
+                      value={newShop.image}
+                      onChange={(e) => setNewShop({ ...newShop, image: e.target.value })}
+                      className="w-full px-3 py-3 border-2 border-gray-200 rounded-md text-sm focus:outline-none focus:border-[#2C6E49]"
+                    />
+                  </div>
 
-  {/* Latitude */}
-  <div>
-    <label className="block mb-2 text-gray-800 font-medium">Latitude</label>
-    <input
-      type="number"
-      step="any"
-      value={newShop.latitude}
-      onChange={(e) => setNewShop({ ...newShop, latitude: e.target.value })}
-      className="w-full px-3 py-3 border-2 border-gray-200 rounded-md text-sm focus:outline-none focus:border-[#2C6E49]"
-      required
-      placeholder="e.g., 9.3057"
-    />
-  </div>
+                  {/* Latitude */}
+                  <div>
+                    <label className="block mb-2 text-gray-800 font-medium">Latitude</label>
+                    <input
+                      type="number"
+                      step="any"
+                      value={newShop.latitude}
+                      onChange={(e) => setNewShop({ ...newShop, latitude: e.target.value })}
+                      className="w-full px-3 py-3 border-2 border-gray-200 rounded-md text-sm focus:outline-none focus:border-[#2C6E49]"
+                      required
+                    />
+                  </div>
 
-  {/* Longitude */}
-  <div>
-    <label className="block mb-2 text-gray-800 font-medium">Longitude</label>
-    <input
-      type="number"
-      step="any"
-      value={newShop.longitude}
-      onChange={(e) => setNewShop({ ...newShop, longitude: e.target.value })}
-      className="w-full px-3 py-3 border-2 border-gray-200 rounded-md text-sm focus:outline-none focus:border-[#2C6E49]"
-      required
-      placeholder="e.g., 123.3055"
-    />
-  </div>
+                  {/* Longitude */}
+                  <div>
+                    <label className="block mb-2 text-gray-800 font-medium">Longitude</label>
+                    <input
+                      type="number"
+                      step="any"
+                      value={newShop.longitude}
+                      onChange={(e) => setNewShop({ ...newShop, longitude: e.target.value })}
+                      className="w-full px-3 py-3 border-2 border-gray-200 rounded-md text-sm focus:outline-none focus:border-[#2C6E49]"
+                      required
+                    />
+                  </div>
 
-  {/* Operating Hours */}
-  <div>
-    <label className="block mb-2 text-gray-800 font-medium">Operating Hours</label>
-    <input
-      type="text"
-      value={newShop.hours}
-      onChange={(e) => setNewShop({ ...newShop, hours: e.target.value })}
-      className="w-full px-3 py-3 border-2 border-gray-200 rounded-md text-sm focus:outline-none focus:border-[#2C6E49]"
-      required
-      placeholder="e.g., 9:00 AM - 6:00 PM"
-    />
-  </div>
+                  {/* Hours */}
+                  <div>
+                    <label className="block mb-2 text-gray-800 font-medium">Operating Hours</label>
+                    <input
+                      type="text"
+                      value={newShop.hours}
+                      onChange={(e) => setNewShop({ ...newShop, hours: e.target.value })}
+                      className="w-full px-3 py-3 border-2 border-gray-200 rounded-md text-sm focus:outline-none focus:border-[#2C6E49]"
+                      required
+                    />
+                  </div>
 
-  {/* Price Range */}
-  <div>
-    <label className="block mb-2 text-gray-800 font-medium">Price Range</label>
-    <input
-      type="text"
-      value={newShop.priceRange}
-      onChange={(e) => setNewShop({ ...newShop, priceRange: e.target.value })}
-      className="w-full px-3 py-3 border-2 border-gray-200 rounded-md text-sm focus:outline-none focus:border-[#2C6E49]"
-      required
-      placeholder="e.g., ₱100 - ₱500"
-    />
-  </div>
-</div>
+                  {/* Price Range */}
+                  <div>
+                    <label className="block mb-2 text-gray-800 font-medium">Price Range</label>
+                    <input
+                      type="text"
+                      value={newShop.priceRange}
+                      onChange={(e) => setNewShop({ ...newShop, priceRange: e.target.value })}
+                      className="w-full px-3 py-3 border-2 border-gray-200 rounded-md text-sm focus:outline-none focus:border-[#2C6E49]"
+                      required
+                    />
+                  </div>
+                </div>
 
-
+                {/* Item Types */}
                 <div className="mb-5">
                   <label className="block mb-2 text-gray-800 font-medium">Item Types</label>
                   <div className="flex gap-5 flex-wrap">
@@ -279,7 +306,8 @@ function AdminPage({ user }) {
                         longitude: '',
                         hours: '',
                         priceRange: '',
-                        itemTypes: []
+                        itemTypes: [],
+                        image: '',
                       });
                     }}
                   >
@@ -289,6 +317,7 @@ function AdminPage({ user }) {
               </form>
             </div>
 
+            {/* Display shops from Supabase */}
             <div>
               <h2 className="text-gray-800 mb-5 text-2xl font-bold border-b-2 border-gray-100 pb-2">
                 Manage Thrift Shops
@@ -296,14 +325,20 @@ function AdminPage({ user }) {
               <div className="grid gap-5">
                 {shops.map((shop) => (
                   <div
-                    key={shop.id}
+                    key={shop.ShopID}
                     className="bg-gray-100 p-5 rounded-lg border-l-4 border-[#2C6E49] flex justify-between items-center"
                   >
                     <div className="flex-1">
-                      <h3 className="text-gray-800 mb-2">{shop.name}</h3>
-                      <p className="my-1 text-gray-600"><strong>Hours:</strong> {shop.hours}</p>
-                      <p className="my-1 text-gray-600"><strong>Price Range:</strong> {shop.priceRange}</p>
-                      <p className="my-1 text-gray-600"><strong>Items:</strong> {shop.itemTypes.join(', ')}</p>
+                      <h3 className="text-gray-800 mb-2">{shop.Name}</h3>
+                      <p className="my-1 text-gray-600">
+                        <strong>Hours:</strong> {shop.StoreHours}
+                      </p>
+                      <p className="my-1 text-gray-600">
+                        <strong>Price Range:</strong> {shop.PriceRange}
+                      </p>
+                      <p className="my-1 text-gray-600">
+                        <strong>Items:</strong> {shop.Category}
+                      </p>
                     </div>
 
                     <div className="flex flex-col gap-2">
@@ -315,7 +350,7 @@ function AdminPage({ user }) {
                       </button>
                       <button
                         className="px-6 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition-all"
-                        onClick={() => handleDeleteShop(shop.id)}
+                        onClick={() => handleDeleteShop(shop.ShopID)}
                       >
                         Delete
                       </button>
@@ -327,7 +362,7 @@ function AdminPage({ user }) {
           </div>
         )}
 
-        {/* Comment Moderation (Updated Section) */}
+        {/* Comment Moderation */}
         {activeTab === 'comments' && (
           <div className="bg-white rounded-lg p-8 shadow-lg">
             <h2 className="text-gray-800 mb-5 text-2xl font-bold border-b-2 border-gray-100 pb-2">
@@ -336,26 +371,23 @@ function AdminPage({ user }) {
             <div className="grid gap-5">
               {comments.map((comment) => (
                 <div
-                  key={comment.id}
+                  key={comment.CommentID}
                   className="bg-gray-100 p-5 rounded-lg border-l-4 border-[#2C6E49] flex justify-between items-center"
                 >
                   <div className="flex-1">
-                    <p className="font-semibold text-gray-800">@{comment.user}</p>
-                    <p className="text-gray-700 mt-1 italic">"{comment.content}"</p>
+                    <p className="font-semibold text-gray-800">Comment ID: {comment.CommentID}</p>
+                    <p className="text-gray-700 mt-1 italic">"{comment.Content}"</p>
                     <div className="text-sm text-gray-600 mt-2">
-                      <span className="font-semibold">Shop:</span> {comment.shop} &nbsp;
-                      <span className="font-semibold">Date:</span> {comment.date}
+                      <span className="font-semibold">Shop ID:</span> {comment.ShopID} &nbsp;
+                      <span className="font-semibold">Date:</span> {comment.CreationDate}
                     </div>
                   </div>
-
-                  <div className="flex gap-2">
-                    <button
-                      className="bg-[#E63946] hover:bg-[#C92D39] text-white px-4 py-2 rounded-md text-sm font-medium"
-                      onClick={() => handleDeleteComment(comment.id)}
-                    >
-                      Delete
-                    </button>
-                  </div>
+                  <button
+                    className="bg-[#E63946] hover:bg-[#C92D39] text-white px-4 py-2 rounded-md text-sm font-medium"
+                    onClick={() => handleDeleteComment(comment.CommentID)}
+                  >
+                    Delete
+                  </button>
                 </div>
               ))}
             </div>
