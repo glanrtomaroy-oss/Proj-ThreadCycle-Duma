@@ -52,13 +52,14 @@ function AdminPage() {
       const { error } = await supabase
         .from("THRIFT SHOP")
         .insert([{
-          ShopName: newShop.name,
-          Latitude: parseFloat(newShop.latitude),
-          Longitude: parseFloat(newShop.longitude),
-          OperatingHours: newShop.hours,
+          Name: newShop.name,
+          Latitude: newShop.latitude.toString(),
+          Longitude: newShop.longitude.toString(),
+          StoreHours: newShop.hours,           
           PriceRange: newShop.priceRange,
-          itemTypes: newShop.itemTypes,
-          Image: newShop.Image || null
+          Category: newShop.itemTypes.join(','), 
+          Image: newShop.Image || null,
+          AdminID: 1                            
         }]);
 
       if (error) throw error;
@@ -87,12 +88,12 @@ function AdminPage() {
       const { error } = await supabase
         .from("THRIFT SHOP")
         .update({
-          ShopName: newShop.name,
-          Latitude: parseFloat(newShop.latitude),
-          Longitude: parseFloat(newShop.longitude),
-          OperatingHours: newShop.hours,
+          Name: newShop.name,
+          Latitude: newShop.latitude.toString(),
+          Longitude: newShop.longitude.toString(),
+          StoreHours: newShop.hours,
           PriceRange: newShop.priceRange,
-          itemTypes: newShop.itemTypes,
+          Category: newShop.itemTypes.join(','),
           Image: newShop.Image || null
         })
         .eq('ShopID', editingShop.ShopID);
