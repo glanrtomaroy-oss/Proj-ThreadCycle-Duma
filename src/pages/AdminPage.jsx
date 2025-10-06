@@ -48,22 +48,45 @@ function AdminPage() {
   // Add new thrift shop
   const handleAddShop = async (e) => {
     e.preventDefault();
+  
     try {
-      const { error } = await supabase
+      if (!newShop.Image) {
+        alert("Please upload an image");
+        return;
+      }
+  
+      const file = newShop.Image;
+      const fileName = `${Date.now()}_${file.name}`;
+      const filePath = `thrift-shops/${fileName}`;
+  
+      const { error: uploadError } = await supabase.storage
+        .from("thrift-shop-images")
+        .upload(filePath, file);
+  
+      if (uploadError) throw uploadError;
+  
+      const { data: publicData } = supabase.storage
+        .from("thrift-shop-images")
+        .getPublicUrl(filePath);
+  
+      const imageUrl = publicData.publicUrl;
+  
+      const { error: insertError } = await supabase
         .from("THRIFT SHOP")
         .insert([{
           Name: newShop.name,
           Latitude: newShop.latitude.toString(),
           Longitude: newShop.longitude.toString(),
-          StoreHours: newShop.hours,           
+          StoreHours: newShop.hours,
           PriceRange: newShop.priceRange,
-          Category: newShop.itemTypes.join(','), 
-          Image: newShop.Image || null,
-          AdminID: 1                            
+          Category: newShop.itemTypes.join(','),
+          Image: imageUrl,
+          AdminID: 1 // adjust as needed
         }]);
-
-      if (error) throw error;
-
+  
+      if (insertError) throw insertError;
+  
+      // Reset form
       setNewShop({
         name: '',
         latitude: '',
@@ -73,18 +96,35 @@ function AdminPage() {
         itemTypes: [],
         Image: '',
       });
-     
-      fetchShops(); // Refresh the list
+  
+      fetchShops();
     } catch (err) {
       console.error("Error adding shop:", err.message);
       alert("Error adding shop: " + err.message);
     }
   };
-
   // Update existing shop
   const handleUpdateShop = async (e) => {
     e.preventDefault();
     try {
+      let imageUrl = editingShop.Image; // keep existing image as default
+  
+      if (newShop.Image instanceof File) {
+        const fileName = `${Date.now()}_${newShop.Image.name}`;
+        const filePath = `thrift-shops/${fileName}`;
+  
+        const { error: uploadError } = await supabase.storage
+          .from("thrift-shop-images")
+          .upload(filePath, newShop.Image, { upsert: true });
+  
+        if (uploadError) throw uploadError;
+  
+        const { data } = supabase.storage
+          .from("thrift-shop-images")
+          .getPublicUrl(filePath);
+        imageUrl = data.publicUrl;
+      }
+  
       const { error } = await supabase
         .from("THRIFT SHOP")
         .update({
@@ -94,29 +134,31 @@ function AdminPage() {
           StoreHours: newShop.hours,
           PriceRange: newShop.priceRange,
           Category: newShop.itemTypes.join(','),
-          Image: newShop.Image || null
+          Image: imageUrl, // ✅ always use the final URL (either old or new)
         })
-        .eq('ShopID', editingShop.ShopID);
-
+        .eq("ShopID", editingShop.ShopID);
+  
       if (error) throw error;
-
+  
+      // Step 3: Reset UI
       setEditingShop(null);
       setNewShop({
-        name: '',
-        latitude: '',
-        longitude: '',
-        hours: '',
-        priceRange: '',
+        name: "",
+        latitude: "",
+        longitude: "",
+        hours: "",
+        priceRange: "",
         itemTypes: [],
-        Image: '',
+        Image: "",
       });
-     
-      fetchShops(); // Refresh the list
+  
+      fetchShops(); // Refresh list
     } catch (err) {
       console.error("Error updating shop:", err.message);
       alert("Error updating shop: " + err.message);
     }
   };
+
 
   // Delete shop
   const handleDeleteShop = async (shopId) => {
