@@ -28,7 +28,7 @@ function ThriftMapPage() {
       if (error) throw error;
       setShops(data || []);
     } catch (err) {
-      toast.error("Unable to load store details.", err.message);
+      toast.error(`Unable to load store details. ${err?.message ?? ""}`);
     }
   };
 
@@ -60,7 +60,7 @@ function ThriftMapPage() {
       });
       setComments(grouped);
     } catch (err) {
-      toast.error("Comment could not be posted. Please try again later.", err.message);
+      toast.error(`Comment could not be posted. Please try again later. ${err?.message ?? ""}`);
     }
   };
 
@@ -96,7 +96,7 @@ function ThriftMapPage() {
       setDraftComments((prev) => ({ ...prev, [shopId]: "" }));
       fetchComments();
     } catch (err) {
-      toast.error("Comment could not be posted. Please try again later.", err.message);
+      toast.error(`Comment could not be posted. Please try again later. ${err?.message ?? ""}`);
     }
   };
 
