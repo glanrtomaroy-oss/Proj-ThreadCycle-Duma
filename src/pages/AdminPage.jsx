@@ -424,7 +424,7 @@ function AdminPage() {
                     <div className="flex-1">
                       <h3 className="text-gray-800 mb-2">{shop.ShopName}</h3>
                       <h3 className="my-1 text-gray-600"><strong>Shop Name:</strong> {shop.Name}</h3>
-                      <p className="my-1 text-gray-600"><strong>Hours:</strong> {shop.OperatingHours}</p>
+                      <p className="my-1 text-gray-600"><strong>Hours:</strong> {shop.StoreHours}</p>
                       <p className="my-1 text-gray-600"><strong>Price Range:</strong> {shop.PriceRange}</p>
                       <p className="my-1 text-gray-600"><strong>Items:</strong> {shop.itemTypes?.join(', ') || 'None'}</p>
                       <p className="my-1 text-gray-600 text-sm">
