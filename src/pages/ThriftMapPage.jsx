@@ -51,7 +51,7 @@ function ThriftMapPage() {
       });
       setComments(grouped);
     } catch (err) {
-      console.error("Error fetching comments:", err.message);
+      toast.error("Comment could not be posted. Please try again later.", err.message);
     }
   };
 
@@ -87,7 +87,7 @@ function ThriftMapPage() {
       setDraftComments((prev) => ({ ...prev, [shopId]: "" }));
       fetchComments();
     } catch (err) {
-      console.error("Error adding comment:", err.message);
+      toast.error("Comment could not be posted. Please try again later.", err.message);
     }
   };
 
