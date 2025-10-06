@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
-import { supabase } from '../lib/supabase'; // Adjust import path as needed
+import { supabase } from '../util/supabase'; // Adjust import path as needed
 
-function AdminPage({ user }) {
+function AdminPage() {
   const [activeTab, setActiveTab] = useState('shops');
   const [shops, setShops] = useState([]);
   const [comments, setComments] = useState([]);
