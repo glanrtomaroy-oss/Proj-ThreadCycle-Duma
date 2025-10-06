@@ -175,6 +175,22 @@ function AdminPage({ user }) {
                   </div>
                 </div>
 
+                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
+                  <div>
+                    <label className="block mb-2 text-gray-800 font-medium">Shop Name</label>
+                    <input
+                      type="text"
+                      value={newShop.name}
+                      onChange={(e) => setNewShop({ ...newShop, name: e.target.value })}
+                      className="w-full px-3 py-3 border-2 border-gray-200 rounded-md text-sm focus:outline-none focus:border-[#2C6E49]"
+                      required
+                      placeholder="Enter shop name"
+                    />
+                  </div>
+                </div>
+
+                
+
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
                   <div>
                     <label className="block mb-2 text-gray-800 font-medium">Latitude</label>
