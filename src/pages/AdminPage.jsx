@@ -491,22 +491,22 @@ function AdminPage() {
                     </div>
 
                     <div className="flex gap-2 flex-wrap">
-                      // {comment.Status !== 'visible' && (
-                      //   <button
-                      //     className="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded text-sm"
-                      //     onClick={() => handleUpdateCommentStatus(comment.CommentID, 'visible')}
-                      //   >
-                      //     Approve
-                      //   </button>
-                      // )}
-                      // {comment.Status !== 'hidden' && (
-                      //   <button
-                      //     className="bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-1 rounded text-sm"
-                      //     onClick={() => handleUpdateCommentStatus(comment.CommentID, 'hidden')}
-                      //   >
-                      //     Hide
-                      //   </button>
-                      // )}
+                      {comment.Status !== 'visible' && (
+                        <button
+                          className="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded text-sm"
+                          onClick={() => handleUpdateCommentStatus(comment.CommentID, 'visible')}
+                        >
+                          Approve
+                        </button>
+                      )}
+                      {comment.Status !== 'hidden' && (
+                        <button
+                          className="bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-1 rounded text-sm"
+                          onClick={() => handleUpdateCommentStatus(comment.CommentID, 'hidden')}
+                        >
+                          Hide
+                        </button>
+                      )}
                       <button
                         className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm"
                         onClick={() => handleDeleteComment(comment.CommentID)}
