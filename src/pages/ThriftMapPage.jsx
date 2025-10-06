@@ -78,7 +78,7 @@ function ThriftMapPage() {
         Content: text,
         ShopID: shopId,
         CustID: customer.CustID,
-        Status: "visible",
+        Username: customer.Username,
         CreationDate: new Date().toISOString(),
       });
 
