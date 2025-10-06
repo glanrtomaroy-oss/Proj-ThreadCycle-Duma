@@ -6,13 +6,13 @@ function AdminPage() {
   const [shops, setShops] = useState([]);
   const [comments, setComments] = useState([]);
   const [newShop, setNewShop] = useState({
-    Name: '',
-    Latitude: '',
-    Longitude: '',
+    name: '',
+    latitude: '',
+    longitude: '',
     StoreHours: '',
     PriceRange: '',
     Category: [],
-    Image: '',
+    image: '',
   });
   const [editingShop, setEditingShop] = useState(null);
 
