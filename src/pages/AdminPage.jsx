@@ -57,7 +57,7 @@ function AdminPage() {
           Longitude: parseFloat(newShop.longitude),
           OperatingHours: newShop.hours,
           PriceRange: newShop.priceRange,
-          ItemTypes: newShop.itemTypes,
+          itemTypes: newShop.itemTypes,
           Image: newShop.Image || null
         }]);
 
@@ -92,7 +92,7 @@ function AdminPage() {
           Longitude: parseFloat(newShop.longitude),
           OperatingHours: newShop.hours,
           PriceRange: newShop.priceRange,
-          ItemTypes: newShop.itemTypes,
+          itemTypes: newShop.itemTypes,
           Image: newShop.Image || null
         })
         .eq('ShopID', editingShop.ShopID);
@@ -181,7 +181,7 @@ function AdminPage() {
       longitude: shop.Longitude?.toString() || '',
       hours: shop.OperatingHours || '',
       priceRange: shop.PriceRange || '',
-      itemTypes: shop.ItemTypes || [],
+      itemTypes: shop.itemTypes || [],
       Image: shop.Image || '',
     });
   };
@@ -382,7 +382,7 @@ function AdminPage() {
                       <h3 className="text-gray-800 mb-2">{shop.ShopName}</h3>
                       <p className="my-1 text-gray-600"><strong>Hours:</strong> {shop.OperatingHours}</p>
                       <p className="my-1 text-gray-600"><strong>Price Range:</strong> {shop.PriceRange}</p>
-                      <p className="my-1 text-gray-600"><strong>Items:</strong> {shop.ItemTypes?.join(', ') || 'None'}</p>
+                      <p className="my-1 text-gray-600"><strong>Items:</strong> {shop.itemTypes?.join(', ') || 'None'}</p>
                       <p className="my-1 text-gray-600 text-sm">
                         <strong>Location:</strong> {shop.Latitude}, {shop.Longitude}
                       </p>
