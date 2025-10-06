@@ -162,21 +162,33 @@ function AdminPage({ user }) {
                 onSubmit={editingShop ? handleUpdateShop : handleAddShop}
                 className="bg-gray-100 p-6 rounded-lg mb-8"
               >
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
-                  <div>
-                    <label className="block mb-2 text-gray-800 font-medium">Shop Name</label>
-                    <input
-                      type="text"
-                      value={newShop.name}
-                      onChange={(e) => setNewShop({ ...newShop, name: e.target.value })}
-                      className="w-full px-3 py-3 border-2 border-gray-200 rounded-md text-sm focus:outline-none focus:border-[#2C6E49]"
-                      required
-                      placeholder="Enter shop name"
-                    />
-                  </div>
-                </div>
+               <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
+  {/* Shop Name */}
+  <div>
+    <label className="block mb-2 text-gray-800 font-medium">Shop Name</label>
+    <input
+      type="text"
+      value={newShop.name}
+      onChange={(e) => setNewShop({ ...newShop, name: e.target.value })}
+      className="w-full px-3 py-3 border-2 border-gray-200 rounded-md text-sm focus:outline-none focus:border-[#2C6E49]"
+      required
+      placeholder="Enter shop name"
+    />
+  </div>
 
-               <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-5">
+  {/* Image URL */}
+  <div>
+    <label className="block mb-2 text-gray-800 font-medium">Image URL</label>
+    <input
+      type="text"
+      value={newShop.image}
+      onChange={(e) => setNewShop({ ...newShop, image: e.target.value })}
+      className="w-full px-3 py-3 border-2 border-gray-200 rounded-md text-sm focus:outline-none focus:border-[#2C6E49]"
+      placeholder="Paste image link (e.g., https://example.com/shop.jpg)"
+    />
+  </div>
+
+  {/* Latitude */}
   <div>
     <label className="block mb-2 text-gray-800 font-medium">Latitude</label>
     <input
@@ -190,17 +202,7 @@ function AdminPage({ user }) {
     />
   </div>
 
-  <div>
-    <label className="block mb-2 text-gray-800 font-medium">Image URL</label>
-    <input
-      type="text"
-      value={newShop.image || ''}
-      onChange={(e) => setNewShop({ ...newShop, image: e.target.value })}
-      className="w-full px-3 py-3 border-2 border-gray-200 rounded-md text-sm focus:outline-none focus:border-[#2C6E49]"
-      placeholder="Paste image link (e.g., https://example.com/image.jpg)"
-    />
-  </div>
-
+  {/* Longitude */}
   <div>
     <label className="block mb-2 text-gray-800 font-medium">Longitude</label>
     <input
@@ -213,30 +215,34 @@ function AdminPage({ user }) {
       placeholder="e.g., 123.3055"
     />
   </div>
+
+  {/* Operating Hours */}
+  <div>
+    <label className="block mb-2 text-gray-800 font-medium">Operating Hours</label>
+    <input
+      type="text"
+      value={newShop.hours}
+      onChange={(e) => setNewShop({ ...newShop, hours: e.target.value })}
+      className="w-full px-3 py-3 border-2 border-gray-200 rounded-md text-sm focus:outline-none focus:border-[#2C6E49]"
+      required
+      placeholder="e.g., 9:00 AM - 6:00 PM"
+    />
+  </div>
+
+  {/* Price Range */}
+  <div>
+    <label className="block mb-2 text-gray-800 font-medium">Price Range</label>
+    <input
+      type="text"
+      value={newShop.priceRange}
+      onChange={(e) => setNewShop({ ...newShop, priceRange: e.target.value })}
+      className="w-full px-3 py-3 border-2 border-gray-200 rounded-md text-sm focus:outline-none focus:border-[#2C6E49]"
+      required
+      placeholder="e.g., ₱100 - ₱500"
+    />
+  </div>
 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
-                  <div>
-                    <label className="block mb-2 text-gray-800 font-medium">Operating Hours</label>
-                    <input
-                      type="text"
-                      value={newShop.hours}
-                      onChange={(e) => setNewShop({ ...newShop, hours: e.target.value })}
-                      className="w-full px-3 py-3 border-2 border-gray-200 rounded-md text-sm focus:outline-none focus:border-[#2C6E49]"
-                      placeholder="e.g., 9:00 AM - 6:00 PM"
-                    />
-                  </div>
-                  <div>
-                    <label className="block mb-2 text-gray-800 font-medium">Price Range</label>
-                    <input
-                      type="text"
-                      value={newShop.priceRange}
-                      onChange={(e) => setNewShop({ ...newShop, priceRange: e.target.value })}
-                      className="w-full px-3 py-3 border-2 border-gray-200 rounded-md text-sm focus:outline-none focus:border-[#2C6E49]"
-                      placeholder="e.g., ₱50 - ₱300"
-                    />
-                  </div>
-                </div>
 
                 <div className="mb-5">
                   <label className="block mb-2 text-gray-800 font-medium">Item Types</label>
