@@ -19,7 +19,7 @@ function ThriftMapPage() {
       if (error) throw error;
       setShops(data || []);
     } catch (err) {
-      console.error("Error fetching thrift shops:", err.message);
+      toast.error("Unable to load store details.", err.message);
     }
   };
 
