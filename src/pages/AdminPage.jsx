@@ -34,7 +34,7 @@ function AdminPage() {
         .from("COMMENT")
         .select(`
           *,
-          THRIFT SHOP (ShopName),
+          "THRIFT SHOP" (Name),
           CUSTOMER (Username)
         `);
      
