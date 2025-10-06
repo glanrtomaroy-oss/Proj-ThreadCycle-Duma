@@ -175,22 +175,6 @@ function AdminPage({ user }) {
                   </div>
                 </div>
 
-                 <div>
-                    <label className="block mb-2 text-gray-800 font-medium">Longitude</label>
-                    <input
-                      type="number"
-                      step="any"
-                      value={newShop.longitude}
-                      onChange={(e) => setNewShop({ ...newShop, longitude: e.target.value })}
-                      className="w-full px-3 py-3 border-2 border-gray-200 rounded-md text-sm focus:outline-none focus:border-[#2C6E49]"
-                      required
-                      placeholder="e.g., 123.3055"
-                    />
-                  </div>
-                </div>
-
-                
-
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
                   <div>
                     <label className="block mb-2 text-gray-800 font-medium">Latitude</label>
