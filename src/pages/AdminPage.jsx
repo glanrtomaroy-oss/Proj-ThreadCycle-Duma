@@ -10,7 +10,7 @@ function AdminPage({ user }) {
     longitude: '',
     hours: '',
     priceRange: '',
-    itemTypes: []
+    itemTypes: [],
     image: '',
   });
   const [editingShop, setEditingShop] = useState(null);
