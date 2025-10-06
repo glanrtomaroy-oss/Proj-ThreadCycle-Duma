@@ -1,6 +1,9 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { supabase } from "../util/supabase";
 import { UserAuth } from "../context/AuthContext";
+import toast from "react-hot-toast";
+import mapboxgl from "mapbox-gl";
+import "mapbox-gl/dist/mapbox-gl.css";
 
 function ThriftMapPage() {
   const { session } = UserAuth();
@@ -11,6 +14,13 @@ function ThriftMapPage() {
   const [draftComments, setDraftComments] = useState({});
   const [activeCategory, setActiveCategory] = useState("all");
   const [activePrice, setActivePrice] = useState("all");
+
+  // Mapbox setup
+  const mapContainerRef = useRef(null);
+  const mapRef = useRef(null);
+  const markersRef = useRef([]);
+
+  const mapboxToken = "pk.eyJ1IjoiZ2xhbnRvbSIsImEiOiJjbWdkZ293cXgxbnpnMm1zZ2FiZmhpdjU4In0.cebB2Cqp7oZJC2_oL9sfog";
 
   // Fetch thrift shops
   const fetchShops = async () => {
@@ -96,6 +106,78 @@ function ThriftMapPage() {
     fetchComments();
   }, []);
 
+  // Initialize Mapbox map once
+  useEffect(() => {
+    if (!mapContainerRef.current) return;
+    if (mapRef.current) return; // already initialized
+
+    if (!mapboxToken) {
+      toast.error("Mapbox token missing. Set VITE_MAPBOX_TOKEN in your .env");
+      return;
+    }
+
+    mapboxgl.accessToken = mapboxToken;
+
+    // Center on Dumaguete City
+    const initialCenter = [123.3000, 9.3070];
+
+    mapRef.current = new mapboxgl.Map({
+      container: mapContainerRef.current,
+      style: "mapbox://styles/mapbox/streets-v12",
+      center: initialCenter,
+      zoom: 12,
+    });
+
+    mapRef.current.addControl(new mapboxgl.NavigationControl({ showCompass: false }));
+  }, [mapboxToken]);
+
+  // Filtered shops for both UI and map markers
+  const filteredShops = useMemo(
+    () => shops.filter(isShopInActiveFilters),
+    [shops, activeCategory, activePrice]
+  );
+
+  // Add/refresh markers whenever filtered shops change
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map) return;
+
+    // Remove existing markers
+    markersRef.current.forEach((m) => m.remove());
+    markersRef.current = [];
+
+    filteredShops.forEach((shop) => {
+      const lat = Number(shop.Latitude);
+      const lng = Number(shop.Longitude);
+      if (!isFinite(lat) || !isFinite(lng)) return;
+
+      const popupHtml = `
+        <div style="min-width:200px">
+          <div style="font-weight:600;color:#2C6E49;margin-bottom:4px">${shop.Name ?? "Thrift Shop"}</div>
+          <div style="font-size:12px;color:#555;margin-bottom:6px">
+            ${(shop.Category ?? "").toString()} • ${(shop.PriceRange ?? "").toString()}
+          </div>
+          <a href="https://www.google.com/maps?q=${lat},${lng}" target="_blank" rel="noopener noreferrer" style="font-size:12px;color:#2C6E49;text-decoration:underline">Directions</a>
+        </div>`;
+
+      const popup = new mapboxgl.Popup({ offset: 16 }).setHTML(popupHtml);
+
+      const marker = new mapboxgl.Marker({ color: "#2C6E49" })
+        .setLngLat([lng, lat])
+        .setPopup(popup)
+        .addTo(map);
+
+      markersRef.current.push(marker);
+    });
+
+    // Optionally fit bounds to markers
+    if (markersRef.current.length > 0) {
+      const bounds = new mapboxgl.LngLatBounds();
+      markersRef.current.forEach((m) => bounds.extend(m.getLngLat()));
+      map.fitBounds(bounds, { padding: 40, maxZoom: 15 });
+    }
+  }, [filteredShops]);
+
   const getPriceBucket = (priceText) => {
     if (!priceText) return "all";
     const text = priceText.replace(/\s|₱/g, "");
@@ -128,10 +210,10 @@ function ThriftMapPage() {
         </div>
       </section>
 
-      {/* Map Placeholder */}
+      {/* Map */}
       <section className="max-w-6xl mx-auto mt-10 px-4">
-        <div className="bg-white shadow-lg rounded-xl h-[400px] flex items-center justify-center text-gray-500">
-          <p>Map view coming soon (Mapbox integration pending)</p>
+        <div className="bg-white shadow-lg rounded-xl h-[400px] overflow-hidden">
+          <div ref={mapContainerRef} className="w-full h-full" />
         </div>
       </section>
 
