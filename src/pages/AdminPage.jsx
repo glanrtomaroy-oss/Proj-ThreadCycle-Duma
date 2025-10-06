@@ -1,22 +1,22 @@
-import { useState, useEffect } from "react";
-import supabase from "../supabase"; // ✅ make sure your supabase.js file is correct
+import { useState, useEffect } from 'react';
+import { supabase } from '../lib/supabase'; // Adjust import path as needed
 
 function AdminPage({ user }) {
-  const [activeTab, setActiveTab] = useState("shops");
+  const [activeTab, setActiveTab] = useState('shops');
   const [shops, setShops] = useState([]);
-  const [comments, setComments] = useState({});
+  const [comments, setComments] = useState([]);
   const [newShop, setNewShop] = useState({
-    name: "",
-    latitude: "",
-    longitude: "",
-    hours: "",
-    priceRange: "",
+    name: '',
+    latitude: '',
+    longitude: '',
+    hours: '',
+    priceRange: '',
     itemTypes: [],
-    image: "",
+    image: '',
   });
   const [editingShop, setEditingShop] = useState(null);
 
-  // ✅ Fetch thrift shops from Supabase
+  // Fetch thrift shops
   const fetchShops = async () => {
     try {
       const { data, error } = await supabase.from("THRIFT SHOP").select("*");
@@ -27,130 +27,374 @@ function AdminPage({ user }) {
     }
   };
 
-  // ✅ Fetch approved comments (Status = "visible")
+  // Fetch all comments for moderation
   const fetchComments = async () => {
     try {
       const { data, error } = await supabase
         .from("COMMENT")
-        .select("*")
-        .eq("Status", "visible");
+        .select(`
+          *,
+          THRIFT SHOP (ShopName),
+          CUSTOMER (Username)
+        `);
+      
       if (error) throw error;
-
-      const grouped = {};
-      data.forEach((c) => {
-        if (!grouped[c.ShopID]) grouped[c.ShopID] = [];
-        grouped[c.ShopID].push(c);
-      });
-
-      setComments(grouped);
+      setComments(data || []);
     } catch (err) {
       console.error("Error fetching comments:", err.message);
     }
   };
 
-  // ✅ Initial data load
-  useEffect(() => {
-    fetchShops();
-    fetchComments();
-  }, []);
+  // Add new thrift shop
+  const handleAddShop = async (e) => {
+    e.preventDefault();
+    try {
+      const { error } = await supabase
+        .from("THRIFT SHOP")
+        .insert([{
+          ShopName: newShop.name,
+          Latitude: parseFloat(newShop.latitude),
+          Longitude: parseFloat(newShop.longitude),
+          OperatingHours: newShop.hours,
+          PriceRange: newShop.priceRange,
+          ItemTypes: newShop.itemTypes,
+          ImageURL: newShop.image || null
+        }]);
 
-  // 🔹 Handle Delete Shop
+      if (error) throw error;
+
+      setNewShop({
+        name: '',
+        latitude: '',
+        longitude: '',
+        hours: '',
+        priceRange: '',
+        itemTypes: [],
+        image: '',
+      });
+      
+      fetchShops(); // Refresh the list
+    } catch (err) {
+      console.error("Error adding shop:", err.message);
+      alert("Error adding shop: " + err.message);
+    }
+  };
+
+  // Update existing shop
+  const handleUpdateShop = async (e) => {
+    e.preventDefault();
+    try {
+      const { error } = await supabase
+        .from("THRIFT SHOP")
+        .update({
+          ShopName: newShop.name,
+          Latitude: parseFloat(newShop.latitude),
+          Longitude: parseFloat(newShop.longitude),
+          OperatingHours: newShop.hours,
+          PriceRange: newShop.priceRange,
+          ItemTypes: newShop.itemTypes,
+          ImageURL: newShop.image || null
+        })
+        .eq('ShopID', editingShop.ShopID);
+
+      if (error) throw error;
+
+      setEditingShop(null);
+      setNewShop({
+        name: '',
+        latitude: '',
+        longitude: '',
+        hours: '',
+        priceRange: '',
+        itemTypes: [],
+        image: '',
+      });
+      
+      fetchShops(); // Refresh the list
+    } catch (err) {
+      console.error("Error updating shop:", err.message);
+      alert("Error updating shop: " + err.message);
+    }
+  };
+
+  // Delete shop
   const handleDeleteShop = async (shopId) => {
+    if (!window.confirm("Are you sure you want to delete this shop?")) return;
+    
     try {
       const { error } = await supabase
         .from("THRIFT SHOP")
         .delete()
-        .eq("ShopID", shopId);
+        .eq('ShopID', shopId);
+
       if (error) throw error;
-      fetchShops();
+      
+      fetchShops(); // Refresh the list
     } catch (err) {
       console.error("Error deleting shop:", err.message);
+      alert("Error deleting shop: " + err.message);
     }
   };
 
-  // 🔹 Handle Delete Comment
+  // Comment moderation - delete comment
   const handleDeleteComment = async (commentId) => {
+    if (!window.confirm("Are you sure you want to delete this comment?")) return;
+    
     try {
       const { error } = await supabase
         .from("COMMENT")
         .delete()
-        .eq("ComID", commentId);
+        .eq('CommentID', commentId);
+
       if (error) throw error;
-      fetchComments();
+      
+      fetchComments(); // Refresh the list
     } catch (err) {
       console.error("Error deleting comment:", err.message);
+      alert("Error deleting comment: " + err.message);
     }
   };
+
+  // Comment moderation - update comment status
+  const handleUpdateCommentStatus = async (commentId, status) => {
+    try {
+      const { error } = await supabase
+        .from("COMMENT")
+        .update({ Status: status })
+        .eq('CommentID', commentId);
+
+      if (error) throw error;
+      
+      fetchComments(); // Refresh the list
+    } catch (err) {
+      console.error("Error updating comment status:", err.message);
+      alert("Error updating comment status: " + err.message);
+    }
+  };
+
+  // Set editing shop
+  const handleEditShop = (shop) => {
+    setEditingShop(shop);
+    setNewShop({
+      name: shop.ShopName || '',
+      latitude: shop.Latitude?.toString() || '',
+      longitude: shop.Longitude?.toString() || '',
+      hours: shop.OperatingHours || '',
+      priceRange: shop.PriceRange || '',
+      itemTypes: shop.ItemTypes || [],
+      image: shop.ImageURL || '',
+    });
+  };
+
+  useEffect(() => {
+    fetchShops();
+    fetchComments();
+  }, []);
 
   return (
     <div className="min-h-[calc(100vh-200px)] bg-gray-100 py-10">
       <div className="max-w-6xl mx-auto px-5">
         <div className="text-center mb-10">
           <h1 className="text-gray-800 text-4xl font-bold mb-2">Admin Dashboard</h1>
-          <p className="text-gray-600 text-lg">
-            Manage thrift shops and moderate comments
-          </p>
+          <p className="text-gray-600 text-lg">Manage thrift shops and moderate comments</p>
         </div>
 
         {/* Tabs */}
         <div className="flex bg-white rounded-lg p-2 mb-8 shadow-lg">
           <button
-            onClick={() => setActiveTab("shops")}
+            onClick={() => setActiveTab('shops')}
             className={`flex-1 py-4 px-5 cursor-pointer text-base font-medium rounded-md transition-all
               ${
-                activeTab === "shops"
-                  ? "bg-white text-[#2C6E49] border border-[#2C6E49] shadow-sm"
-                  : "bg-[#2C6E49] text-white hover:bg-[#25573A]"
+                activeTab === 'shops'
+                  ? 'bg-white text-[#2C6E49] border border-[#2C6E49] shadow-sm'
+                  : 'bg-[#2C6E49] text-white hover:bg-[#25573A]'
               }`}
           >
             Thrift Shops
           </button>
 
           <button
-            onClick={() => setActiveTab("comments")}
+            onClick={() => setActiveTab('comments')}
             className={`flex-1 py-4 px-5 cursor-pointer text-base font-medium rounded-md transition-all
               ${
-                activeTab === "comments"
-                  ? "bg-white text-[#2C6E49] border border-[#2C6E49] shadow-sm"
-                  : "bg-[#2C6E49] text-white hover:bg-[#25573A]"
+                activeTab === 'comments'
+                  ? 'bg-white text-[#2C6E49] border border-[#2C6E49] shadow-sm'
+                  : 'bg-[#2C6E49] text-white hover:bg-[#25573A]'
               }`}
           >
             Comment Moderation
           </button>
         </div>
 
-        {/* 🏪 Thrift Shop Management */}
-        {activeTab === "shops" && (
+        {/* Thrift Shops Management */}
+        {activeTab === 'shops' && (
           <div className="bg-white rounded-lg p-8 shadow-lg">
-            <h2 className="text-gray-800 mb-5 text-2xl font-bold border-b-2 border-gray-100 pb-2">
-              Manage Thrift Shops
-            </h2>
+            <div className="mb-10">
+              <h2 className="text-gray-800 mb-5 text-2xl font-bold border-b-2 border-gray-100 pb-2">
+                {editingShop ? 'Edit Thrift Shop' : 'Add New Thrift Shop'}
+              </h2>
+              <form
+                onSubmit={editingShop ? handleUpdateShop : handleAddShop}
+                className="bg-gray-100 p-6 rounded-lg mb-8"
+              >
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
+                  {/* Shop Name */}
+                  <div>
+                    <label className="block mb-2 text-gray-800 font-medium">Shop Name</label>
+                    <input
+                      type="text"
+                      value={newShop.name}
+                      onChange={(e) => setNewShop({ ...newShop, name: e.target.value })}
+                      className="w-full px-3 py-3 border-2 border-gray-200 rounded-md text-sm focus:outline-none focus:border-[#2C6E49]"
+                      required
+                      placeholder="Enter shop name"
+                    />
+                  </div>
 
-            <div className="grid gap-5">
-              {shops.length === 0 ? (
-                <p className="text-gray-500">No thrift shops found.</p>
-              ) : (
-                shops.map((shop) => (
+                  {/* Image URL */}
+                  <div>
+                    <label className="block mb-2 text-gray-800 font-medium">Image URL</label>
+                    <input
+                      type="text"
+                      value={newShop.image}
+                      onChange={(e) => setNewShop({ ...newShop, image: e.target.value })}
+                      className="w-full px-3 py-3 border-2 border-gray-200 rounded-md text-sm focus:outline-none focus:border-[#2C6E49]"
+                      placeholder="Paste image link (e.g., https://example.com/shop.jpg)"
+                    />
+                  </div>
+
+                  {/* Latitude */}
+                  <div>
+                    <label className="block mb-2 text-gray-800 font-medium">Latitude</label>
+                    <input
+                      type="number"
+                      step="any"
+                      value={newShop.latitude}
+                      onChange={(e) => setNewShop({ ...newShop, latitude: e.target.value })}
+                      className="w-full px-3 py-3 border-2 border-gray-200 rounded-md text-sm focus:outline-none focus:border-[#2C6E49]"
+                      required
+                      placeholder="e.g., 9.3057"
+                    />
+                  </div>
+
+                  {/* Longitude */}
+                  <div>
+                    <label className="block mb-2 text-gray-800 font-medium">Longitude</label>
+                    <input
+                      type="number"
+                      step="any"
+                      value={newShop.longitude}
+                      onChange={(e) => setNewShop({ ...newShop, longitude: e.target.value })}
+                      className="w-full px-3 py-3 border-2 border-gray-200 rounded-md text-sm focus:outline-none focus:border-[#2C6E49]"
+                      required
+                      placeholder="e.g., 123.3055"
+                    />
+                  </div>
+
+                  {/* Operating Hours */}
+                  <div>
+                    <label className="block mb-2 text-gray-800 font-medium">Operating Hours</label>
+                    <input
+                      type="text"
+                      value={newShop.hours}
+                      onChange={(e) => setNewShop({ ...newShop, hours: e.target.value })}
+                      className="w-full px-3 py-3 border-2 border-gray-200 rounded-md text-sm focus:outline-none focus:border-[#2C6E49]"
+                      required
+                      placeholder="e.g., 9:00 AM - 6:00 PM"
+                    />
+                  </div>
+
+                  {/* Price Range */}
+                  <div>
+                    <label className="block mb-2 text-gray-800 font-medium">Price Range</label>
+                    <input
+                      type="text"
+                      value={newShop.priceRange}
+                      onChange={(e) => setNewShop({ ...newShop, priceRange: e.target.value })}
+                      className="w-full px-3 py-3 border-2 border-gray-200 rounded-md text-sm focus:outline-none focus:border-[#2C6E49]"
+                      required
+                      placeholder="e.g., ₱100 - ₱500"
+                    />
+                  </div>
+                </div>
+
+                <div className="mb-5">
+                  <label className="block mb-2 text-gray-800 font-medium">Item Types</label>
+                  <div className="flex gap-5 flex-wrap">
+                    {['clothing', 'shoes', 'bags', 'accessories'].map((type) => (
+                      <label key={type} className="flex items-center gap-2 cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={newShop.itemTypes.includes(type)}
+                          onChange={(e) => {
+                            const types = e.target.checked
+                              ? [...newShop.itemTypes, type]
+                              : newShop.itemTypes.filter((t) => t !== type);
+                            setNewShop({ ...newShop, itemTypes: types });
+                          }}
+                        />
+                        {type.charAt(0).toUpperCase() + type.slice(1)}
+                      </label>
+                    ))}
+                  </div>
+                </div>
+
+                <button
+                  type="submit"
+                  className="px-6 py-3 rounded-md text-sm font-medium transition-all bg-[#2C6E49] text-white hover:bg-[#25573A]"
+                >
+                  {editingShop ? 'Update Shop' : 'Add Shop'}
+                </button>
+                {editingShop && (
+                  <button
+                    type="button"
+                    className="ml-3 px-6 py-3 border-2 border-[#2C6E49] text-[#2C6E49] rounded-md hover:bg-[#2C6E49] hover:text-white transition-all"
+                    onClick={() => {
+                      setEditingShop(null);
+                      setNewShop({
+                        name: '',
+                        latitude: '',
+                        longitude: '',
+                        hours: '',
+                        priceRange: '',
+                        itemTypes: [],
+                        image: ''
+                      });
+                    }}
+                  >
+                    Cancel
+                  </button>
+                )}
+              </form>
+            </div>
+
+            <div>
+              <h2 className="text-gray-800 mb-5 text-2xl font-bold border-b-2 border-gray-100 pb-2">
+                Manage Thrift Shops ({shops.length} total)
+              </h2>
+              <div className="grid gap-5">
+                {shops.map((shop) => (
                   <div
                     key={shop.ShopID}
                     className="bg-gray-100 p-5 rounded-lg border-l-4 border-[#2C6E49] flex justify-between items-center"
                   >
                     <div className="flex-1">
-                      <h3 className="text-gray-800 mb-2 font-semibold">
-                        {shop.Name}
-                      </h3>
-                      <p className="my-1 text-gray-600">
-                        <strong>Hours:</strong> {shop.StoreHours}
-                      </p>
-                      <p className="my-1 text-gray-600">
-                        <strong>Price Range:</strong> {shop.PriceRange}
-                      </p>
-                      <p className="my-1 text-gray-600">
-                        <strong>Category:</strong> {shop.Category}
+                      <h3 className="text-gray-800 mb-2">{shop.ShopName}</h3>
+                      <p className="my-1 text-gray-600"><strong>Hours:</strong> {shop.OperatingHours}</p>
+                      <p className="my-1 text-gray-600"><strong>Price Range:</strong> {shop.PriceRange}</p>
+                      <p className="my-1 text-gray-600"><strong>Items:</strong> {shop.ItemTypes?.join(', ') || 'None'}</p>
+                      <p className="my-1 text-gray-600 text-sm">
+                        <strong>Location:</strong> {shop.Latitude}, {shop.Longitude}
                       </p>
                     </div>
 
                     <div className="flex flex-col gap-2">
+                      <button
+                        className="px-6 py-2 border-2 border-[#2C6E49] text-[#2C6E49] bg-white rounded-md hover:bg-[#2C6E49] hover:text-white transition-all"
+                        onClick={() => handleEditShop(shop)}
+                      >
+                        Edit
+                      </button>
                       <button
                         className="px-6 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition-all"
                         onClick={() => handleDeleteShop(shop.ShopID)}
@@ -159,56 +403,82 @@ function AdminPage({ user }) {
                       </button>
                     </div>
                   </div>
-                ))
-              )}
+                ))}
+                {shops.length === 0 && (
+                  <div className="text-center py-8 text-gray-500">
+                    No thrift shops found. Add your first shop above.
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         )}
 
-        {/* 💬 Comment Moderation */}
-        {activeTab === "comments" && (
+        {/* Comment Moderation */}
+        {activeTab === 'comments' && (
           <div className="bg-white rounded-lg p-8 shadow-lg">
             <h2 className="text-gray-800 mb-5 text-2xl font-bold border-b-2 border-gray-100 pb-2">
-              Comment Moderation
+              Comment Moderation ({comments.length} total)
             </h2>
-
-            {Object.keys(comments).length === 0 ? (
-              <p className="text-gray-500">No visible comments yet.</p>
-            ) : (
-              Object.entries(comments).map(([shopId, shopComments]) => (
-                <div key={shopId} className="mb-8">
-                  <h3 className="text-xl font-semibold text-[#2C6E49] mb-3">
-                    Shop ID: {shopId}
-                  </h3>
-
-                  <div className="grid gap-5">
-                    {shopComments.map((comment) => (
-                      <div
-                        key={comment.ComID}
-                        className="bg-gray-100 p-5 rounded-lg border-l-4 border-[#2C6E49] flex justify-between items-center"
-                      >
-                        <div className="flex-1">
-                          <p className="text-gray-800 mb-1">
-                            <strong>Content:</strong> {comment.Content}
-                          </p>
-                          <p className="text-gray-600 text-sm">
-                            <strong>Date:</strong>{" "}
-                            {new Date(comment.CreationDate).toLocaleDateString()}
-                          </p>
-                        </div>
-
-                        <button
-                          className="bg-[#E63946] hover:bg-[#C92D39] text-white px-4 py-2 rounded-md text-sm font-medium"
-                          onClick={() => handleDeleteComment(comment.ComID)}
-                        >
-                          Delete
-                        </button>
+            <div className="grid gap-5">
+              {comments.map((comment) => (
+                <div
+                  key={comment.CommentID}
+                  className="bg-gray-100 p-5 rounded-lg border-l-4 border-[#2C6E49]"
+                >
+                  <div className="flex justify-between items-start mb-3">
+                    <div className="flex-1">
+                      <p className="font-semibold text-gray-800">
+                        @{comment.CUSTOMER?.Username || 'Unknown User'}
+                      </p>
+                      <p className="text-gray-700 mt-1 italic">"{comment.Content}"</p>
+                      <div className="text-sm text-gray-600 mt-2">
+                        <span className="font-semibold">Shop:</span> {comment['THRIFT SHOP']?.ShopName || 'Unknown Shop'} &nbsp;
+                        <span className="font-semibold">Date:</span> {new Date(comment.CreationDate).toLocaleDateString()} &nbsp;
+                        <span className="font-semibold">Status:</span> 
+                        <span className={`ml-1 px-2 py-1 rounded text-xs ${
+                          comment.Status === 'visible' 
+                            ? 'bg-green-100 text-green-800' 
+                            : 'bg-yellow-100 text-yellow-800'
+                        }`}>
+                          {comment.Status}
+                        </span>
                       </div>
-                    ))}
+                    </div>
+
+                    <div className="flex gap-2 flex-wrap">
+                      {comment.Status !== 'visible' && (
+                        <button
+                          className="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded text-sm"
+                          onClick={() => handleUpdateCommentStatus(comment.CommentID, 'visible')}
+                        >
+                          Approve
+                        </button>
+                      )}
+                      {comment.Status !== 'hidden' && (
+                        <button
+                          className="bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-1 rounded text-sm"
+                          onClick={() => handleUpdateCommentStatus(comment.CommentID, 'hidden')}
+                        >
+                          Hide
+                        </button>
+                      )}
+                      <button
+                        className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm"
+                        onClick={() => handleDeleteComment(comment.CommentID)}
+                      >
+                        Delete
+                      </button>
+                    </div>
                   </div>
                 </div>
-              ))
-            )}
+              ))}
+              {comments.length === 0 && (
+                <div className="text-center py-8 text-gray-500">
+                  No comments found.
+                </div>
+              )}
+            </div>
           </div>
         )}
       </div>
