@@ -24,7 +24,7 @@ function AdminPage() {
       if (error) throw error;
       setShops(data || []);
     } catch (err) {
-      console.error("Error fetching thrift shops:", err.message);
+      toast.error("Error fetching thrift shops:", err.message);
     }
   };
 
@@ -42,7 +42,7 @@ function AdminPage() {
       if (error) throw error;
       setComments(data || []);
     } catch (err) {
-      console.error("Error fetching comments:", err.message);
+      toast.error("Error fetching comments:", err.message);
     }
   };
 
@@ -100,7 +100,7 @@ function AdminPage() {
       toast.success("Successfully Added Shop!");
       fetchShops();
     } catch (err) {
-      console.error("Error adding shop:", err.message);
+      toast.error("Error adding shop:", err.message);
       alert("Error adding shop: " + err.message);
     }
   };
@@ -155,7 +155,7 @@ function AdminPage() {
   
       fetchShops(); // Refresh list
     } catch (err) {
-      console.error("Error updating shop:", err.message);
+      toast.error("Error updating shop:", err.message);
       alert("Error updating shop: " + err.message);
     }
   };
@@ -175,7 +175,7 @@ function AdminPage() {
      
       fetchShops(); // Refresh the list
     } catch (err) {
-      console.error("Error deleting shop:", err.message);
+      toast.error("Error deleting shop:", err.message);
       alert("Error deleting shop: " + err.message);
     }
   };
@@ -194,7 +194,7 @@ function AdminPage() {
      
       fetchComments(); // Refresh the list
     } catch (err) {
-      console.error("Error deleting comment:", err.message);
+      toast.error("Error deleting comment:", err.message);
       alert("Error deleting comment: " + err.message);
     }
   };
@@ -211,7 +211,7 @@ function AdminPage() {
      
       fetchComments(); // Refresh the list
     } catch (err) {
-      console.error("Error updating comment status:", err.message);
+      toast.error("Error updating comment status:", err.message);
       alert("Error updating comment status: " + err.message);
     }
   };
