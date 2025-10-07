@@ -63,7 +63,8 @@ function TutorialsPage({ user }) {
     }
   ];
 
-  const filteredTutorials = tutorials.filter(tutorial => {
+  const filteredTutorials = tutorials.filter(tutorial => 
+  {
     const categoryMatch = activeFilter === "all" || tutorial.category === activeFilter;
     const difficultyMatch = activeDifficulty === "all" || tutorial.difficulty === activeDifficulty;
     return categoryMatch && difficultyMatch;
@@ -77,54 +78,6 @@ function TutorialsPage({ user }) {
     setActiveDifficulty(difficulty);
   };
 
-  const handleCommentChange = (tutorialId, comment) => {
-    // FIX: Only allow comment changes if user is logged in
-    if (!user) return;
-
-    setNewComments(prev => ({
-      ...prev,
-      [tutorialId]: comment
-    }));
-  };
-
-  const handleCommentSubmit = (tutorialId) => {
-    // Check if user is logged in
-    if (!user) {
-      alert("Please log in to post comments.");
-      return;
-    }
-
-    const comment = newComments[tutorialId]?.trim();
-
-    if (!comment) {
-      alert("Please enter a comment before sending.");
-      return;
-    }
-
-    const newComment = {
-      id: Date.now(),
-      text: comment,
-      timestamp: new Date().toLocaleString(),
-      user: user.username || "Anonymous"
-    };
-
-    setComments(prev => ({
-      ...prev,
-      [tutorialId]: [...(prev[tutorialId] || []), newComment]
-    }));
-
-    setNewComments(prev => ({
-      ...prev,
-      [tutorialId]: ""
-    }));
-  };
-
-  const handleKeyPress = (e, tutorialId) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault();
-      handleCommentSubmit(tutorialId);
-    }
-  };
 
   const difficultyColors = {
     beginner: 'bg-[#27ae60]',
@@ -273,71 +226,6 @@ function TutorialsPage({ user }) {
                   </div>
                   <h3 className="mb-2.5 text-[var(--dark)]text-[1.3rem]">{tutorial.title}</h3>
                   <p className="text-[var(--gray)] mb-[15px] text-[.95rem] leading-[1.5]">{tutorial.description}</p>
-
-                  {/* Comments Section - Protected */}
-                  {/* <div className="comments-section">
-                    <h4>
-                      Comments ({comments[tutorial.id]?.length || 0})
-                      {!user && <span className="login-required-tag"> - Login Required</span>}
-                    </h4> */}
-
-                    {/* Comments List - Protected */}
-                    {/* <div className="comments-list">
-                      {user ? (
-                        comments[tutorial.id]?.map(comment => (
-                          <div key={comment.id} className="comment">
-                            <div className="comment-header">
-                              <strong>{comment.user}</strong>
-                              <span className="comment-time">{comment.timestamp}</span>
-                            </div>
-                            <p className="comment-text">{comment.text}</p>
-                          </div>
-                        ))
-                      ) : (
-                        <div className="no-comments-message">
-                          <i className="fas fa-lock"></i>
-                          <p>Please log in to view comments</p>
-                        </div>
-                      )}
-
-                      {user && comments[tutorial.id]?.length === 0 && (
-                        <div className="no-comments-message">
-                          <p>No comments yet. Be the first to comment!</p>
-                        </div>
-                      )}
-                    </div> */}
-
-                    {/* Comment Input - Protected */}
-                    {/* {user ? (
-                      <div className="comment-input-container">
-                        <textarea
-                          className="comment-input"
-                          placeholder="Share your thoughts or ask a question..."
-                          value={newComments[tutorial.id] || ""}
-                          onChange={(e) => handleCommentChange(tutorial.id, e.target.value)}
-                          onKeyPress={(e) => handleKeyPress(e, tutorial.id)}
-                          rows="2"
-                        />
-                        <button
-                          className="comment-send-btn"
-                          onClick={() => handleCommentSubmit(tutorial.id)}
-                          title="Send comment"
-                        >
-                          <i className="fas fa-paper-plane"></i>
-                        </button>
-                      </div>
-                    ) : (
-                      <div className="login-prompt">
-                        <div className="login-prompt-content">
-                          <i className="fas fa-user-lock"></i>
-                          <div>
-                            <p><strong>Want to join the discussion?</strong></p>
-                            <p>Log in to ask questions and share your experiences</p>
-                          </div>
-                        </div>
-                      </div>
-                    )} */}
-                  {/* </div> */}
                 </div>
               </div>
             ))}
