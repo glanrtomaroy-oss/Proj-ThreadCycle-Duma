@@ -55,7 +55,7 @@ const HomePage = () => {
       mapRef.current?.resize();
     });
     mapRef.current.on('error', (e) => {
-      console.error('Mapbox error', e?.error || e);
+      toast.error('Mapbox error', e?.error || e);
       toast.error('Map failed to load. Please refresh.');
     });
   }, [mapboxToken]);
