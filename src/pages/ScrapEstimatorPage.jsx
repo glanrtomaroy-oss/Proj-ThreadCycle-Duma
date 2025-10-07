@@ -63,7 +63,7 @@ function ScrapEstimatorPage() {
       if (error) throw error;
       return data;
     } catch (error) {
-      console.error("Failed to insert into supabase", error.message);
+      toast.error("Failed to insert into supabase", error.message);
       return null;
     } finally {
       setLoadings(false);
@@ -89,7 +89,7 @@ function ScrapEstimatorPage() {
       setCalculations(data || []);
       return data || [];
     } catch (error) {
-      console.error("Failed to fetch from supabase", error.message);
+      toast.error("Failed to fetch from supabase", error.message);
       setCalculations([]);
       return [];
     } finally {
@@ -113,7 +113,7 @@ function ScrapEstimatorPage() {
       .single(); // since each user should have exactly one customer row
 
     if (error) {
-      console.error("Error fetching customer id:", error.message);
+      toast.error("Error fetching customer id:", error.message);
       return null;
     }
 
@@ -142,7 +142,7 @@ function ScrapEstimatorPage() {
       setCalculations(calculations.filter(calc => calc.ProjID !== projId));
       toast.success("Calculation deleted successfully!");
     } catch (error) {
-      console.error("Failed to delete calculation:", error.message);
+      toast.error("Failed to delete calculation:", error.message);
       toast.error("Failed to delete calculation.");
     } finally {
       setLoadings(false);
