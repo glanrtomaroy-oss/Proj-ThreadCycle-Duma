@@ -76,8 +76,7 @@ function AboutPage() {
                 </div>
                 <h3 className="text-gray-800 mb-1">Glan R. Tomaroy</h3>
                 <p className="text-[#4c5f0d] font-medium mb-2">Co-Founder & Developer</p>
-                <p className="text-gray-600 text-sm">IT professional with a passion for sustainable solutions and community development.</p>
-              </div>
+                </div>
 
               <div className="bg-white rounded-lg overflow-hidden shadow-lg text-center p-5 transition-transform hover:-translate-y-1">
                 <div className="w-30 h-30 rounded-full overflow-hidden mx-auto mb-4">
@@ -85,8 +84,7 @@ function AboutPage() {
                 </div>
                 <h3 className="text-gray-800 mb-1">Voughn John Zoe N. Villalon</h3>
                 <p className="text-[#4c5f0d] font-medium mb-2">Co-Founder & Sustainability Expert</p>
-                <p className="text-gray-600 text-sm">Fashion enthusiast with expertise in sustainable practices and community engagement.</p>
-              </div>
+                </div>
 
               <div className="bg-white rounded-lg overflow-hidden shadow-lg text-center p-5 transition-transform hover:-translate-y-1">
                 <div className="w-30 h-30 rounded-full overflow-hidden mx-auto mb-4">
@@ -94,8 +92,7 @@ function AboutPage() {
                 </div>
                 <h3 className="text-gray-800 mb-1">Kate Valerie Katada</h3>
                 <p className="text-[#4c5f0d] font-medium mb-2">Co-Founder & Secretary</p>
-                <p className="text-gray-600 text-sm">Fashion enthusiast with expertise in sustainable practices and community engagement.</p>
-              </div>
+                </div>
             </div>
           </div>
 
