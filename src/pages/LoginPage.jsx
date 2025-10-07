@@ -38,7 +38,7 @@ const LoginPage = () => {
         toast.error(result.error);
       }
     } catch (err) {
-      toast.error("An unexpected error occurred");
+      toast.error("An unexpected error occurred.");
     } finally {
       setLoading(false);
     }
