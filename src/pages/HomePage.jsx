@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { supabase } from '../util/supabase';
 import { useNavigate } from 'react-router-dom';
 import mapboxgl from 'mapbox-gl';
@@ -30,34 +30,51 @@ const HomePage = () => {
     fetchShops();
   }, []);
 
-  // Initialize Mapbox map once
+  // Initialize Mapbox map once (when container is visible)
   useEffect(() => {
-    if (!mapContainerRef.current) return;
+    const containerEl = mapContainerRef.current;
+    if (!containerEl) return;
     if (mapRef.current) return;
 
-    if (!mapboxToken) {
-      toast.error('Missing Mapbox token. Check your .env or Vercel settings.');
-      return;
-    }
+    const initMap = () => {
+      if (!mapboxToken) {
+        toast.error('Missing Mapbox token. Check your .env or Vercel settings.');
+        return;
+      }
+      mapboxgl.accessToken = mapboxToken;
+      const initialCenter = [123.3, 9.307];
+      mapRef.current = new mapboxgl.Map({
+        container: containerEl,
+        style: 'mapbox://styles/mapbox/streets-v12',
+        center: initialCenter,
+        zoom: 12,
+      });
+      mapRef.current.addControl(new mapboxgl.NavigationControl({ showCompass: false }));
+      mapRef.current.on('load', () => mapRef.current?.resize());
+      mapRef.current.on('error', (e) => {
+        console.error('Mapbox error', e?.error || e);
+        toast.error('Map failed to load. Please refresh.');
+      });
+    };
 
-    mapboxgl.accessToken = mapboxToken;
+    // Defer until element is on screen to avoid layout issues
+    const observer = new IntersectionObserver((entries) => {
+      const [entry] = entries;
+      if (entry.isIntersecting && !mapRef.current) {
+        initMap();
+        observer.disconnect();
+      }
+    }, { root: null, threshold: 0.01 });
 
-    const initialCenter = [123.3, 9.307];
-    mapRef.current = new mapboxgl.Map({
-      container: mapContainerRef.current,
-      style: 'mapbox://styles/mapbox/streets-v12',
-      center: initialCenter,
-      zoom: 12,
-    });
+    observer.observe(containerEl);
 
-    mapRef.current.addControl(new mapboxgl.NavigationControl({ showCompass: false }));
-    mapRef.current.on('load', () => {
-      mapRef.current?.resize();
-    });
-    mapRef.current.on('error', (e) => {
-      toast.error('Mapbox error', e?.error || e);
-      toast.error('Map failed to load. Please refresh.');
-    });
+    return () => {
+      observer.disconnect();
+      if (mapRef.current) {
+        mapRef.current.remove();
+        mapRef.current = null;
+      }
+    };
   }, [mapboxToken]);
 
   // Render markers when shops change
@@ -79,8 +96,8 @@ const HomePage = () => {
 
       const popupHtml = `
         <div style="min-width:200px">
-          <div style=\"font-weight:600;color:#2C6E49;margin-bottom:4px\">${shop.Name ?? 'Thrift Shop'}</div>
-          <div style=\"font-size:12px;color:#555;margin-bottom:6px\">${(shop.Category ?? '').toString()} • ${(shop.PriceRange ?? '').toString()}</div>
+          <div style="font-weight:600;color:#2C6E49;margin-bottom:4px">${shop.Name ?? 'Thrift Shop'}</div>
+          <div style="font-size:12px;color:#555;margin-bottom:6px">${(shop.Category ?? '').toString()} • ${(shop.PriceRange ?? '').toString()}</div>
         </div>`;
 
       const popup = new mapboxgl.Popup({ offset: 16 }).setHTML(popupHtml);
