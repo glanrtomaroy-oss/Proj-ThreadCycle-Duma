@@ -234,7 +234,7 @@ function AdminPage() {
     });
   
     // clear previous file input
-    // if (fileInputRef.current) fileInputRef.current.value = '';
+    if (fileInputRef.current) fileInputRef.current.value = '';
   };
 
 
