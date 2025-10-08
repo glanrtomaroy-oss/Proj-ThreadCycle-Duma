@@ -159,7 +159,7 @@ function AdminPage() {
         itemTypes: [],
         Image: "",
       });
-  
+      toast.success("Successfully Updated Shop!");
       fetchShops(); // Refresh list
     } catch (err) {
       toast.error("Error updating shop:", err.message);
