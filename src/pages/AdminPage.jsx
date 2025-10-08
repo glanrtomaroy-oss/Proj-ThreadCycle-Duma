@@ -1,7 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { supabase } from '../util/supabase'; // Adjust import path as needed
 import toast from 'react-hot-toast'
-import { useState, useEffect, useRef } from 'react';
 
 function AdminPage() {
   const [activeTab, setActiveTab] = useState('shops');
