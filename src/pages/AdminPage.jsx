@@ -452,10 +452,10 @@ function AdminPage() {
                       <h3 className="my-1 text-gray-600"><strong>Shop Name:</strong> {shop.Name}</h3>
                       <p className="my-1 text-gray-600"><strong>Hours:</strong> {shop.StoreHours}</p>
                       <p className="my-1 text-gray-600"><strong>Price Range:</strong> {shop.PriceRange}</p>
-                      <p className="my-1 text-gray-600"><strong>Items:</strong> {shop.itemTypes?.join(', ') || 'None'}</p>
+                      {/* <p className="my-1 text-gray-600"><strong>Items:</strong> {shop.itemTypes?.join(', ') || 'None'}</p>
                       <p className="my-1 text-gray-600 text-sm">
                         <strong>Location:</strong> {shop.Latitude}, {shop.Longitude}
-                      </p>
+                      </p> */}
                     </div>
 
                     <div className="flex flex-col gap-2">
