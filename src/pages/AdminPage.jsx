@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '../util/supabase'; // Adjust import path as needed
 import toast from 'react-hot-toast'
+import { useState, useEffect, useRef } from 'react';
 
 function AdminPage() {
   const [activeTab, setActiveTab] = useState('shops');
@@ -16,6 +17,7 @@ function AdminPage() {
     Image: '',
   });
   const [editingShop, setEditingShop] = useState(null);
+  const fileInputRef = useRef(null);
 
   // Fetch thrift shops
   const fetchShops = async () => {
@@ -97,6 +99,9 @@ function AdminPage() {
         itemTypes: [],
         Image: '',
       });
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
       toast.success("Successfully Added Shop!");
       fetchShops();
     } catch (err) {
@@ -302,6 +307,7 @@ function AdminPage() {
                       type="file"
                       accept="image/*"
                       required
+                      ref={fileInputRef}     // 👈 add this
                       onChange={(e) => setNewShop({ ...newShop, Image: e.target.files[0] })}
                       className="w-full px-3 py-3 border-2 border-gray-200 rounded-md text-sm focus:outline-none focus:border-[#2C6E49]"
                     />
