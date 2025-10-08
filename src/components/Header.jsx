@@ -124,26 +124,19 @@ const Header = () => {
                 </NavLink>
               </li>
             )}
-            {/* Admin Link */}
           </ul>
+          
           <div className="flex items-center">
-            {!loading && userRole === "customer" || userRole === "admin" ? (
-              <div className="flex items-center">
-                <NavLink
-                  className={({ isActive }) =>
-                    `bg-[#4C956C] hover:bg-[#3B7D57] text-white font-bold px-6 py-3 rounded-lg cursor-pointer transition-all duration-300 tracking-wide text-sm shadow-lg hover:shadow-xl hover:scale-105 transform flex items-center' : ''
-                    }`
-                  }
-                  to="/profile"
-                >
-                  Profile
-                </NavLink>
-              </div>
+            {!loading && (userRole === "customer" || userRole === "admin") ? (
+              <NavLink
+                className="bg-[#4C956C] hover:bg-[#3B7D57] text-white font-bold px-6 py-3 rounded-lg cursor-pointer transition-all duration-300 tracking-wide text-sm shadow-lg hover:shadow-xl hover:scale-105 transform flex items-center"
+                to="/profile"
+              >
+                Profile
+              </NavLink>
             ) : (
               <NavLink
-                className={
-                  "bg-[#4C956C] hover:bg-[#3B7D57] text-white font-bold px-6 py-3 rounded-lg cursor-pointer transition-all duration-300 tracking-wide text-sm shadow-lg hover:shadow-xl hover:scale-105 transform flex items-center "
-                }
+                className="bg-[#4C956C] hover:bg-[#3B7D57] text-white font-bold px-6 py-3 rounded-lg cursor-pointer transition-all duration-300 tracking-wide text-sm shadow-lg hover:shadow-xl hover:scale-105 transform flex items-center"
                 to="/login"
               >
                 Login
