@@ -3,6 +3,8 @@ import { UserAuth } from '../context/AuthContext';
 
 const Header = () => {
   const { userRole, loading } = UserAuth();
+  console.log("Current user role:", userRole);
+  console.log("Loading state:", loading);
   // const [user, setUser] = useState("");
 
   return (
@@ -104,7 +106,7 @@ const Header = () => {
                 About
               </NavLink>
             </li>
-            { userRole === "admin" ? (
+            {!loading && userRole === "admin" && (
               <li className="ml-6">
                 <NavLink
                   className={({ isActive }) =>
