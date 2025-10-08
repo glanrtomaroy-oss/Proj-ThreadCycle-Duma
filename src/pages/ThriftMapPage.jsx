@@ -20,6 +20,7 @@ function ThriftMapPage() {
   const mapRef = useRef(null);
   // Track markers by ShopID for quick focus
   const markersRef = useRef({});
+  const addressCacheRef = useRef({});
   const mapboxToken = import.meta.env.VITE_MAPBOX_TOKEN;
 
   const getPriceBucket = (priceText) => {
@@ -178,20 +179,36 @@ function ThriftMapPage() {
       const lng = Number(shop.Longitude);
       if (!isFinite(lat) || !isFinite(lng)) return;
 
-      const popupHtml = `
-        <div style="min-width:200px">
-          <div style="font-weight:600;color:#2C6E49;margin-bottom:4px">${shop.Name ?? "Thrift Shop"}</div>
-          <div style="font-size:12px;color:#555;margin-bottom:6px">
-            ${(shop.Category ?? "").toString()} • ${(shop.PriceRange ?? "").toString()}
+      const initialAddress = addressCacheRef.current[shop.ShopID] || '';
+      const makePopupHtml = (address) => `
+        <div style="min-width:220px; max-width:260px; background:#fff; border-radius:10px; box-shadow:0 6px 20px rgba(0,0,0,0.12); overflow:hidden;">
+          <div style="padding:10px 12px 8px 12px;">
+            <div style="font-weight:700; color:#2C6E49; font-size:14px; margin-bottom:4px">${shop.Name ?? 'Thrift Shop'}</div>
+            <div style="font-size:12px; color:#555; margin-bottom:6px">${(shop.Category ?? '').toString()} • ${(shop.PriceRange ?? '').toString()}</div>
+            <div style="font-size:12px; color:#333;">${address || 'Resolving address...'}</div>
           </div>
         </div>`;
 
-      const popup = new mapboxgl.Popup({ offset: 16 }).setHTML(popupHtml);
+      const popup = new mapboxgl.Popup({ offset: 16, closeButton: true, closeOnClick: true })
+        .setHTML(makePopupHtml(initialAddress));
       const marker = new mapboxgl.Marker({ color: "#2C6E49" })
         .setLngLat([lng, lat])
         .setPopup(popup)
         .addTo(map);
       markersRef.current[shop.ShopID] = marker;
+
+      if (!initialAddress) {
+        const url = `https://api.mapbox.com/geocoding/v5/mapbox.places/${lng},${lat}.json?access_token=${encodeURIComponent(mapboxToken)}&types=address,poi,place&limit=1`;
+        fetch(url)
+          .then((r) => (r.ok ? r.json() : null))
+          .then((data) => {
+            const addr = data?.features?.[0]?.place_name || '';
+            if (addr) addressCacheRef.current[shop.ShopID] = addr;
+            const m = markersRef.current[shop.ShopID];
+            if (m && m.getPopup()) m.getPopup().setHTML(makePopupHtml(addr));
+          })
+          .catch(() => {});
+      }
     });
 
     const markerList = Object.values(markersRef.current);

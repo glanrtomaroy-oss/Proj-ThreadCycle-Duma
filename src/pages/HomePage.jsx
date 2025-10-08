@@ -14,6 +14,7 @@ const HomePage = () => {
   const mapContainerRef = useRef(null);
   const mapRef = useRef(null);
   const markersRef = useRef({}); // ShopID -> marker
+  const addressCacheRef = useRef({}); // ShopID -> address string
   const mapboxToken = import.meta.env.VITE_MAPBOX_TOKEN;
 
   const fetchShops = async () => {
@@ -29,6 +30,30 @@ const HomePage = () => {
   useEffect(() => {
     fetchShops();
   }, []);
+
+  const makePopupHtml = (shop, addressText) => `
+    <div style="min-width:220px; max-width:260px; background:#fff; border-radius:10px; box-shadow:0 6px 20px rgba(0,0,0,0.12); overflow:hidden;">
+      <div style="padding:10px 12px 8px 12px;">
+        <div style="font-weight:700; color:#2C6E49; font-size:14px; margin-bottom:4px;">${shop.Name ?? 'Thrift Shop'}</div>
+        <div style="font-size:12px; color:#555; margin-bottom:6px;">${(shop.Category ?? '').toString()} • ${(shop.PriceRange ?? '').toString()}</div>
+        <div style="font-size:12px; color:#333;">${addressText || 'Resolving address...'}</div>
+      </div>
+    </div>`;
+
+  const getAddressFor = async (lat, lng, shopId) => {
+    if (addressCacheRef.current[shopId]) return addressCacheRef.current[shopId];
+    try {
+      const url = `https://api.mapbox.com/geocoding/v5/mapbox.places/${lng},${lat}.json?access_token=${encodeURIComponent(mapboxToken)}&types=address,poi,place&limit=1`;
+      const res = await fetch(url);
+      if (!res.ok) throw new Error('Failed reverse geocoding');
+      const data = await res.json();
+      const address = data?.features?.[0]?.place_name || '';
+      if (address) addressCacheRef.current[shopId] = address;
+      return address;
+    } catch {
+      return '';
+    }
+  };
 
   // Initialize Mapbox map once (align with ThriftMapPage)
   useEffect(() => {
@@ -83,18 +108,23 @@ const HomePage = () => {
       const lat = Number(shop.Latitude);
       const lng = Number(shop.Longitude);
 
-      const popupHtml = `
-        <div style="min-width:200px">
-          <div style="font-weight:600;color:#2C6E49;margin-bottom:4px">${shop.Name ?? 'Thrift Shop'}</div>
-          <div style="font-size:12px;color:#555;margin-bottom:6px">${(shop.Category ?? '').toString()} • ${(shop.PriceRange ?? '').toString()}</div>
-        </div>`;
-
-      const popup = new mapboxgl.Popup({ offset: 16 }).setHTML(popupHtml);
+      const initialAddress = addressCacheRef.current[shop.ShopID] || '';
+      const popup = new mapboxgl.Popup({ offset: 16, closeButton: true, closeOnClick: true })
+        .setHTML(makePopupHtml(shop, initialAddress));
       const marker = new mapboxgl.Marker({ color: '#2C6E49' })
         .setLngLat([lng, lat])
         .setPopup(popup)
         .addTo(map);
       markersRef.current[shop.ShopID] = marker;
+
+      if (!initialAddress) {
+        getAddressFor(lat, lng, shop.ShopID).then((addr) => {
+          const m = markersRef.current[shop.ShopID];
+          if (m && m.getPopup()) {
+            m.getPopup().setHTML(makePopupHtml(shop, addr));
+          }
+        });
+      }
     });
 
     if (validShops.length > 0) {
@@ -127,16 +157,19 @@ const HomePage = () => {
             <p className="text-gray-600 max-w-3xl mx-auto">Discover how ThreadCycle Duma helps you embrace sustainable fashion practices</p>
           </div>
 
-          {/* Map Container */}
-          <div className="bg-white rounded-xl overflow-hidden shadow-lg mb-6 h-[400px]">
-            <div ref={mapContainerRef} className="w-full h-full" />
-            <div className="absolute bottom-3 right-3 z-10">
+          {/* Map Card */}
+          <div className="bg-white rounded-xl shadow-lg mb-6 overflow-hidden">
+            <div className="flex items-center justify-between px-4 py-3 border-b">
+              <h3 className="font-semibold text-gray-800">Interactive Thrift Shop Map</h3>
               <button
-                className="px-4 py-2 bg-transparent border border-[#4c5f0d] text-[#4c5f0d] rounded hover:bg-[#4c5f0d] hover:text-white transition-colors"
+                className="px-3 py-1.5 text-sm bg-transparent border border-[#2C6E49] text-[#2C6E49] rounded hover:bg-[#2C6E49] hover:text-white transition-colors"
                 onClick={() => navigate('/thrift-map')}
               >
                 View Larger Map
               </button>
+            </div>
+            <div className="h-[400px]">
+              <div ref={mapContainerRef} className="w-full h-full" />
             </div>
           </div>
         </div>
