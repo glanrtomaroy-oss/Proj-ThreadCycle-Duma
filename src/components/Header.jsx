@@ -104,7 +104,7 @@ const Header = () => {
                 About
               </NavLink>
             </li>
-            {!loading && userRole === "admin" && (
+            { userRole === "admin" ? (
               <li className="ml-6">
                 <NavLink
                   className={({ isActive }) =>
