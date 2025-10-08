@@ -176,7 +176,7 @@ function AdminPage() {
         .eq('ShopID', shopId);
 
       if (error) throw error;
-      toast.success("Successfully Added Shop!");
+      toast.success("Successfully Deleted Shop!");
       fetchShops(); // Refresh the list
     } catch (err) {
       toast.error("Error deleting shop:", err.message);
