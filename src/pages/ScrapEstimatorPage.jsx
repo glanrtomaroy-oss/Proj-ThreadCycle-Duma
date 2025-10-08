@@ -41,6 +41,19 @@ function ScrapEstimatorPage() {
 
     toast.success(`You saved ${saved.toFixed(2)} meters of ${fabricType} fabric!`);
 
+    // fabric type tracking to your state
+    const emissionFactors = { 
+      cotton: 7.5,  
+      polyester: 6, 
+      wool: 15, 
+      mixed: 6, 
+      denim: 10, 
+      silk: 20, 
+      linen: 10, 
+      leather: 30, 
+      other: 5
+  };
+
     // // Reset form
     // setFabricType("");
     // setOriginalLength("");
@@ -238,10 +251,12 @@ function ScrapEstimatorPage() {
                 <div className="w-12 h-12 bg-[#4C956C] rounded-full flex items-center justify-center text-white text-xl">
                   <i className="fas fa-co2"></i>
                 </div>
-                <div>
-                  <h3 className="text-3xl font-bold text-gray-800 mb-1">{(totalSaved * 0.5).toFixed(1)}kg</h3>
-                  <p className="text-gray-600 m-0">CO₂ Reduction*</p>
-                </div>
+                  <div>
+                    <h3 className="text-3xl font-bold text-gray-800 mb-1">
+                      {(totalSaved * 6).toFixed(1)}kg
+                    </h3>
+                    <p className="text-gray-600 m-0">CO₂ Reduction</p>
+                  </div>
               </div>
             </div>
 
@@ -289,7 +304,7 @@ function ScrapEstimatorPage() {
                     />
                   </div>
                   <button type="submit" className={`px-6 py-3 border-none rounded cursor-pointer font-medium transition-all w-full ${isLoggedIn ? 'bg-[#4C956C] text-white hover:bg-[#3B7D57]' : 'bg-gray-300 text-gray-500 cursor-not-allowed'}`} disabled={!isLoggedIn}>
-                    {isLoggedIn ? 'Calculate Savings' : 'Sign in to calculate & save'}
+                    {isLoggedIn ? 'Calculate Savings' : 'Sign in to Calculate'}
                   </button>
                 </form>
                 {!isLoggedIn && (
@@ -376,8 +391,7 @@ function ScrapEstimatorPage() {
                               className="bg-none text-red-500 border border-red-500 px-3 py-1 rounded-md cursor-pointer text-sm font-medium transition-all hover:bg-red-500 hover:text-white hover:-translate-y-0.5 mt-2 ml-1"
                               onClick={() => deleteCalculation(calc.ProjID)}
                               title="Delete calculation"
-                            >
-                              Delete
+                            > Delete
                             </button>
                           </div>
                         </div>
