@@ -224,15 +224,19 @@ function AdminPage() {
   const handleEditShop = (shop) => {
     setEditingShop(shop);
     setNewShop({
-      name: shop.ShopName || '',
+      name: shop.Name || '',
       latitude: shop.Latitude?.toString() || '',
       longitude: shop.Longitude?.toString() || '',
-      hours: shop.OperatingHours || '',
+      hours: shop.StoreHours || '',
       priceRange: shop.PriceRange || '',
-      itemTypes: shop.itemTypes || [],
+      itemTypes: shop.Category ? shop.Category.split(',') : [],
       Image: shop.Image || '',
     });
+  
+    // clear previous file input
+    if (fileInputRef.current) fileInputRef.current.value = '';
   };
+
 
   useEffect(() => {
     fetchShops();
