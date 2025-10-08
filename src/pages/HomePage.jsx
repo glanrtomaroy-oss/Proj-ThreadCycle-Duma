@@ -32,7 +32,7 @@ const HomePage = () => {
   }, []);
 
   const makePopupHtml = (shop, addressText) => `
-    <div style="min-width:220px; max-width:260px; background:#fff; border-radius:10px; box-shadow:0 6px 20px rgba(0,0,0,0.12); overflow:hidden;">
+    <div style="min-width:220px; max-width:260px; background:#fff; border-radius:10px; box-shadow:0 6px 20px #0000001f; overflow:hidden;">
       <div style="padding:10px 12px 8px 12px;">
         <div style="font-weight:700; color:#2C6E49; font-size:14px; margin-bottom:4px;">${shop.Name ?? 'Thrift Shop'}</div>
         <div style="font-size:12px; color:#555; margin-bottom:6px;">${(shop.Category ?? '').toString()} • ${(shop.PriceRange ?? '').toString()}</div>
@@ -66,7 +66,7 @@ const HomePage = () => {
     }
 
     mapboxgl.accessToken = mapboxToken;
-    const initialCenter = [123.3, 9.307];
+    const initialCenter = [123.3, 9.307]; // Dumaguete Focus
     mapRef.current = new mapboxgl.Map({
       container: mapContainerRef.current,
       style: 'mapbox://styles/mapbox/streets-v12',
