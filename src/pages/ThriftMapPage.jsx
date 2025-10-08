@@ -131,7 +131,7 @@ function ThriftMapPage() {
   // Initialize Mapbox map once
   useEffect(() => {
     if (!mapContainerRef.current) return;
-    if (mapRef.current) return; // already initialized
+    if (mapRef.current) return; 
 
     if (!mapboxToken) {
       toast.error("Mapbox token missing.");
