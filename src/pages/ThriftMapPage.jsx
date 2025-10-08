@@ -43,7 +43,10 @@ function ThriftMapPage() {
   // Fetch thrift shops
   const fetchShops = async () => {
     try {
-      const { data, error } = await supabase.from("THRIFT SHOP").select("*");
+      const { data, error } = await supabase
+        .from("THRIFT SHOP")
+        .select("*")
+        .order("ShopID", { ascending: true });
       if (error) throw error;
       setShops(data || []);
     } catch (err) {
