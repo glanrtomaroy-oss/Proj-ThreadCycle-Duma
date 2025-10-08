@@ -198,7 +198,7 @@ function AdminPage() {
         .eq('ComID', commentId);
 
       if (error) throw error;
-     
+      toast.success("Successfully Deleted Comment!");
       fetchComments(); // Refresh the list
     } catch (err) {
       toast.error("Error deleting comment:", err.message);
