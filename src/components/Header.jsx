@@ -104,6 +104,24 @@ const Header = () => {
                 About
               </NavLink>
             </li>
+            <li className="ml-6">
+              <NavLink
+                className={({ isActive }) =>
+                  `relative transition-colors no-underline 
+                   font-medium hover:text-[#FEFEE3] 
+                   after:content-[''] after:absolute after:w-0 after:h-[2px] 
+                   after:left-0 after:-bottom-1 after:bg-[#FEFEE3] 
+                   after:transition-all after:duration-300 
+                   hover:after:w-full
+                   ${isActive 
+                      ? "text-[#FEFEE3] after:w-full" 
+                      : "text-white after:w-0"}`
+                }
+                to="/admin"
+              >
+                Admin Page
+              </NavLink>
+            </li>
             {/* Admin Link */}
           </ul>
           <div className="flex items-center">
