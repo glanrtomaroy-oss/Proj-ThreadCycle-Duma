@@ -11,9 +11,15 @@ function ScrapEstimatorPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [loadings, setLoadings] = useState(false);
   const { session, loading } = UserAuth();
+  const isLoggedIn = !!session?.user;
 
   const calculateSavings = async (e) => {
     e.preventDefault();
+
+    if (!isLoggedIn) {
+      toast.error("Please sign in to create and save a project.");
+      return;
+    }
 
     if (!fabricType || !originalLength || !usedLength) {
       alert("Please fill in all fields");
@@ -253,6 +259,7 @@ function ScrapEstimatorPage() {
                       placeholder="e.g., Cotton, Denim, Silk"
                       value={fabricType}
                       onChange={handleFabricType}
+                      disabled={!isLoggedIn}
                     />
                   </div>
                   <div className="mb-5">
@@ -265,6 +272,7 @@ function ScrapEstimatorPage() {
                       step="0.1"
                       value={originalLength}
                       onChange={handleOriginalLength}
+                      disabled={!isLoggedIn}
                     />
                   </div>
                   <div className="mb-5">
@@ -277,10 +285,16 @@ function ScrapEstimatorPage() {
                       step="0.1"
                       value={usedLength}
                       onChange={handleUsedLength}
+                      disabled={!isLoggedIn}
                     />
                   </div>
-                  <button type="submit" className="px-6 py-3 border-none rounded cursor-pointer font-medium transition-all bg-[#4C956C] text-white hover:bg-[#3B7D57] w-full">Calculate Savings</button>
+                  <button type="submit" className={`px-6 py-3 border-none rounded cursor-pointer font-medium transition-all w-full ${isLoggedIn ? 'bg-[#4C956C] text-white hover:bg-[#3B7D57]' : 'bg-gray-300 text-gray-500 cursor-not-allowed'}`} disabled={!isLoggedIn}>
+                    {isLoggedIn ? 'Calculate Savings' : 'Sign in to calculate & save'}
+                  </button>
                 </form>
+                {!isLoggedIn && (
+                  <p className="text-xs text-gray-500 text-center mt-3">You must be signed in to create and save a project.</p>
+                )}
               </div>
             </div>
 
