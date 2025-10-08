@@ -30,46 +30,35 @@ const HomePage = () => {
     fetchShops();
   }, []);
 
-  // Initialize Mapbox map once (when container is visible)
+  // Initialize Mapbox map once (align with ThriftMapPage)
   useEffect(() => {
-    const containerEl = mapContainerRef.current;
-    if (!containerEl) return;
+    if (!mapContainerRef.current) return;
     if (mapRef.current) return;
 
-    const initMap = () => {
-      if (!mapboxToken) {
-        toast.error('Missing Mapbox token. Check your .env or Vercel settings.');
-        return;
-      }
-      mapboxgl.accessToken = mapboxToken;
-      const initialCenter = [123.3, 9.307];
-      mapRef.current = new mapboxgl.Map({
-        container: containerEl,
-        style: 'mapbox://styles/mapbox/streets-v12',
-        center: initialCenter,
-        zoom: 12,
-      });
-      mapRef.current.addControl(new mapboxgl.NavigationControl({ showCompass: false }));
-      mapRef.current.on('load', () => mapRef.current?.resize());
-      mapRef.current.on('error', (e) => {
-        console.error('Mapbox error', e?.error || e);
-        toast.error('Map failed to load. Please refresh.');
-      });
-    };
+    if (!mapboxToken) {
+      toast.error('Missing Mapbox token. Check your .env or Vercel settings.');
+      return;
+    }
 
-    // Defer until element is on screen to avoid layout issues
-    const observer = new IntersectionObserver((entries) => {
-      const [entry] = entries;
-      if (entry.isIntersecting && !mapRef.current) {
-        initMap();
-        observer.disconnect();
-      }
-    }, { root: null, threshold: 0.01 });
+    mapboxgl.accessToken = mapboxToken;
+    const initialCenter = [123.3, 9.307];
+    mapRef.current = new mapboxgl.Map({
+      container: mapContainerRef.current,
+      style: 'mapbox://styles/mapbox/streets-v12',
+      center: initialCenter,
+      zoom: 12,
+    });
 
-    observer.observe(containerEl);
+    mapRef.current.addControl(new mapboxgl.NavigationControl({ showCompass: false }));
+    mapRef.current.on('load', () => {
+      mapRef.current?.resize();
+    });
+    mapRef.current.on('error', (e) => {
+      console.error('Mapbox error', e?.error || e);
+      toast.error('Map failed to load. Please refresh.');
+    });
 
     return () => {
-      observer.disconnect();
       if (mapRef.current) {
         mapRef.current.remove();
         mapRef.current = null;
@@ -131,7 +120,7 @@ const HomePage = () => {
       </section>
 
       {/* Thrift Map Section - SIMPLIFIED VERSION */}
-      <section className="bg-[#FEFEE3] py-10 pb-20" id="thrift-map">
+      <section className="bg-[#FEFEE3] py-10 pb-10" id="thrift-map">
         <div className="w-full max-w-6xl mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="text-2xl font-bold mb-4 text-gray-800">Key Features</h2>
@@ -139,8 +128,8 @@ const HomePage = () => {
           </div>
 
           {/* Map Container */}
-          <div className="bg-white rounded-lg overflow-hidden shadow-lg mb-10 h-96 relative">
-            <div ref={mapContainerRef} className="absolute inset-0" />
+          <div className="bg-white rounded-xl overflow-hidden shadow-lg mb-6 h-[400px]">
+            <div ref={mapContainerRef} className="w-full h-full" />
             <div className="absolute bottom-3 right-3 z-10">
               <button
                 className="px-4 py-2 bg-transparent border border-[#4c5f0d] text-[#4c5f0d] rounded hover:bg-[#4c5f0d] hover:text-white transition-colors"
@@ -154,7 +143,7 @@ const HomePage = () => {
       </section>
 
       {/* Features Section */}
-      <section className="bg-[#FEFEE3] py-20" id="features">
+      <section className="bg-[#FEFEE3] py-12" id="features">
         <div className="w-full max-w-6xl mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
 
