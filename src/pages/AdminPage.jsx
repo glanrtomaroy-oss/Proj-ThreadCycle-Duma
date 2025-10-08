@@ -313,7 +313,15 @@ function AdminPage() {
                       onChange={(e) => setNewShop({ ...newShop, Image: e.target.files[0] })}
                       className="w-full px-3 py-3 border-2 border-gray-200 rounded-md text-sm focus:outline-none focus:border-[#2C6E49]"
                     />
-                  
+                  {editingShop && editingShop.Image && (
+                    <div className="mt-3">
+                      <img
+                        src={editingShop.Image}
+                        alt="Current Shop"
+                        className="w-32 h-32 object-cover rounded-md border"
+                      />
+                    </div>
+                  )}
                     {editingShop && !newShop.Image instanceof File && editingShop.Image && (
                       <div className="mt-2 text-sm text-gray-600">
                         <strong>Current image:</strong> {editingShop.Image.split('/').pop()}
