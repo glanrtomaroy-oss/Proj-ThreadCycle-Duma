@@ -104,7 +104,7 @@ const Header = () => {
                 About
               </NavLink>
             </li>
-            {userRole === "admin" ? 
+            { userRole === "admin" ? 
             <li className="ml-6">
               <NavLink
                 className={({ isActive }) =>
@@ -123,7 +123,7 @@ const Header = () => {
                 Admin Page
               </NavLink>
             </li>
-              )}
+            }
             {/* Admin Link */}
           </ul>
           <div className="flex items-center">
