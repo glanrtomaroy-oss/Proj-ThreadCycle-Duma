@@ -309,11 +309,16 @@ function AdminPage() {
                     <input
                       type="file"
                       accept="image/*"
-                      required
-                      ref={fileInputRef}     // 👈 add this
+                      ref={fileInputRef}
                       onChange={(e) => setNewShop({ ...newShop, Image: e.target.files[0] })}
                       className="w-full px-3 py-3 border-2 border-gray-200 rounded-md text-sm focus:outline-none focus:border-[#2C6E49]"
                     />
+                  
+                    {editingShop && !newShop.Image instanceof File && editingShop.Image && (
+                      <div className="mt-2 text-sm text-gray-600">
+                        <strong>Current image:</strong> {editingShop.Image.split('/').pop()}
+                      </div>
+                    )}
                   </div>
 
                   {/* Latitude */}
