@@ -234,8 +234,7 @@ function TutorialsPage({ user }) {
           {filteredTutorials.length === 0 && (
             <div className="no-results">
               <i className="fas fa-search"></i>
-              <h3>No tutorials found</h3>
-              <p>Try adjusting your filters to see more results</p>
+              <h3 className ="text-center text-gray-500 mt-8">No tutorials found.</h3>
             </div>
           )}
         </div>
