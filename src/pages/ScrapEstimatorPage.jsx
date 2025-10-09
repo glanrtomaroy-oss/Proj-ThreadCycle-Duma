@@ -11,9 +11,15 @@ function ScrapEstimatorPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [loadings, setLoadings] = useState(false);
   const { session, loading } = UserAuth();
+  const isLoggedIn = !!session?.user;
 
   const calculateSavings = async (e) => {
     e.preventDefault();
+
+    if (!isLoggedIn) {
+      toast.error("Please sign in to create and save a project.");
+      return;
+    }
 
     if (!fabricType || !originalLength || !usedLength) {
       alert("Please fill in all fields");
@@ -35,6 +41,19 @@ function ScrapEstimatorPage() {
 
     toast.success(`You saved ${saved.toFixed(2)} meters of ${fabricType} fabric!`);
 
+    // fabric type tracking to your state
+    const emissionFactors = { 
+      cotton: 7.5,  
+      polyester: 6, 
+      wool: 15, 
+      mixed: 6, 
+      denim: 10, 
+      silk: 20, 
+      linen: 10, 
+      leather: 30, 
+      other: 5
+  };
+
     // // Reset form
     // setFabricType("");
     // setOriginalLength("");
@@ -54,16 +73,16 @@ function ScrapEstimatorPage() {
           FabricType: fabricType,
           OriginalLength: originalLength,
           UsedLength: usedLength,
-          FabricSaved: fabricSaved, // ✅ match column name
+          FabricSaved: fabricSaved, // match column name
           CO2Reduction: 5,
           CustID: custId,
         }])
-        .select(); // ✅ return the inserted row
+        .select(); // return the inserted row
 
       if (error) throw error;
       return data;
     } catch (error) {
-      console.error("Failed to insert into supabase", error.message);
+      toast.error("Failed to insert into supabase", error.message);
       return null;
     } finally {
       setLoadings(false);
@@ -89,7 +108,7 @@ function ScrapEstimatorPage() {
       setCalculations(data || []);
       return data || [];
     } catch (error) {
-      console.error("Failed to fetch from supabase", error.message);
+      toast.error("Failed to fetch from supabase", error.message);
       setCalculations([]);
       return [];
     } finally {
@@ -113,7 +132,7 @@ function ScrapEstimatorPage() {
       .single(); // since each user should have exactly one customer row
 
     if (error) {
-      console.error("Error fetching customer id:", error.message);
+      toast.error("Error fetching user.", error.message);
       return null;
     }
 
@@ -142,7 +161,7 @@ function ScrapEstimatorPage() {
       setCalculations(calculations.filter(calc => calc.ProjID !== projId));
       toast.success("Calculation deleted successfully!");
     } catch (error) {
-      console.error("Failed to delete calculation:", error.message);
+      toast.error("Failed to delete calculation:", error.message);
       toast.error("Failed to delete calculation.");
     } finally {
       setLoadings(false);
@@ -232,10 +251,12 @@ function ScrapEstimatorPage() {
                 <div className="w-12 h-12 bg-[#4C956C] rounded-full flex items-center justify-center text-white text-xl">
                   <i className="fas fa-co2"></i>
                 </div>
-                <div>
-                  <h3 className="text-3xl font-bold text-gray-800 mb-1">{(totalSaved * 0.5).toFixed(1)}kg</h3>
-                  <p className="text-gray-600 m-0">CO₂ Reduction*</p>
-                </div>
+                  <div>
+                    <h3 className="text-3xl font-bold text-gray-800 mb-1">
+                      {(totalSaved * 6).toFixed(1)}kg
+                    </h3>
+                    <p className="text-gray-600 m-0">CO₂ Reduction</p>
+                  </div>
               </div>
             </div>
 
@@ -253,6 +274,7 @@ function ScrapEstimatorPage() {
                       placeholder="e.g., Cotton, Denim, Silk"
                       value={fabricType}
                       onChange={handleFabricType}
+                      disabled={!isLoggedIn}
                     />
                   </div>
                   <div className="mb-5">
@@ -265,6 +287,7 @@ function ScrapEstimatorPage() {
                       step="0.1"
                       value={originalLength}
                       onChange={handleOriginalLength}
+                      disabled={!isLoggedIn}
                     />
                   </div>
                   <div className="mb-5">
@@ -277,10 +300,16 @@ function ScrapEstimatorPage() {
                       step="0.1"
                       value={usedLength}
                       onChange={handleUsedLength}
+                      disabled={!isLoggedIn}
                     />
                   </div>
-                  <button type="submit" className="px-6 py-3 border-none rounded cursor-pointer font-medium transition-all bg-[#4C956C] text-white hover:bg-[#3B7D57] w-full">Calculate Savings</button>
+                  <button type="submit" className={`px-6 py-3 border-none rounded cursor-pointer font-medium transition-all w-full ${isLoggedIn ? 'bg-[#4C956C] text-white hover:bg-[#3B7D57]' : 'bg-gray-300 text-gray-500 cursor-not-allowed'}`} disabled={!isLoggedIn}>
+                    {isLoggedIn ? 'Calculate Savings' : 'Sign in to Calculate'}
+                  </button>
                 </form>
+                {!isLoggedIn && (
+                  <p className="text-xs text-gray-500 text-center mt-3">You must be signed in to create and save a project.</p>
+                )}
               </div>
             </div>
 
@@ -362,8 +391,7 @@ function ScrapEstimatorPage() {
                               className="bg-none text-red-500 border border-red-500 px-3 py-1 rounded-md cursor-pointer text-sm font-medium transition-all hover:bg-red-500 hover:text-white hover:-translate-y-0.5 mt-2 ml-1"
                               onClick={() => deleteCalculation(calc.ProjID)}
                               title="Delete calculation"
-                            >
-                              Delete
+                            > Delete
                             </button>
                           </div>
                         </div>

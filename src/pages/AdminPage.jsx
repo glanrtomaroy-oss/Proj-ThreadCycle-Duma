@@ -1,5 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { supabase } from '../util/supabase'; // Adjust import path as needed
+import toast from 'react-hot-toast'
 
 function AdminPage() {
   const [activeTab, setActiveTab] = useState('shops');
@@ -15,15 +16,19 @@ function AdminPage() {
     Image: '',
   });
   const [editingShop, setEditingShop] = useState(null);
+  const fileInputRef = useRef(null);
 
   // Fetch thrift shops
   const fetchShops = async () => {
     try {
-      const { data, error } = await supabase.from("THRIFT SHOP").select("*");
+      const { data, error } = await supabase
+        .from("THRIFT SHOP")
+        .select("*")
+        .order("ShopID", { ascending: true });
       if (error) throw error;
       setShops(data || []);
     } catch (err) {
-      console.error("Error fetching thrift shops:", err.message);
+      toast.error("Error fetching thrift shops:", err.message);
     }
   };
 
@@ -34,35 +39,59 @@ function AdminPage() {
         .from("COMMENT")
         .select(`
           *,
-          THRIFT SHOP (ShopName),
+          "THRIFT SHOP" (Name),
           CUSTOMER (Username)
         `);
      
       if (error) throw error;
       setComments(data || []);
     } catch (err) {
-      console.error("Error fetching comments:", err.message);
+      toast.error("Error fetching comments:", err.message);
     }
   };
 
   // Add new thrift shop
   const handleAddShop = async (e) => {
     e.preventDefault();
+  
     try {
-      const { error } = await supabase
+      if (!newShop.Image) {
+        alert("Please upload an image");
+        return;
+      }
+  
+      const file = newShop.Image;
+      const fileName = `${Date.now()}_${file.name}`;
+      const filePath = `thrift-shops/${fileName}`;
+  
+      const { error: uploadError } = await supabase.storage
+        .from("thrift-shop-images")
+        .upload(filePath, file);
+  
+      if (uploadError) throw uploadError;
+  
+      const { data: publicData } = supabase.storage
+        .from("thrift-shop-images")
+        .getPublicUrl(filePath);
+  
+      const imageUrl = publicData.publicUrl;
+  
+      const { error: insertError } = await supabase
         .from("THRIFT SHOP")
         .insert([{
-          ShopName: newShop.name,
-          Latitude: parseFloat(newShop.latitude),
-          Longitude: parseFloat(newShop.longitude),
-          OperatingHours: newShop.hours,
+          Name: newShop.name,
+          Latitude: newShop.latitude.toString(),
+          Longitude: newShop.longitude.toString(),
+          StoreHours: newShop.hours,
           PriceRange: newShop.priceRange,
-          ItemTypes: newShop.itemTypes,
-          Image: newShop.Image || null
+          Category: newShop.itemTypes.join(','),
+          Image: imageUrl,
+          AdminID: 1 // adjust as needed
         }]);
-
-      if (error) throw error;
-
+  
+      if (insertError) throw insertError;
+  
+      // Reset form
       setNewShop({
         name: '',
         latitude: '',
@@ -72,50 +101,72 @@ function AdminPage() {
         itemTypes: [],
         Image: '',
       });
-     
-      fetchShops(); // Refresh the list
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
+      toast.success("Successfully Added Shop!");
+      fetchShops();
     } catch (err) {
-      console.error("Error adding shop:", err.message);
+      toast.error("Error adding shop:", err.message);
       alert("Error adding shop: " + err.message);
     }
   };
-
   // Update existing shop
   const handleUpdateShop = async (e) => {
     e.preventDefault();
     try {
+      let imageUrl = editingShop.Image; // keep existing image as default
+  
+      if (newShop.Image instanceof File) {
+        const fileName = `${Date.now()}_${newShop.Image.name}`;
+        const filePath = `thrift-shops/${fileName}`;
+  
+        const { error: uploadError } = await supabase.storage
+          .from("thrift-shop-images")
+          .upload(filePath, newShop.Image, { upsert: true });
+  
+        if (uploadError) throw uploadError;
+  
+        const { data } = supabase.storage
+          .from("thrift-shop-images")
+          .getPublicUrl(filePath);
+        imageUrl = data.publicUrl;
+      }
+  
       const { error } = await supabase
         .from("THRIFT SHOP")
         .update({
-          ShopName: newShop.name,
-          Latitude: parseFloat(newShop.latitude),
-          Longitude: parseFloat(newShop.longitude),
-          OperatingHours: newShop.hours,
+          Name: newShop.name,
+          Latitude: newShop.latitude.toString(),
+          Longitude: newShop.longitude.toString(),
+          StoreHours: newShop.hours,
           PriceRange: newShop.priceRange,
-          ItemTypes: newShop.itemTypes,
-          Image: newShop.Image || null
+          Category: newShop.itemTypes.join(','),
+          Image: imageUrl, // ✅ always use the final URL (either old or new)
         })
-        .eq('ShopID', editingShop.ShopID);
-
+        .eq("ShopID", editingShop.ShopID);
+  
       if (error) throw error;
-
+  
+      // Step 3: Reset UI
       setEditingShop(null);
       setNewShop({
-        name: '',
-        latitude: '',
-        longitude: '',
-        hours: '',
-        priceRange: '',
+        name: "",
+        latitude: "",
+        longitude: "",
+        hours: "",
+        priceRange: "",
         itemTypes: [],
-        Image: '',
+        Image: "",
       });
-     
-      fetchShops(); // Refresh the list
+      toast.success("Successfully Updated Shop!");
+      fetchShops(); // Refresh list
     } catch (err) {
-      console.error("Error updating shop:", err.message);
+      toast.error("Error updating shop:", err.message);
       alert("Error updating shop: " + err.message);
     }
   };
+
 
   // Delete shop
   const handleDeleteShop = async (shopId) => {
@@ -128,10 +179,10 @@ function AdminPage() {
         .eq('ShopID', shopId);
 
       if (error) throw error;
-     
+      toast.success("Successfully Deleted Shop!");
       fetchShops(); // Refresh the list
     } catch (err) {
-      console.error("Error deleting shop:", err.message);
+      toast.error("Error deleting shop:", err.message);
       alert("Error deleting shop: " + err.message);
     }
   };
@@ -144,13 +195,13 @@ function AdminPage() {
       const { error } = await supabase
         .from("COMMENT")
         .delete()
-        .eq('CommentID', commentId);
+        .eq('ComID', commentId);
 
       if (error) throw error;
-     
+      toast.success("Successfully Deleted Comment!");
       fetchComments(); // Refresh the list
     } catch (err) {
-      console.error("Error deleting comment:", err.message);
+      toast.error("Error deleting comment:", err.message);
       alert("Error deleting comment: " + err.message);
     }
   };
@@ -161,13 +212,13 @@ function AdminPage() {
       const { error } = await supabase
         .from("COMMENT")
         .update({ Status: status })
-        .eq('CommentID', commentId);
+        .eq('ComID', commentId);
 
       if (error) throw error;
      
       fetchComments(); // Refresh the list
     } catch (err) {
-      console.error("Error updating comment status:", err.message);
+      toast.error("Error updating comment status:", err.message);
       alert("Error updating comment status: " + err.message);
     }
   };
@@ -176,15 +227,19 @@ function AdminPage() {
   const handleEditShop = (shop) => {
     setEditingShop(shop);
     setNewShop({
-      name: shop.ShopName || '',
+      name: shop.Name || '',
       latitude: shop.Latitude?.toString() || '',
       longitude: shop.Longitude?.toString() || '',
-      hours: shop.OperatingHours || '',
+      hours: shop.StoreHours || '',
       priceRange: shop.PriceRange || '',
-      itemTypes: shop.ItemTypes || [],
+      itemTypes: shop.Category ? shop.Category.split(',') : [],
       Image: shop.Image || '',
     });
+  
+    // clear previous file input
+    if (fileInputRef.current) fileInputRef.current.value = '';
   };
+
 
   useEffect(() => {
     fetchShops();
@@ -200,14 +255,14 @@ function AdminPage() {
         </div>
 
         {/* Tabs */}
-        <div className="flex bg-white rounded-lg p-2 mb-8 shadow-lg">
+        <div className="flex bg-white rounded-lg p-2 mb-8 shadow-lg gap-2">
           <button
             onClick={() => setActiveTab('shops')}
             className={`flex-1 py-4 px-5 cursor-pointer text-base font-medium rounded-md transition-all
               ${
                 activeTab === 'shops'
-                  ? 'bg-white text-[#2C6E49] border border-[#2C6E49] shadow-sm'
-                  : 'bg-[#2C6E49] text-white hover:bg-[#25573A]'
+                  ? 'bg-[#2C6E49] text-white border border-[#2C6E49] shadow-sm'
+                  : 'bg-white text-[#2C6E49] hover:bg-[#25573A]'
               }`}
           >
             Thrift Shops
@@ -218,8 +273,8 @@ function AdminPage() {
             className={`flex-1 py-4 px-5 cursor-pointer text-base font-medium rounded-md transition-all
               ${
                 activeTab === 'comments'
-                  ? 'bg-white text-[#2C6E49] border border-[#2C6E49] shadow-sm'
-                  : 'bg-[#2C6E49] text-white hover:bg-[#25573A]'
+                  ? 'bg-[#2C6E49] text-white border border-[#2C6E49] shadow-sm'
+                  : 'bg-white text-[#2C6E49] hover:bg-[#25573A]'
               }`}
           >
             Comment Moderation
@@ -253,14 +308,28 @@ function AdminPage() {
 
                   {/* Image URL */}
                   <div>
-                    <label className="block mb-2 text-gray-800 font-medium">Image URL</label>
+                    <label className="block mb-2 text-gray-800 font-medium">Upload Image</label>
                     <input
-                      type="text"
-                      value={newShop.Image}
-                      onChange={(e) => setNewShop({ ...newShop, Image: e.target.value })}
+                      type="file"
+                      accept="image/*"
+                      ref={fileInputRef}
+                      onChange={(e) => setNewShop({ ...newShop, Image: e.target.files[0] })}
                       className="w-full px-3 py-3 border-2 border-gray-200 rounded-md text-sm focus:outline-none focus:border-[#2C6E49]"
-                      placeholder="Paste Image link (e.g., https://example.com/shop.jpg)"
                     />
+                  {editingShop && editingShop.Image && (
+                    <div className="mt-3">
+                      <img
+                        src={editingShop.Image}
+                        alt="Current Shop"
+                        className="w-32 h-32 object-cover rounded-md border"
+                      />
+                    </div>
+                  )}
+                    {editingShop && !newShop.Image instanceof File && editingShop.Image && (
+                      <div className="mt-2 text-sm text-gray-600">
+                        <strong>Current image:</strong> {editingShop.Image.split('/').pop()}
+                      </div>
+                    )}
                   </div>
 
                   {/* Latitude */}
@@ -380,12 +449,13 @@ function AdminPage() {
                   >
                     <div className="flex-1">
                       <h3 className="text-gray-800 mb-2">{shop.ShopName}</h3>
-                      <p className="my-1 text-gray-600"><strong>Hours:</strong> {shop.OperatingHours}</p>
+                      <h3 className="my-1 text-gray-600"><strong>Shop Name:</strong> {shop.Name}</h3>
+                      <p className="my-1 text-gray-600"><strong>Hours:</strong> {shop.StoreHours}</p>
                       <p className="my-1 text-gray-600"><strong>Price Range:</strong> {shop.PriceRange}</p>
-                      <p className="my-1 text-gray-600"><strong>Items:</strong> {shop.ItemTypes?.join(', ') || 'None'}</p>
+                      {/* <p className="my-1 text-gray-600"><strong>Items:</strong> {shop.itemTypes?.join(', ') || 'None'}</p>
                       <p className="my-1 text-gray-600 text-sm">
                         <strong>Location:</strong> {shop.Latitude}, {shop.Longitude}
-                      </p>
+                      </p> */}
                     </div>
 
                     <div className="flex flex-col gap-2">
@@ -423,7 +493,7 @@ function AdminPage() {
             <div className="grid gap-5">
               {comments.map((comment) => (
                 <div
-                  key={comment.CommentID}
+                  key={comment.ComID}
                   className="bg-gray-100 p-5 rounded-lg border-l-4 border-[#2C6E49]"
                 >
                   <div className="flex justify-between items-start mb-3">
@@ -433,39 +503,15 @@ function AdminPage() {
                       </p>
                       <p className="text-gray-700 mt-1 italic">"{comment.Content}"</p>
                       <div className="text-sm text-gray-600 mt-2">
-                        <span className="font-semibold">Shop:</span> {comment['THRIFT SHOP']?.ShopName || 'Unknown Shop'} &nbsp;
+                        <span className="font-semibold">Shop:</span> {comment['THRIFT SHOP']?.Name || 'Unknown Shop'} &nbsp;
                         <span className="font-semibold">Date:</span> {new Date(comment.CreationDate).toLocaleDateString()} &nbsp;
-                        <span className="font-semibold">Status:</span>
-                        <span className={`ml-1 px-2 py-1 rounded text-xs ${
-                          comment.Status === 'visible'
-                            ? 'bg-green-100 text-green-800'
-                            : 'bg-yellow-100 text-yellow-800'
-                        }`}>
-                          {comment.Status}
-                        </span>
                       </div>
                     </div>
 
                     <div className="flex gap-2 flex-wrap">
-                      {comment.Status !== 'visible' && (
-                        <button
-                          className="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded text-sm"
-                          onClick={() => handleUpdateCommentStatus(comment.CommentID, 'visible')}
-                        >
-                          Approve
-                        </button>
-                      )}
-                      {comment.Status !== 'hidden' && (
-                        <button
-                          className="bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-1 rounded text-sm"
-                          onClick={() => handleUpdateCommentStatus(comment.CommentID, 'hidden')}
-                        >
-                          Hide
-                        </button>
-                      )}
                       <button
                         className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm"
-                        onClick={() => handleDeleteComment(comment.CommentID)}
+                        onClick={() => handleDeleteComment(comment.ComID)}
                       >
                         Delete
                       </button>

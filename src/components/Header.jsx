@@ -3,6 +3,8 @@ import { UserAuth } from '../context/AuthContext';
 
 const Header = () => {
   const { userRole, loading } = UserAuth();
+  console.log("Current user role:", userRole);
+  console.log("Loading state:", loading);
   // const [user, setUser] = useState("");
 
   return (
@@ -104,40 +106,39 @@ const Header = () => {
                 About
               </NavLink>
             </li>
-            {/* Admin Link */}
             {!loading && userRole === "admin" && (
               <li className="ml-6">
-                <NavLink 
-                  className={({isActive}) => 
-                    `text-gray-800 font-medium transition-colors no-underline hover:text-[#4c5f0d] ${
-                      isActive ? 'text-[#4c5f0d] border-b-2 border-[#4c5f0d]' : ''
-                    }`
-                  } 
+                <NavLink
+                  className={({ isActive }) =>
+                    `relative transition-colors no-underline 
+                     font-medium hover:text-[#FEFEE3] 
+                     after:content-[''] after:absolute after:w-0 after:h-[2px] 
+                     after:left-0 after:-bottom-1 after:bg-[#FEFEE3] 
+                     after:transition-all after:duration-300 
+                     hover:after:w-full
+                     ${isActive 
+                        ? "text-[#FEFEE3] after:w-full" 
+                        : "text-white after:w-0"}`
+                  }
                   to="/admin"
                 >
-                  Admin
+                  Admin Page
                 </NavLink>
               </li>
             )}
           </ul>
+          
           <div className="flex items-center">
-            {!loading && userRole === "customer" ? (
-              <div className="flex items-center">
-                <NavLink
-                  className={({ isActive }) =>
-                    `bg-[#4C956C] hover:bg-[#3B7D57] text-white font-bold px-6 py-3 rounded-lg cursor-pointer transition-all duration-300 tracking-wide text-sm shadow-lg hover:shadow-xl hover:scale-105 transform flex items-center' : ''
-                    }`
-                  }
-                  to="/profile"
-                >
-                  Profile
-                </NavLink>
-              </div>
+            {!loading && (userRole === "customer" || userRole === "admin") ? (
+              <NavLink
+                className="bg-[#4C956C] hover:bg-[#3B7D57] text-white font-bold px-6 py-3 rounded-lg cursor-pointer transition-all duration-300 tracking-wide text-sm shadow-lg hover:shadow-xl hover:scale-105 transform flex items-center"
+                to="/profile"
+              >
+                Profile
+              </NavLink>
             ) : (
               <NavLink
-                className={
-                  "bg-[#4C956C] hover:bg-[#3B7D57] text-white font-bold px-6 py-3 rounded-lg cursor-pointer transition-all duration-300 tracking-wide text-sm shadow-lg hover:shadow-xl hover:scale-105 transform flex items-center "
-                }
+                className="bg-[#4C956C] hover:bg-[#3B7D57] text-white font-bold px-6 py-3 rounded-lg cursor-pointer transition-all duration-300 tracking-wide text-sm shadow-lg hover:shadow-xl hover:scale-105 transform flex items-center"
                 to="/login"
               >
                 Login

@@ -1,6 +1,9 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { supabase } from "../util/supabase";
 import { UserAuth } from "../context/AuthContext";
+import toast from "react-hot-toast";
+import mapboxgl from "mapbox-gl";
+import "mapbox-gl/dist/mapbox-gl.css";
 
 function ThriftMapPage() {
   const { session } = UserAuth();
@@ -12,36 +15,78 @@ function ThriftMapPage() {
   const [activeCategory, setActiveCategory] = useState("all");
   const [activePrice, setActivePrice] = useState("all");
 
+  // Mapbox setup
+  const mapContainerRef = useRef(null);
+  const mapRef = useRef(null);
+  // Track markers by ShopID for quick focus
+  const markersRef = useRef({});
+  const addressCacheRef = useRef({});
+  const mapboxToken = import.meta.env.VITE_MAPBOX_TOKEN;
+
+  const getPriceBucket = (priceText) => {
+    if (!priceText) return "all";
+    const text = priceText.replace(/\s|₱/g, "");
+    if (/250\+/.test(text)) return "250+";
+    if (/50-100/.test(text)) return "50-100";
+    if (/100-250/.test(text)) return "100-250";
+    return "all";
+  };
+
+  const isShopInActiveFilters = (shop) => {
+    const categoryMatch =
+      activeCategory === "all" ||
+      (shop.Category || "").toLowerCase() === activeCategory;
+    const priceMatch =
+      activePrice === "all" || getPriceBucket(shop.PriceRange) === activePrice;
+    return categoryMatch && priceMatch;
+  };
+
   // Fetch thrift shops
   const fetchShops = async () => {
     try {
-      const { data, error } = await supabase.from("THRIFT SHOP").select("*");
+      const { data, error } = await supabase
+        .from("THRIFT SHOP")
+        .select("*")
+        .order("ShopID", { ascending: true });
       if (error) throw error;
       setShops(data || []);
     } catch (err) {
-      console.error("Error fetching thrift shops:", err.message);
+      toast.error(`Unable to load store details. ${err?.message ?? ""}`);
     }
   };
 
-  // Fetch approved comments
+  // Fetch comments with Username (joined from CUSTOMER) and CreationDate
   const fetchComments = async () => {
     try {
       const { data, error } = await supabase
         .from("COMMENT")
-        .select("*")
-        .eq("Status", "visible");
+        .select(`
+          ComID,
+          Content,
+          CreationDate,
+          ShopID,
+          CustID,
+          CUSTOMER ( Username )
+        `)
+        .order("CreationDate", { ascending: false });
+
       if (error) throw error;
 
+      // Group by shop id
       const grouped = {};
       data.forEach((c) => {
         if (!grouped[c.ShopID]) grouped[c.ShopID] = [];
-        grouped[c.ShopID].push(c);
+        grouped[c.ShopID].push({
+          ...c,
+          Username: c.CUSTOMER?.Username || "Anonymous",
+        });
       });
       setComments(grouped);
     } catch (err) {
-      console.error("Error fetching comments:", err.message);
+      toast.error(`Comment could not be posted. Please try again later. ${err?.message ?? ""}`);
     }
   };
+
 
   // Submit a comment
   const submitComment = async (shopId) => {
@@ -65,7 +110,7 @@ function ThriftMapPage() {
         Content: text,
         ShopID: shopId,
         CustID: customer.CustID,
-        Status: "visible",
+        Username: customer.Username,
         CreationDate: new Date().toISOString(),
       });
 
@@ -74,7 +119,7 @@ function ThriftMapPage() {
       setDraftComments((prev) => ({ ...prev, [shopId]: "" }));
       fetchComments();
     } catch (err) {
-      console.error("Error adding comment:", err.message);
+      toast.error(`Comment could not be posted. Please try again later. ${err?.message ?? ""}`);
     }
   };
 
@@ -83,23 +128,123 @@ function ThriftMapPage() {
     fetchComments();
   }, []);
 
-  const getPriceBucket = (priceText) => {
-    if (!priceText) return "all";
-    const text = priceText.replace(/\s|₱/g, "");
-    if (/250\+/.test(text)) return "250+";
-    if (/50-100/.test(text)) return "50-100";
-    if (/100-250/.test(text)) return "100-250";
-    return "all";
+  // Initialize Mapbox map once
+  useEffect(() => {
+    if (!mapContainerRef.current) return;
+    if (mapRef.current) return; 
+
+    if (!mapboxToken) {
+      toast.error("Mapbox token missing.");
+      return;
+    }
+
+    mapboxgl.accessToken = mapboxToken;
+
+    // Center on Dumaguete City
+    const initialCenter = [123.3, 9.307];
+    mapRef.current = new mapboxgl.Map({
+      container: mapContainerRef.current,
+      style: "mapbox://styles/mapbox/streets-v12",
+      center: initialCenter,
+      zoom: 12,
+    });
+
+    mapRef.current.addControl(new mapboxgl.NavigationControl({ showCompass: false }));
+    mapRef.current.on("load", () => {
+      mapRef.current?.resize();
+    });
+    mapRef.current.on("error", (e) => {
+      console.error("Mapbox error", e?.error || e);
+      toast.error("Map failed to load. Please refresh.");
+    });
+  }, [mapboxToken]);
+
+  // Filtered shops for both UI and map markers
+  const filteredShops = useMemo(
+    () => shops.filter(isShopInActiveFilters),
+    [shops, activeCategory, activePrice]
+  );
+
+  // Add/refresh markers whenever filtered shops change
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map) return;
+
+    // Remove existing markers
+    Object.values(markersRef.current).forEach((m) => m.remove());
+    markersRef.current = {};
+
+    filteredShops.forEach((shop) => {
+      const lat = Number(shop.Latitude);
+      const lng = Number(shop.Longitude);
+      if (!isFinite(lat) || !isFinite(lng)) return;
+
+      const initialAddress = addressCacheRef.current[shop.ShopID] || '';
+      const makePopupHtml = (address) => `
+        <div style="min-width:220px; max-width:260px; background:#fff; border-radius:10px; box-shadow:0 6px 20px rgba(0,0,0,0.12); overflow:hidden;">
+          <div style="padding:10px 12px 8px 12px;">
+            <div style="font-weight:700; color:#2C6E49; font-size:14px; margin-bottom:4px">${shop.Name ?? 'Thrift Shop'}</div>
+            <div style="font-size:12px; color:#555; margin-bottom:6px">${(shop.Category ?? '').toString()} • ${(shop.PriceRange ?? '').toString()}</div>
+            <div style="font-size:12px; color:#333;">${address || 'Resolving address...'}</div>
+          </div>
+        </div>`;
+
+      const popup = new mapboxgl.Popup({ offset: 16, closeButton: true, closeOnClick: true })
+        .setHTML(makePopupHtml(initialAddress));
+      const marker = new mapboxgl.Marker({ color: "#2C6E49" })
+        .setLngLat([lng, lat])
+        .setPopup(popup)
+        .addTo(map);
+      markersRef.current[shop.ShopID] = marker;
+
+      if (!initialAddress) {
+        const url = `https://api.mapbox.com/geocoding/v5/mapbox.places/${lng},${lat}.json?access_token=${encodeURIComponent(mapboxToken)}&types=address,poi,place&limit=1`;
+        fetch(url)
+          .then((r) => (r.ok ? r.json() : null))
+          .then((data) => {
+            const addr = data?.features?.[0]?.place_name || '';
+            if (addr) addressCacheRef.current[shop.ShopID] = addr;
+            const m = markersRef.current[shop.ShopID];
+            if (m && m.getPopup()) m.getPopup().setHTML(makePopupHtml(addr));
+          })
+          .catch(() => {});
+      }
+    });
+
+    const markerList = Object.values(markersRef.current);
+    if (markerList.length > 0) {
+      const bounds = new mapboxgl.LngLatBounds();
+      markerList.forEach((m) => bounds.extend(m.getLngLat()));
+      map.fitBounds(bounds, { padding: 40, maxZoom: 15 });
+    }
+  }, [filteredShops]);
+
+  // Focus map on a shop and open its popup inline
+  const focusShopOnMap = (shop) => {
+    const map = mapRef.current;
+    if (!map) return;
+    const lat = Number(shop.Latitude);
+    const lng = Number(shop.Longitude);
+    if (!isFinite(lat) || !isFinite(lng)) {
+      toast.error("Location unavailable for this shop");
+      return;
+    }
+    map.flyTo({ center: [lng, lat], zoom: 15, essential: true });
+    const marker = markersRef.current[shop.ShopID];
+    if (marker) {
+      const popup = marker.getPopup?.();
+      // Open popup shortly after flyTo
+      setTimeout(() => {
+        if (popup && !popup.isOpen()) {
+          try {
+            marker.togglePopup();
+          } catch {}
+        }
+      }, 300);
+    }
   };
 
-  const isShopInActiveFilters = (shop) => {
-    const categoryMatch =
-      activeCategory === "all" ||
-      (shop.Category || "").toLowerCase() === activeCategory;
-    const priceMatch =
-      activePrice === "all" || getPriceBucket(shop.PriceRange) === activePrice;
-    return categoryMatch && priceMatch;
-  };
+  
 
   return (
     <div className="bg-[#FEFEE3] min-h-screen pb-20">
@@ -115,10 +260,10 @@ function ThriftMapPage() {
         </div>
       </section>
 
-      {/* Map Placeholder */}
+      {/* Map */}
       <section className="max-w-6xl mx-auto mt-10 px-4">
-        <div className="bg-white shadow-lg rounded-xl h-[400px] flex items-center justify-center text-gray-500">
-          <p>Map view coming soon (Mapbox integration pending)</p>
+        <div className="bg-white shadow-lg rounded-xl h-[400px] overflow-hidden">
+          <div ref={mapContainerRef} className="w-full h-full" />
         </div>
       </section>
 
@@ -208,15 +353,14 @@ function ThriftMapPage() {
                       </div>
                     </div>
 
-                    {/* Directions Button */}
-                    <a
-                      href={`https://www.google.com/maps?q=${shop.Latitude},${shop.Longitude}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
+                    {/* Directions Button - focus map inline (no new tab) */}
+                    <button
+                      type="button"
+                      onClick={() => focusShopOnMap(shop)}
                       className="text-sm bg-[#2C6E49] text-white px-4 py-2 rounded hover:bg-[#265a3e] transition"
                     >
                       Directions
-                    </a>
+                    </button>
                   </div>
 
                   {/* Comments */}
@@ -227,20 +371,28 @@ function ThriftMapPage() {
                       </span>
                     </div>
 
-                    {comments[shop.ShopID]?.length > 0 ? (
-                      <div className="space-y-2 max-h-[120px] overflow-y-auto pr-1">
-                        {comments[shop.ShopID].map((c) => (
-                          <div
-                            key={c.ComID}
-                            className="text-sm bg-gray-50 rounded px-3 py-2"
-                          >
-                            <p className="text-gray-700">{c.Content}</p>
+                  {comments[shop.ShopID]?.length > 0 ? (
+                    <div className="space-y-2 max-h-[120px] overflow-y-auto pr-1">
+                      {comments[shop.ShopID].map((c) => (
+                        <div
+                          key={c.ComID}
+                          className="text-sm bg-gray-50 rounded px-3 py-2"
+                        >
+                          <div className="flex justify-between items-center mb-1">
+                            <span className="font-medium text-[#2C6E49]">
+                              {c.Username}
+                            </span>
+                            <span className="text-xs text-gray-400">
+                              {new Date(c.CreationDate).toLocaleString()}
+                            </span>
                           </div>
-                        ))}
-                      </div>
-                    ) : (
-                      <p className="text-xs text-gray-500">No comments yet</p>
-                    )}
+                          <p className="text-gray-700">{c.Content}</p>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <p className="text-xs text-gray-500">No comments yet</p>
+                  )}
 
                     {currentUser ? (
                       <div className="mt-3 flex items-end gap-2">

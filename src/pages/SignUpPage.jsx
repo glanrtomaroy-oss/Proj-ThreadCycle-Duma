@@ -9,8 +9,8 @@ const SignupPage = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const [showPassword, setShowPassword] = useState("");
-  const [showConfirmPassword, setShowConfirmPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const { signUpNewUser } = UserAuth();
   const navigate = useNavigate();
 
@@ -31,11 +31,11 @@ const SignupPage = () => {
 
     setLoading(true);
 
-    // Enhanced password validation
+    // Password validation
     const hasUpperCase = /[A-Z]/.test(password);
     const hasLowerCase = /[a-z]/.test(password);
     const hasNumber = /[0-9]/.test(password);
-    const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+    const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>_/\-]/.test(password);
     const hasMinLength = password.length >= 8;
 
     if (!hasMinLength) {
@@ -64,6 +64,12 @@ const SignupPage = () => {
 
     if (!hasSpecialChar) {
       toast.error('Password must contain at least one special character.');
+      setLoading(false);
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      toast.error("Passwords do not match. Please confirm your password.");
       setLoading(false);
       return;
     }

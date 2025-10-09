@@ -25,7 +25,7 @@ const LoginPage = () => {
 
         console.log(result);
 
-        // ✅ Redirect based on role
+        // Redirect based on role
         if (result.role === "admin") {
           navigate("/admin");
         } else if (result.role === "customer") {
@@ -38,7 +38,7 @@ const LoginPage = () => {
         toast.error(result.error);
       }
     } catch (err) {
-      toast.error("An unexpected error occurred");
+      toast.error("An unexpected error occurred.");
     } finally {
       setLoading(false);
     }
