@@ -66,7 +66,7 @@ const ProfilePage = () => {
               .single();
       
             if (error || !data) {
-              console.error("Fetch error:", error);
+              console.error("Profile information could not be retrieved.", error);
             } else {
               const profileData = {
                 username: data.Username || ""
