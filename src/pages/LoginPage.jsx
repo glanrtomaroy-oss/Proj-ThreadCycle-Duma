@@ -25,7 +25,7 @@ const LoginPage = () => {
 
         console.log(result);
 
-        // ✅ Redirect based on role
+        // Redirect based on role
         if (result.role === "admin") {
           navigate("/admin");
         } else if (result.role === "customer") {
