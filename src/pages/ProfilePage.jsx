@@ -96,7 +96,7 @@ const ProfilePage = () => {
           let userIdColumn = "";
           let updates = {};
       
-          // 🔹 Map role → table + column + updates
+          // Map role → table + column + updates
           switch (userRole) {
             case "customer":
               tableName = "CUSTOMER";
@@ -122,7 +122,7 @@ const ProfilePage = () => {
               return;
           }
       
-          // 🔹 Perform the update
+          // Perform the update
           const { error } = await supabase
             .from(tableName)
             .update(updates)
