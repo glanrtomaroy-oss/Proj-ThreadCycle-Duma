@@ -34,7 +34,7 @@ const ProfilePage = () => {
         );
       };
 
-      // ~Fetch profile data when component mounts or session changes~
+      // Fetch profile data 
       useEffect(() => {
         const fetchProfile = async () => {
           try {
@@ -66,7 +66,7 @@ const ProfilePage = () => {
               .single();
       
             if (error || !data) {
-              console.error("Fetch error:", error);
+              toast.error("Profile information could not be retrieved.", error);
             } else {
               const profileData = {
                 username: data.Username || ""
@@ -96,7 +96,7 @@ const ProfilePage = () => {
           let userIdColumn = "";
           let updates = {};
       
-          // 🔹 Map role → table + column + updates
+          // Map role → table + column + updates
           switch (userRole) {
             case "customer":
               tableName = "CUSTOMER";
