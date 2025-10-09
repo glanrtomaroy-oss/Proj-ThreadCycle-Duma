@@ -132,7 +132,7 @@ function ScrapEstimatorPage() {
       .single(); // since each user should have exactly one customer row
 
     if (error) {
-      toast.error("Error fetching customer id:", error.message);
+      toast.error("Error fetching user.", error.message);
       return null;
     }
 
