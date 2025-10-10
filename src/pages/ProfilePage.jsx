@@ -58,7 +58,7 @@ const ProfilePage = () => {
                 userIdColumn = "Admin_uid";
                 break;
               default:
-                console.error("Unknown role:", userRole);
+                toast.error("Unknown role:", userRole);
                 return;
             }
       
@@ -80,7 +80,7 @@ const ProfilePage = () => {
               setOriginalValues(profileData);
             }
           } catch (err) {
-            console.error("Unexpected error:", err);
+            toast.error("Unexpected error:", err);
           } finally {
             setLoadings(false);
           }
