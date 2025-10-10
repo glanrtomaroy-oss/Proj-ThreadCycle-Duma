@@ -42,7 +42,7 @@ const HomePage = () => {
       </div>
     </div>`;
 
-  // Reverse geocode lat/lng via Mapbox to show human-readable address
+  // Reverse geocode lat/lng through Mapbox to show readable address
   const getAddressFor = async (lat, lng, shopId) => {
     if (addressCacheRef.current[shopId]) return addressCacheRef.current[shopId];
     try {
@@ -64,7 +64,7 @@ const HomePage = () => {
     if (mapRef.current) return;
 
     if (!mapboxToken) {
-      toast.error('Missing Mapbox token. Check your .env or Vercel settings.');
+      toast.error('Missing Mapbox token. Map cannot load.');
       return;
     }
 
@@ -152,7 +152,7 @@ const HomePage = () => {
         </div>
       </section>
 
-      {/* Thrift Map Section - SIMPLIFIED VERSION */}
+      {/* Thrift Map Section */}
       <section className="bg-[#FEFEE3] py-10 pb-10" id="thrift-map">
         <div className="w-full max-w-6xl mx-auto px-4">
           <div className="text-center mb-12">
