@@ -14,9 +14,7 @@ const LoginPage = () => {
   // Handle form submission: authenticate via context
   const handleLogin = async (e) => {
     e.preventDefault();
-
     if (loading) return;
-
     setLoading(true);
 
     try {
