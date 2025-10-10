@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { supabase } from '../util/supabase'; // Adjust import path as needed
 import toast from 'react-hot-toast'
 
+// Admin dashboard: manage shops and moderate comments
 function AdminPage() {
   const [activeTab, setActiveTab] = useState('shops');
   const [shops, setShops] = useState([]);
@@ -18,7 +19,7 @@ function AdminPage() {
   const [editingShop, setEditingShop] = useState(null);
   const fileInputRef = useRef(null);
 
-  // Fetch thrift shops
+  // Fetch thrift shops (ordered by ShopID)
   const fetchShops = async () => {
     try {
       const { data, error } = await supabase
@@ -32,7 +33,7 @@ function AdminPage() {
     }
   };
 
-  // Fetch all comments for moderation
+  // Fetch all comments for moderation (joined with shop and user)
   const fetchComments = async () => {
     try {
       const { data, error } = await supabase
@@ -50,7 +51,7 @@ function AdminPage() {
     }
   };
 
-  // Add new thrift shop
+  // Add new thrift shop: upload image to storage, insert row to THRIFT SHOP
   const handleAddShop = async (e) => {
     e.preventDefault();
   
@@ -111,7 +112,7 @@ function AdminPage() {
       alert("Error adding shop: " + err.message);
     }
   };
-  // Update existing shop
+  // Update existing shop: optionally upload new image, then update row
   const handleUpdateShop = async (e) => {
     e.preventDefault();
     try {
@@ -168,7 +169,7 @@ function AdminPage() {
   };
 
 
-  // Delete shop
+  // Delete shop by ShopID
   const handleDeleteShop = async (shopId) => {
     if (!window.confirm("Are you sure you want to delete this shop?")) return;
    
@@ -187,7 +188,7 @@ function AdminPage() {
     }
   };
 
-  // Comment moderation - delete comment
+  // Comment moderation - delete comment by ComID
   const handleDeleteComment = async (commentId) => {
     if (!window.confirm("Are you sure you want to delete this comment?")) return;
    
@@ -206,7 +207,7 @@ function AdminPage() {
     }
   };
 
-  // Comment moderation - update comment status
+  // Comment moderation - update comment status (e.g., approved/hidden)
   const handleUpdateCommentStatus = async (commentId, status) => {
     try {
       const { error } = await supabase
@@ -223,7 +224,7 @@ function AdminPage() {
     }
   };
 
-  // Set editing shop
+  // Set editing shop: prefill form with selected shop fields
   const handleEditShop = (shop) => {
     setEditingShop(shop);
     setNewShop({
@@ -241,6 +242,7 @@ function AdminPage() {
   };
 
 
+  // On mount, load shops and comments
   useEffect(() => {
     fetchShops();
     fetchComments();
