@@ -24,7 +24,7 @@ function ScrapEstimatorPage() {
     }
 
     if (!fabricType || !originalLength || !usedLength) {
-      alert("Please fill in all fields");
+      alert("Please fill in all fields.");
       return;
     }
 
@@ -54,13 +54,7 @@ function ScrapEstimatorPage() {
       linen: 10, 
       leather: 30, 
       other: 5
-  };
-
-    // // Reset form
-    // setFabricType("");
-    // setOriginalLength("");
-    // setUsedLength("");
-  };
+  };};
 
   // Persist a project row in Supabase for this user
   const insertProject = async (fabricSaved) => {
