@@ -7,6 +7,7 @@ function TutorialsPage({ user }) {
   const [comments, setComments] = useState({});
   const [newComments, setNewComments] = useState({});
 
+  // Sample tutorial data with YouTube IDs (embedded) for easier loading
   const tutorials = [
     {
       id: 1,
@@ -93,7 +94,8 @@ function TutorialsPage({ user }) {
   ];
 
   // Apply both category and difficulty filters
-  const filteredTutorials = tutorials.filter((tutorial) => {
+  const filteredTutorials = tutorials.filter((tutorial) => 
+  {
     const categoryMatch = activeFilter === "all" || tutorial.category === activeFilter;
     const difficultyMatch = activeDifficulty === "all" || tutorial.difficulty === activeDifficulty;
     return categoryMatch && difficultyMatch;
