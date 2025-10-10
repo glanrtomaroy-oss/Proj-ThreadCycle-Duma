@@ -31,6 +31,7 @@ const HomePage = () => {
     fetchShops();
   }, []);
 
+  // Build a styled popup HTML rendered by Mapbox
   const makePopupHtml = (shop, addressText) => `
     <div style="min-width:220px; max-width:260px; background:#fff; border-radius:10px; box-shadow:0 6px 20px #0000001f; overflow:hidden;">
       <div style="padding:10px 12px 8px 12px;">
@@ -40,6 +41,7 @@ const HomePage = () => {
       </div>
     </div>`;
 
+  // Reverse geocode lat/lng via Mapbox to show human-readable address
   const getAddressFor = async (lat, lng, shopId) => {
     if (addressCacheRef.current[shopId]) return addressCacheRef.current[shopId];
     try {
