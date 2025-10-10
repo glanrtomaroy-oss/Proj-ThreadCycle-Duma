@@ -21,16 +21,16 @@ function AboutPage() {
 
       {/* About Section */}
       <section className="bg-[#FEFEE3] py-12">
-        <div className="w-full max-w-6xl mx-auto px-4 space-y-10">
+        <div className="w-full max-w-6xl mx-auto px-4 space-y-12">
           {/* About the Website */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div className="bg-white rounded-xl p-6 shadow-lg">
-              <h2 className="text-2xl font-bold text-gray-800 mb-3">About ThreadCycle</h2>
-              <p className="text-gray-600 leading-relaxed">ThreadCycle Duma is a community platform focused on sustainable fashion and circular practices. We help residents discover thrift shops, learn upcycling skills, and track impact through tools like the Scrap Estimator.</p>
+            <div className="bg-[#F5FAF6] border border-[#2C6E49]/10 rounded-2xl p-7 shadow-md">
+              <h2 className="text-2xl font-bold text-[#2C6E49] mb-3">About ThreadCycle</h2>
+              <p className="text-gray-700 leading-relaxed">ThreadCycle Duma is a community platform focused on sustainable fashion and circular practices. We help residents discover thrift shops, learn upcycling skills, and track impact through tools like the Scrap Estimator.</p>
             </div>
-            <div className="bg-white rounded-xl p-6 shadow-lg">
-              <h2 className="text-2xl font-bold text-gray-800 mb-3">Our Goals</h2>
-              <ul className="list-disc pl-5 space-y-2 text-gray-600">
+            <div className="bg-[#F5FAF6] border border-[#2C6E49]/10 rounded-2xl p-7 shadow-md">
+              <h2 className="text-2xl font-bold text-[#2C6E49] mb-3">Our Goals</h2>
+              <ul className="list-disc pl-6 space-y-2 text-gray-700 leading-relaxed">
                 <li>Reduce textile waste through education and practical tools</li>
                 <li>Support local thrift shops and sustainable businesses</li>
                 <li>Build a community around repair, reuse, and upcycling</li>
@@ -42,24 +42,24 @@ function AboutPage() {
           {/* About Us - Team Cards */}
           <div>
             <div className="text-center mb-8">
-              <h2 className="text-2xl font-bold text-gray-800">About Us</h2>
+              <h2 className="text-2xl font-bold text-[#2C6E49]">About Us</h2>
               <p className="text-gray-600">The team behind ThreadCycle Duma</p>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              <div className="bg-white rounded-xl overflow-hidden shadow-lg text-center p-6">
-                <img src="member1.png" alt="Glan R. Tomaroy" className="w-28 h-28 object-cover rounded-full mx-auto mb-4" />
+              <div className="bg-white border border-[#2C6E49]/10 rounded-2xl text-center p-6 shadow-sm hover:shadow-md transition-shadow">
+                <img src="member1.png" alt="Glan R. Tomaroy" className="w-28 h-28 object-cover rounded-full mx-auto mb-4 ring-2 ring-[#2C6E49]/20" />
                 <h3 className="text-gray-800 font-semibold">Glan R. Tomaroy</h3>
-                <p className="text-[#4c5f0d] font-medium">Co-Founder & Developer</p>
+                <p className="text-[#2C6E49] font-medium">Co-Founder & Developer</p>
               </div>
-              <div className="bg-white rounded-xl overflow-hidden shadow-lg text-center p-6">
-                <img src="member2.jpg" alt="Voughn John Zoe N. Villalon" className="w-28 h-28 object-cover rounded-full mx-auto mb-4" />
+              <div className="bg-white border border-[#2C6E49]/10 rounded-2xl text-center p-6 shadow-sm hover:shadow-md transition-shadow">
+                <img src="member2.jpg" alt="Voughn John Zoe N. Villalon" className="w-28 h-28 object-cover rounded-full mx-auto mb-4 ring-2 ring-[#2C6E49]/20" />
                 <h3 className="text-gray-800 font-semibold">Voughn John Zoe N. Villalon</h3>
-                <p className="text-[#4c5f0d] font-medium">Co-Founder & Sustainability Expert</p>
+                <p className="text-[#2C6E49] font-medium">Co-Founder & Sustainability Expert</p>
               </div>
-              <div className="bg-white rounded-xl overflow-hidden shadow-lg text-center p-6">
-                <img src="member3.jpg" alt="Kate Valerie Katada" className="w-28 h-28 object-cover rounded-full mx-auto mb-4" />
+              <div className="bg-white border border-[#2C6E49]/10 rounded-2xl text-center p-6 shadow-sm hover:shadow-md transition-shadow">
+                <img src="member3.jpg" alt="Kate Valerie Katada" className="w-28 h-28 object-cover rounded-full mx-auto mb-4 ring-2 ring-[#2C6E49]/20" />
                 <h3 className="text-gray-800 font-semibold">Kate Valerie Katada</h3>
-                <p className="text-[#4c5f0d] font-medium">Co-Founder & Secretary</p>
+                <p className="text-[#2C6E49] font-medium">Co-Founder & Secretary</p>
               </div>
             </div>
           </div>
