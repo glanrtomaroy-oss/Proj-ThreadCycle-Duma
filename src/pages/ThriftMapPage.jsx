@@ -42,6 +42,7 @@ function ThriftMapPage() {
   };
 
   // Fetch thrift shops
+  // Fetch thrift shops to render list and map markers
   const fetchShops = async () => {
     try {
       const { data, error } = await supabase
@@ -56,6 +57,7 @@ function ThriftMapPage() {
   };
 
   // Fetch comments with Username (joined from CUSTOMER) and CreationDate
+  // Fetch comments for all shops, grouped by ShopID
   const fetchComments = async () => {
     try {
       const { data, error } = await supabase

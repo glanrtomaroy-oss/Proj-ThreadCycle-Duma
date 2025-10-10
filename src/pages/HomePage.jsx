@@ -17,6 +17,7 @@ const HomePage = () => {
   const addressCacheRef = useRef({}); // ShopID -> address string
   const mapboxToken = import.meta.env.VITE_MAPBOX_TOKEN;
 
+  // Fetch thrift shops for markers on the homepage map
   const fetchShops = async () => {
     try {
       const { data, error } = await supabase.from('THRIFT SHOP').select('*');
