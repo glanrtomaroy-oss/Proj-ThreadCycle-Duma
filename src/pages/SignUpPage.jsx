@@ -14,16 +14,19 @@ const SignupPage = () => {
   const { signUpNewUser } = UserAuth();
   const navigate = useNavigate();
 
+  // Track password input for validation
   const handlePasswordChange = (e) => {
     const newPassword = e.target.value;
     setPassword(newPassword);
   };
 
+  // Track confirm password input for matching validation
   const handleConfirmPasswordChange = (e) => {
     const newConfirmPassword = e.target.value;
     setConfirmPassword(newConfirmPassword);
   };
 
+  // Handle sign up with password policy and confirm password guard
   const handleSignUp = async (e) => {
     e.preventDefault();
 

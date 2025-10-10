@@ -1,5 +1,6 @@
 import { useState } from 'react';
 
+// About page: mission, story, team information
 function AboutPage() {
 
   return (

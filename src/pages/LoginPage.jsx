@@ -11,6 +11,7 @@ const LoginPage = () => {
   const navigate = useNavigate();
   const { signInUser } = UserAuth();
   
+  // Handle form submission: authenticate via context
   const handleLogin = async (e) => {
     e.preventDefault();
 
@@ -44,6 +45,7 @@ const LoginPage = () => {
     }
   };
 
+  // Navigate to signup page for new users
   const handleGoToSignup = () => {
     navigate('/signup');
   };

@@ -1,5 +1,6 @@
 import { useState } from 'react';
 
+// Tutorials listing page with filters by category and difficulty
 function TutorialsPage({ user }) {
   const [activeFilter, setActiveFilter] = useState("all");
   const [activeDifficulty, setActiveDifficulty] = useState("all");
@@ -91,6 +92,7 @@ function TutorialsPage({ user }) {
     
   ];
 
+  // Apply both category and difficulty filters
   const filteredTutorials = tutorials.filter((tutorial) => {
     const categoryMatch = activeFilter === "all" || tutorial.category === activeFilter;
     const difficultyMatch = activeDifficulty === "all" || tutorial.difficulty === activeDifficulty;

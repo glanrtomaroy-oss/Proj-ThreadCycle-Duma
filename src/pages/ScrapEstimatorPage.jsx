@@ -3,6 +3,7 @@ import toast from 'react-hot-toast'
 import { supabase } from '../util/supabase'
 import { UserAuth } from '../context/AuthContext'
 
+// Scrap estimator: calculate and persist projects for signed-in users
 function ScrapEstimatorPage() {
   const [fabricType, setFabricType] = useState("");
   const [originalLength, setOriginalLength] = useState("");
@@ -13,6 +14,7 @@ function ScrapEstimatorPage() {
   const { session, loading } = UserAuth();
   const isLoggedIn = !!session?.user;
 
+  // Compute savings and persist a project for the signed-in user
   const calculateSavings = async (e) => {
     e.preventDefault();
 
@@ -60,6 +62,7 @@ function ScrapEstimatorPage() {
     // setUsedLength("");
   };
 
+  // Persist a project row in Supabase for this user
   const insertProject = async (fabricSaved) => {
     try {
       setLoadings(true);
@@ -89,6 +92,7 @@ function ScrapEstimatorPage() {
     }
   };
 
+  // Load existing projects for this user
   const fetchProject = async () => {
     try {
       setLoadings(true);
@@ -116,6 +120,7 @@ function ScrapEstimatorPage() {
     }
   };
 
+  // Refresh projects after auth state resolves
   useEffect(() => {
     if (loading) return;
     if (!session?.user) return;
@@ -123,6 +128,7 @@ function ScrapEstimatorPage() {
     fetchProject();
   }, [loading, session]);
 
+  // Resolve the current user's CustID from CUSTOMER table
   const fetchCustomerId = async () => {
     if (!session?.user?.id) return null;
     const { data, error } = await supabase

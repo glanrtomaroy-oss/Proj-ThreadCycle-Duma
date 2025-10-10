@@ -4,6 +4,7 @@ import toast from "react-hot-toast"
 import { useState, useEffect } from "react";
 import { supabase } from "../util/supabase";
 
+// Profile page: fetch and update basic user info based on role
 const ProfilePage = () => {
   const [profile, setProfile] = useState('')
   const [username, setUsername] = useState('');
@@ -15,6 +16,7 @@ const ProfilePage = () => {
     const { session, signOut, userRole } = UserAuth();
     const navigate = useNavigate();
 
+    // Sign the user out and navigate to login
     const handleSignOut = async () => {
         try {
           await signOut();
@@ -26,6 +28,7 @@ const ProfilePage = () => {
         }
       };
 
+      // Determine if there are unsaved changes
       const hasChanges = () => {
         if (!profile) return false;
     
@@ -34,7 +37,7 @@ const ProfilePage = () => {
         );
       };
 
-      // Fetch profile data 
+      // Fetch profile data for the current user based on role
       useEffect(() => {
         const fetchProfile = async () => {
           try {
@@ -86,7 +89,7 @@ const ProfilePage = () => {
         fetchProfile();
       }, [session]);
 
-      //Function to handle profile save
+      // Save profile updates back to Supabase
       const handleSaveProfile = async () => {
         if (saving) return; // Prevent multiple clicks
         setSaving(true);
