@@ -235,7 +235,7 @@ function ThriftMapPage() {
     const marker = markersRef.current[shop.ShopID];
     if (marker) {
       const popup = marker.getPopup?.();
-      // Open popup shortly after flyTo
+      // Open popup shortly after 
       setTimeout(() => {
         if (popup && !popup.isOpen()) {
           try {
@@ -245,8 +245,6 @@ function ThriftMapPage() {
       }, 300);
     }
   };
-
-  
 
   return (
     <div className="bg-[#FEFEE3] min-h-screen pb-20">
