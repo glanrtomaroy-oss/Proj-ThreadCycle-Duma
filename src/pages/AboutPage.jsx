@@ -34,7 +34,7 @@ function AboutPage() {
                 <li>Reduce textile waste through education and practical tools</li>
                 <li>Support local thrift shops and sustainable businesses</li>
                 <li>Build a community around repair, reuse, and upcycling</li>
-                <li>Promote conscious consumption and creative reuse</li>
+                <li>Promotes and practice slow fashion comsumption</li>
               </ul>
             </div>
           </div>
