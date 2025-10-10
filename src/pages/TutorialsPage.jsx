@@ -91,8 +91,7 @@ function TutorialsPage({ user }) {
     
   ];
 
-  const filteredTutorials = tutorials.filter(tutorial => 
-  {
+  const filteredTutorials = tutorials.filter((tutorial) => {
     const categoryMatch = activeFilter === "all" || tutorial.category === activeFilter;
     const difficultyMatch = activeDifficulty === "all" || tutorial.difficulty === activeDifficulty;
     return categoryMatch && difficultyMatch;
@@ -219,7 +218,7 @@ function TutorialsPage({ user }) {
           </div>
 
           {/* Tutorials Grid */}
-          <div className="grid gap-7.5 grid-cols-[repeat(auto-fill,minmax(300px,1fr))]">
+          <div className="grid gap-6 md:gap-7 grid-cols-[repeat(auto-fill,minmax(280px,1fr))]">
             {filteredTutorials.map(tutorial => (
               <div
                 key={tutorial.id}
@@ -260,9 +259,12 @@ function TutorialsPage({ user }) {
           </div>
 
           {filteredTutorials.length === 0 && (
-            <div className="no-results">
-              <i className="fas fa-search"></i>
-              <h3 className ="text-center text-gray-500 mt-8">No tutorials found.</h3>
+            <div className="flex flex-col items-center justify-center text-center py-14 px-6 bg-white rounded-lg shadow">
+              <div className="w-14 h-14 rounded-full bg-[#2C6E49]/10 flex items-center justify-center mb-3">
+                <i className="fas fa-search text-[#2C6E49]"></i>
+              </div>
+              <h3 className="text-lg font-semibold text-gray-800">No tutorials found</h3>
+              <p className="text-sm text-gray-600 mt-1">Try adjusting your filters to see more results.</p>
             </div>
           )}
         </div>

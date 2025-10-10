@@ -11,13 +11,13 @@ const Header = () => {
     <header className="bg-[#2C6E49] shadow-lg sticky top-0 z-50">
       <div className="w-full max-w-6xl mx-auto px-4">
         <nav className="flex gap-20 items-center py-4">
-          <div className="flex items-center">
+          <Link to="/" className="flex items-center no-underline">
             <div className="relative w-20 h-20 flex items-center justify-center">
               <img src="/logo.png" alt="ThreadCycle Duma Logo" className="w-full h-full object-contain rounded-full" />
               <i className="fas fa-recycle absolute text-xl text-green-600 hidden"></i>
             </div>
             <span className="text-2xl font-bold text-[#85b027]">ThreadCycle</span>
-          </div>
+          </Link>
           <ul className=" flex justify-center list-none">
             <li className="ml-6">
               <NavLink

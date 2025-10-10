@@ -432,10 +432,14 @@ function ThriftMapPage() {
           ))}
         </div>
 
-        {shops.length === 0 && (
-          <p className="text-center text-gray-500 mt-8">
-            No thrift shops found.
-          </p>
+        {shops.filter(isShopInActiveFilters).length === 0 && (
+          <div className="flex flex-col items-center justify-center text-center py-12 px-6 bg-white rounded-lg shadow mt-8">
+            <div className="w-12 h-12 rounded-full bg-[#2C6E49]/10 flex items-center justify-center mb-3">
+              <i className="fas fa-store text-[#2C6E49]"></i>
+            </div>
+            <h4 className="text-base font-semibold text-gray-800">No stores found for this filter.</h4>
+            <p className="text-sm text-gray-600 mt-1">Try a different category or price range.</p>
+          </div>
         )}
       </section>
     </div>
