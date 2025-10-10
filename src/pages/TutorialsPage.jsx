@@ -60,7 +60,35 @@ function TutorialsPage({ user }) {
       title: "Turning Jeans into a Denim Skirt",
       description: "Advanced tutorial on transforming old jeans into a fashionable denim skirt.",
       duration: "5 min"
+    },
+    {
+      id: 7,
+      category: "repair",
+      difficulty: "advanced",
+      youtubeId: "UUa4VBdt7KQ", // How to finally Mend all your holey and torn Clothes
+      title: "How to Finally Mend all your Holey and Torn Clothes",
+      description: "Advanced tutorial on mending the holes and torns of your clothes.",
+      duration: "39 min"
+    },
+    {
+      id: 8,
+      category: "upcycling",
+      difficulty: "intermediate",
+      youtubeId: "utlfzLl0oq4", // 40 Ways to Elevate your Old T-shirts! | DIY clothes remake upcycle thrift flip
+      title: "40 Ways to Elevate your Old T-shirts! | DIY clothes remake upcycle thrift flip",
+      description: "Intermediate tutorial on how to elevate your old T-shirts.",
+      duration: "26 min"
+    },
+    {
+      id: 9,
+      category: "customization",
+      difficulty: "advanced",
+      youtubeId: "nw6viYUGDf0", // How to UPCYCLE your OLD CLOTHES (custom hoodie tutorial)
+      title: "How to UPCYCLE your OLD CLOTHES (custom hoodie tutorial)",
+      description: "Advanced tutorial on how to customize your old hoodies.",
+      duration: "3 min"
     }
+    
   ];
 
   const filteredTutorials = tutorials.filter(tutorial => 
