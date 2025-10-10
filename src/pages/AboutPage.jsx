@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-// About page: mission, story, team information
+// About page: mission, goals, and team information
 function AboutPage() {
 
   return (
@@ -20,83 +20,49 @@ function AboutPage() {
       </section>
 
       {/* About Section */}
-      <section className="bg-[#FEFEE3] py-10 pb-20">
-        <div className="w-full max-w-6xl mx-auto px-4">
-          <div className="space-y-6">
-            <div className="flex gap-20">
-
-              {/* Our Story */}
-              <div className="space-y-6 bg-white rounded-lg p-6 shadow-lg">
-                <h2 className="text-2xl font-bold text-gray-800 mt-6 first:mt-0">Our Story</h2>
-                <p className="text-gray-600 leading-relaxed">ThreadCycle Duma was born out of a passion for sustainable fashion and a desire to address the growing issue of textile waste in our community. Founded in 2023, our platform connects local fashion creators, tailoring shops, and sewing enthusiasts who share a common goal: to reduce fashion waste and promote eco-friendly practices.</p>
-
-                <p className="text-gray-600 leading-relaxed">Dumaguete City, known as the "City of Gentle People," has a rich culture of creativity and community. We wanted to harness this spirit to create a movement towards more sustainable fashion choices that benefit both our community and our environment.</p>
-              </div>
-
-              <div className="flex justify-center w-full">
-                <div className="relative w-full max-w-sm h-[600px] flex items-center justify-center shadow-lg">
-                  <i className="fas fa-leaf absolute text-green-600 text-xl hidden"></i>
-                  <img src="aboutpic.jpg" alt="Sustainable Fashion Community" className="w-full h-full rounded-xl object-cover shadow-lg" />
-                </div>
-              </div>
+      <section className="bg-[#FEFEE3] py-12">
+        <div className="w-full max-w-6xl mx-auto px-4 space-y-10">
+          {/* About the Website */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div className="bg-white rounded-xl p-6 shadow-lg">
+              <h2 className="text-2xl font-bold text-gray-800 mb-3">About ThreadCycle</h2>
+              <p className="text-gray-600 leading-relaxed">ThreadCycle Duma is a community platform focused on sustainable fashion and circular practices. We help residents discover thrift shops, learn upcycling skills, and track impact through tools like the Scrap Estimator.</p>
             </div>
-
-            <div className="flex gap-10">
-              {/* Our Mission */}
-              <div className="space-y-6 bg-white rounded-lg p-6 shadow-lg basis-1/2">
-                <h2 className="text-2xl font-bold text-gray-800 mt-6">Our Mission</h2>
-                <p className="text-gray-600 leading-relaxed">Our mission is to provide a centralized platform that encourages the reuse, repurposing, and responsible management of fabrics within the Dumaguete community. We aim to:</p>
-                <ul className="ml-5 mb-5 space-y-2 list-disc">
-                  <li className="text-gray-600 leading-relaxed">Reduce textile waste through education and practical tools</li>
-                  <li className="text-gray-600 leading-relaxed">Support local thrift shops and sustainable businesses</li>
-                  <li className="text-gray-600 leading-relaxed">Create a community around slow fashion practices</li>
-                  <li className="text-gray-600 leading-relaxed">Educate people on repairing and upcycling clothing</li>
-                  <li className="text-gray-600 leading-relaxed">Track and celebrate our collective impact on reducing fashion waste</li>
-                </ul>
-              </div>
-
-              {/* Our Vision */}
-              <div className="space-y-6 bg-white rounded-lg p-6 shadow-lg basis-1/2">
-                <h2 className="text-2xl font-bold text-gray-800 mt-6">Our Vision</h2>
-                <p className="text-gray-600 leading-relaxed">We envision a Dumaguete City where sustainable fashion is the norm, not the exception. A community where clothing is valued, repaired, and repurposed, and where the environmental impact of our fashion choices is minimized through conscious consumption and creative reuse.</p>
-              </div>
+            <div className="bg-white rounded-xl p-6 shadow-lg">
+              <h2 className="text-2xl font-bold text-gray-800 mb-3">Our Goals</h2>
+              <ul className="list-disc pl-5 space-y-2 text-gray-600">
+                <li>Reduce textile waste through education and practical tools</li>
+                <li>Support local thrift shops and sustainable businesses</li>
+                <li>Build a community around repair, reuse, and upcycling</li>
+                <li>Promote conscious consumption and creative reuse</li>
+              </ul>
             </div>
           </div>
 
-          {/* Team Section */}
-          <div className="my-16">
-            <div className="text-center mb-10">
-              <h2 className="text-2xl font-bold text-gray-800 mb-4">Our Team</h2>
-              <p className="text-gray-600 max-w-3xl mx-auto">The passionate individuals behind ThreadCycle Duma</p>
+          {/* About Us - Team Cards */}
+          <div>
+            <div className="text-center mb-8">
+              <h2 className="text-2xl font-bold text-gray-800">About Us</h2>
+              <p className="text-gray-600">The team behind ThreadCycle Duma</p>
             </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-10">
-              <div className="bg-white rounded-lg overflow-hidden shadow-lg text-center p-5 transition-transform hover:-translate-y-1">
-                <div className="w-30 h-30 rounded-full overflow-hidden mx-auto mb-4">
-                  <img src="member1.png" alt="Glan R. Tomaroy" className="w-full h-full object-cover" />
-                </div>
-                <h3 className="text-gray-800 mb-1">Glan R. Tomaroy</h3>
-                <p className="text-[#4c5f0d] font-medium mb-2">Co-Founder & Developer</p>
-                </div>
-
-              <div className="bg-white rounded-lg overflow-hidden shadow-lg text-center p-5 transition-transform hover:-translate-y-1">
-                <div className="w-30 h-30 rounded-full overflow-hidden mx-auto mb-4">
-                  <img src="member2.jpg" alt="Voughn John Zoe N. Villalon" className="w-full h-full object-cover" />
-                </div>
-                <h3 className="text-gray-800 mb-1">Voughn John Zoe N. Villalon</h3>
-                <p className="text-[#4c5f0d] font-medium mb-2">Co-Founder & Sustainability Expert</p>
-                </div>
-
-              <div className="bg-white rounded-lg overflow-hidden shadow-lg text-center p-5 transition-transform hover:-translate-y-1">
-                <div className="w-30 h-30 rounded-full overflow-hidden mx-auto mb-4">
-                  <img src="member3.jpg" alt="Kate Valerie Katada" className="w-full h-full object-cover" />
-                </div>
-                <h3 className="text-gray-800 mb-1">Kate Valerie Katada</h3>
-                <p className="text-[#4c5f0d] font-medium mb-2">Co-Founder & Secretary</p>
-                </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              <div className="bg-white rounded-xl overflow-hidden shadow-lg text-center p-6">
+                <img src="member1.png" alt="Glan R. Tomaroy" className="w-28 h-28 object-cover rounded-full mx-auto mb-4" />
+                <h3 className="text-gray-800 font-semibold">Glan R. Tomaroy</h3>
+                <p className="text-[#4c5f0d] font-medium">Co-Founder & Developer</p>
+              </div>
+              <div className="bg-white rounded-xl overflow-hidden shadow-lg text-center p-6">
+                <img src="member2.jpg" alt="Voughn John Zoe N. Villalon" className="w-28 h-28 object-cover rounded-full mx-auto mb-4" />
+                <h3 className="text-gray-800 font-semibold">Voughn John Zoe N. Villalon</h3>
+                <p className="text-[#4c5f0d] font-medium">Co-Founder & Sustainability Expert</p>
+              </div>
+              <div className="bg-white rounded-xl overflow-hidden shadow-lg text-center p-6">
+                <img src="member3.jpg" alt="Kate Valerie Katada" className="w-28 h-28 object-cover rounded-full mx-auto mb-4" />
+                <h3 className="text-gray-800 font-semibold">Kate Valerie Katada</h3>
+                <p className="text-[#4c5f0d] font-medium">Co-Founder & Secretary</p>
+              </div>
             </div>
           </div>
-
         </div>
       </section>
     </>

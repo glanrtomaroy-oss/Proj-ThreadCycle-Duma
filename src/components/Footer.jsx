@@ -10,7 +10,7 @@ const Footer = () => {
           onClick={handleBackToTop}
           aria-label="Back to top"
           title="Back to top"
-          className="text-lg leading-none cursor-pointer hover:text-white/80 select-none"
+          className="inline-flex items-center justify-center w-9 h-9 rounded-full border border-white/30 bg-white/10 hover:bg-white/20 shadow-sm text-lg leading-none cursor-pointer hover:text-white/90 select-none"
         >
           ↑
         </a>
