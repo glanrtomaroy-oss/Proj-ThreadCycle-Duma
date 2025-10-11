@@ -31,8 +31,6 @@ function App() {
         <Route path="/profile" element={<ProfilePage />} />
       </Routes>
       <Footer />
-
-      // for toast css
       <Toaster
         position="top-center"
         toastOptions={{
