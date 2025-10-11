@@ -23,21 +23,46 @@ function ThriftMapPage() {
   const addressCacheRef = useRef({});
   const mapboxToken = import.meta.env.VITE_MAPBOX_TOKEN;
 
+  // Normalize a PriceRange string into one of our buckets
   const getPriceBucket = (priceText) => {
     if (!priceText) return "all";
-    const text = priceText.replace(/\s|₱/g, "");
-    if (/250\+/.test(text)) return "250+";
-    if (/50-100/.test(text)) return "50-100";
-    if (/100-250/.test(text)) return "100-250";
+    const text = String(priceText)
+      .toLowerCase()
+      .replace(/₱|\s/g, "")
+      .replace(/[–—]/g, "-"); // normalize dashes
+
+    if (/250\+|>\=?250/.test(text)) return "250+";
+    if (/50-?100/.test(text)) return "50-100";
+    if (/100-?250/.test(text)) return "100-250";
+
+    const nums = text.match(/\d+/g);
+    if (nums && nums.length >= 2) {
+      const min = parseInt(nums[0], 10);
+      const max = parseInt(nums[1], 10);
+      if (!Number.isNaN(min) && !Number.isNaN(max)) {
+        if (max <= 100) return "50-100";
+        if (max <= 250) return "100-250";
+        return "250+";
+      }
+    }
     return "all";
   };
 
+  // Check if a shop passes the active category and price filters
   const isShopInActiveFilters = (shop) => {
+    // Category can be a comma-separated list, e.g., "clothing,shoes"
+    const shopCategories = String(shop.Category || "")
+      .toLowerCase()
+      .split(/[,/|]/)
+      .map((c) => c.trim())
+      .filter(Boolean);
+
     const categoryMatch =
-      activeCategory === "all" ||
-      (shop.Category || "").toLowerCase() === activeCategory;
+      activeCategory === "all" || shopCategories.includes(activeCategory);
+
     const priceMatch =
       activePrice === "all" || getPriceBucket(shop.PriceRange) === activePrice;
+
     return categoryMatch && priceMatch;
   };
 
