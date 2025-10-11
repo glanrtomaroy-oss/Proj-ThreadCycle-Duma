@@ -23,7 +23,7 @@ function ThriftMapPage() {
   const addressCacheRef = useRef({});
   const mapboxToken = import.meta.env.VITE_MAPBOX_TOKEN;
 
-  // Normalize a PriceRange string into one of our buckets
+  // Normalize a PriceRange string into one of the buckets: "all", "50-100", "100-250", "250+"
   const getPriceBucket = (priceText) => {
     if (!priceText) return "all";
     const text = String(priceText)
