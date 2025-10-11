@@ -14,6 +14,7 @@ function ScrapEstimatorPage() {
   const [loadings, setLoadings] = useState(false);
   const { session, loading } = UserAuth();
   const isLoggedIn = !!session?.user;
+
   // Emission factors (kg CO₂ per meter saved)
   const EMISSION_FACTOR_KG_PER_M_DEFAULT = 0.5;
   const FABRIC_EMISSION_FACTORS_KG_PER_M = {
