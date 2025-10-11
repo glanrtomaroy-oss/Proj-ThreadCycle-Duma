@@ -260,7 +260,7 @@ function TutorialsPage({ user }) {
 
                 <div className="p-[20px]">
                   <div className="tutorial-meta flex items-center justify-between">
-                    <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold text-white mb-3 ${categoryColors[(tutorial.category || '').toLowerCase()] || 'bg-gray-600'}`}>
+                    <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold text-white mb-1 ${categoryColors[(tutorial.category || '').toLowerCase()] || 'bg-gray-600'}`}>
                       {tutorial.category.charAt(0).toUpperCase() + tutorial.category.slice(1)}
                     </span>
                     <span className="text-gray-600 text-sm"><i className="far fa-clock"></i> {tutorial.duration}</span>
