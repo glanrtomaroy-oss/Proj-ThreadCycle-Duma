@@ -75,8 +75,8 @@ function ScrapEstimatorPage() {
         .from('PROJECT')
         .insert([{
           FabricType: fabricType,
-          OriginalLength: originalLength,
-          UsedLength: usedLength,
+          OriginalLength: Number(originalLength),
+          UsedLength: Number(usedLength),
           FabricSaved: fabricSaved, // meters saved
           // CO₂ Reduction = Total Fabric Saved × Emission Factor (kg)
           CO2Reduction: Number((fabricSaved * factorKgPerM).toFixed(2)),
