@@ -186,9 +186,9 @@ export const UserAuth = () => {
       userRole: null,
       loading: true,
       signInUser: () =>
-        Promise.resolve({ success: false, error: "Context not available" }),
+        Promise.resolve({ success: false, error: "Context not available." }),
       signUpNewUser: () =>
-        Promise.resolve({ success: false, error: "Context not available" }),
+        Promise.resolve({ success: false, error: "Context not available." }),
       signOut: () => Promise.resolve(),
     };
   }
