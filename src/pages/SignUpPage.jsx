@@ -105,7 +105,8 @@ const SignupPage = () => {
   }
 
   return (
-    <div className="min-h-[calc(100vh-200px)] flex items-center justify-center bg-[#FEFEE3] py-10 px-5">
+    <div className="min-h-[calc(100vh-200px)] flex items-center justify-center bg-gradient-to-br from-gray-100 to-gray-300 py-10 px-5">
+
       <div className="w-full max-w-md">
         <div className="bg-white p-10 rounded-xl shadow-2xl border border-gray-200">
           <div className="text-center mb-8">
