@@ -116,6 +116,15 @@ function TutorialsPage({ user }) {
     advanced: 'bg-[#e74c3c]',
   };
 
+  // Category badge colors (normalize upcycle/upcycling)
+  const categoryColors = {
+    repair: 'bg-blue-600',
+    upcycle: 'bg-emerald-700',
+    upcycling: 'bg-emerald-700',
+    customization: 'bg-purple-600',
+    accessories: 'bg-pink-600',
+  };
+
   return (
     <>
       {/* Hero Section for Tutorials */}
@@ -243,6 +252,10 @@ function TutorialsPage({ user }) {
                       allowFullScreen
                     ></iframe>
                   </div>
+                  {/* Category badge (top-left) */}
+                  <span className={`absolute top-[15px] left-[15px] px-2.5 py-1.5 rounded-[20px] text-[0.8rem] font-medium text-white z-10 ${categoryColors[(tutorial.category || '').toLowerCase()] || 'bg-gray-600'}`}>
+                    {tutorial.category.charAt(0).toUpperCase() + tutorial.category.slice(1)}
+                  </span>
                   <span className={`absolute top-[15px] right-[15px] px-2.5 py-1.5 rounded-[20px] text-[0.8rem] font-medium  text-white z-10 ${difficultyColors[tutorial.difficulty]}`}>
                     {tutorial.difficulty.charAt(0).toUpperCase() + tutorial.difficulty.slice(1)}
                   </span>
