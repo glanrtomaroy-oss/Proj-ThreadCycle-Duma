@@ -4,7 +4,6 @@ import { supabase } from '../util/supabase'
 import { UserAuth } from '../context/AuthContext'
 
 // Scrap estimator: calculate and persist projects for signed-in users
-// Scrap estimator: calculate and persist projects for signed-in users
 function ScrapEstimatorPage() {
   const [fabricType, setFabricType] = useState("");
   const [originalLength, setOriginalLength] = useState("");
