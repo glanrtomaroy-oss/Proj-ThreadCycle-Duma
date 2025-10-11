@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { supabase } from "../util/supabase";
+// Auth context provides: current session, role, and auth helpers (sign in/out/up)
 
 export const AuthContext = createContext();
 
@@ -8,6 +9,7 @@ export const AuthContextProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [session, setSession] = useState(null);
 
+  // Sign up user with Supabase auth, then create a CUSTOMER record
   const signUpNewUser = async (username, email, password) => {
     const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
       email,
@@ -38,6 +40,7 @@ export const AuthContextProvider = ({ children }) => {
     return { success: true, data: signUpData, userRole: "customer" };
   };
 
+  // Determine whether a user is a customer or admin by probing tables
   const fetchUserRole = async (userId) => {
     if (!userId) return null;
   
@@ -69,6 +72,7 @@ export const AuthContextProvider = ({ children }) => {
     return null;
   };
 
+  // Sign in and resolve role; returns both success and role for routing
   const signInUser = async (email, password) => {
     try {
       const { data, error } = await supabase.auth.signInWithPassword({
@@ -98,6 +102,7 @@ export const AuthContextProvider = ({ children }) => {
     }
   };
 
+  // Sign out and clear local state; also remove cached Supabase token
   const signOut = async () => {
     try {
       const { error } = await supabase.auth.signOut();
@@ -127,7 +132,7 @@ export const AuthContextProvider = ({ children }) => {
   };
 
 
-  // On auth state change
+  // On mount: get current session and subscribe to auth state changes
   useEffect(() => {
     const init = async () => {
       try {
@@ -161,6 +166,7 @@ export const AuthContextProvider = ({ children }) => {
     return () => listener?.subscription?.unsubscribe();
   }, []);
 
+  // Expose auth state and helpers to the app
   return (
     <AuthContext.Provider
       value={{
