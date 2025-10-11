@@ -252,21 +252,18 @@ function TutorialsPage({ user }) {
                       allowFullScreen
                     ></iframe>
                   </div>
-                  {/* Category badge (top-left) */}
-                  <span className={`absolute top-[15px] left-[15px] px-2.5 py-1.5 rounded-[20px] text-[0.8rem] font-medium text-white z-10 ${categoryColors[(tutorial.category || '').toLowerCase()] || 'bg-gray-600'}`}>
-                    {tutorial.category.charAt(0).toUpperCase() + tutorial.category.slice(1)}
-                  </span>
+                  {/* keep top-right difficulty badge; category will appear before duration below */}
                   <span className={`absolute top-[15px] right-[15px] px-2.5 py-1.5 rounded-[20px] text-[0.8rem] font-medium  text-white z-10 ${difficultyColors[tutorial.difficulty]}`}>
                     {tutorial.difficulty.charAt(0).toUpperCase() + tutorial.difficulty.slice(1)}
                   </span>
                 </div>
 
                 <div className="p-[20px]">
-                  <div className="tutorial-meta">
-                    <span className="tutorial-category">
+                  <div className="tutorial-meta flex items-center justify-between">
+                    <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold text-white ${categoryColors[(tutorial.category || '').toLowerCase()] || 'bg-gray-600'}`}>
                       {tutorial.category.charAt(0).toUpperCase() + tutorial.category.slice(1)}
                     </span>
-                    <span><i className="far fa-clock"></i> {tutorial.duration}</span>
+                    <span className="text-gray-600 text-sm"><i className="far fa-clock"></i> {tutorial.duration}</span>
                   </div>
                   <h3 className="mb-2.5 text-[var(--dark)]text-[1.3rem]">{tutorial.title}</h3>
                   <p className="text-[var(--gray)] mb-[15px] text-[.95rem] leading-[1.5]">{tutorial.description}</p>
