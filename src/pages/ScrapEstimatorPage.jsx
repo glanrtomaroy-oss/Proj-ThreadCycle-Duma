@@ -14,8 +14,23 @@ function ScrapEstimatorPage() {
   const [loadings, setLoadings] = useState(false);
   const { session, loading } = UserAuth();
   const isLoggedIn = !!session?.user;
-  // Emission factor in kg CO₂ per meter of fabric saved
-  const EMISSION_FACTOR_KG_PER_M = 0.5;
+  // Emission factors (kg CO₂ per meter saved)
+  const EMISSION_FACTOR_KG_PER_M_DEFAULT = 0.5;
+  const FABRIC_EMISSION_FACTORS_KG_PER_M = {
+    cotton: 7.5,
+    polyester: 6,
+    wool: 15,
+    mixed: 6,
+    denim: 10,
+    silk: 20,
+    linen: 10,
+    leather: 30,
+  };
+
+  const getEmissionFactor = (type) => {
+    const key = String(type || '').toLowerCase();
+    return FABRIC_EMISSION_FACTORS_KG_PER_M[key] ?? EMISSION_FACTOR_KG_PER_M_DEFAULT;
+  };
 
   // Compute savings and persist a project for the signed-in user
   const calculateSavings = async (e) => {
@@ -40,27 +55,16 @@ function ScrapEstimatorPage() {
     }
 
     const saved = original - used;
+    const factor = getEmissionFactor(fabricType);
 
-    await insertProject(saved);
+    await insertProject(saved, factor);
     await fetchProject();
 
-    toast.success(`You saved ${saved.toFixed(2)} meters of ${fabricType} fabric!`);
-
-    // fabric type tracking to your state
-    const emissionFactors = { 
-      cotton: 7.5,  
-      polyester: 6, 
-      wool: 15, 
-      mixed: 6, 
-      denim: 10, 
-      silk: 20, 
-      linen: 10, 
-      leather: 30, 
-      other: 5
-  };};
+    const co2 = saved * factor;
+    toast.success(`Saved ${saved.toFixed(2)}m • CO₂ reduction ${co2.toFixed(2)}kg`);
 
   // Persist a project row in Supabase for this user
-  const insertProject = async (fabricSaved) => {
+  const insertProject = async (fabricSaved, factorKgPerM) => {
     try {
       setLoadings(true);
 
@@ -74,8 +78,8 @@ function ScrapEstimatorPage() {
           OriginalLength: originalLength,
           UsedLength: usedLength,
           FabricSaved: fabricSaved, // meters saved
-          // CO₂ Reduction = Total Fabric Saved × Emission Factor
-          CO2Reduction: Number((fabricSaved * EMISSION_FACTOR_KG_PER_M).toFixed(2)),
+          // CO₂ Reduction = Total Fabric Saved × Emission Factor (kg)
+          CO2Reduction: Number((fabricSaved * factorKgPerM).toFixed(2)),
           CustID: custId,
         }])
         .select(); // return the inserted row
