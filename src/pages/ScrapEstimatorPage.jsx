@@ -4,6 +4,7 @@ import { supabase } from '../util/supabase'
 import { UserAuth } from '../context/AuthContext'
 
 // Scrap estimator: calculate and persist projects for signed-in users
+// Scrap estimator: calculate and persist projects for signed-in users
 function ScrapEstimatorPage() {
   const [fabricType, setFabricType] = useState("");
   const [originalLength, setOriginalLength] = useState("");
@@ -13,6 +14,8 @@ function ScrapEstimatorPage() {
   const [loadings, setLoadings] = useState(false);
   const { session, loading } = UserAuth();
   const isLoggedIn = !!session?.user;
+  // Emission factor in kg CO₂ per meter of fabric saved
+  const EMISSION_FACTOR_KG_PER_M = 0.5;
 
   // Compute savings and persist a project for the signed-in user
   const calculateSavings = async (e) => {
@@ -70,8 +73,9 @@ function ScrapEstimatorPage() {
           FabricType: fabricType,
           OriginalLength: originalLength,
           UsedLength: usedLength,
-          FabricSaved: fabricSaved, // match column name
-          CO2Reduction: 5,
+          FabricSaved: fabricSaved, // meters saved
+          // CO₂ Reduction = Total Fabric Saved × Emission Factor
+          CO2Reduction: Number((fabricSaved * EMISSION_FACTOR_KG_PER_M).toFixed(2)),
           CustID: custId,
         }])
         .select(); // return the inserted row
@@ -385,7 +389,7 @@ function ScrapEstimatorPage() {
                           </div>
                         </div>
                         <div className="flex flex-col items-end gap-2">
-                          <span className="bg-green-600 text-white px-2 py-1 rounded-full font-medium text-sm">+{Number(calc.CO2Reduction || 0).toFixed(2)}m</span>
+                          <span className="bg-green-600 text-white px-2 py-1 rounded-full font-medium text-sm">+{Number(calc.CO2Reduction || 0).toFixed(2)}kg CO₂</span>
                           <div className="flex gap-1">
                             <button
                               className="bg-none text-red-500 border border-red-500 px-3 py-1 rounded-md cursor-pointer text-sm font-medium transition-all hover:bg-red-500 hover:text-white hover:-translate-y-0.5 mt-2 ml-1"
