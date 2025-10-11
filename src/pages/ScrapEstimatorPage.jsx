@@ -49,8 +49,21 @@ function ScrapEstimatorPage() {
     const original = parseFloat(originalLength);
     const used = parseFloat(usedLength);
 
+    // Validate numeric and range constraints
+    if (!Number.isFinite(original) || !Number.isFinite(used)) {
+      toast.error("Please enter valid numeric lengths.");
+      return;
+    }
+    if (original <= 0) {
+      toast.error("Original length must be greater than 0.");
+      return;
+    }
+    if (used < 0) {
+      toast.error("Used length cannot be negative.");
+      return;
+    }
     if (used > original) {
-      toast.error("Used length cannot be greater than original length");
+      toast.error("Used length cannot be greater than original length.");
       return;
     }
 
@@ -62,7 +75,9 @@ function ScrapEstimatorPage() {
 
     const co2 = saved * factor;
     toast.success(`Saved ${saved.toFixed(2)}m • CO₂ reduction ${co2.toFixed(2)}kg`);
+  };
 
+  // Persist a project row in Supabase for this user
   // Persist a project row in Supabase for this user
   const insertProject = async (fabricSaved, factorKgPerM) => {
     try {
@@ -261,7 +276,7 @@ function ScrapEstimatorPage() {
                 </div>
                   <div>
                     <h3 className="text-3xl font-bold text-gray-800 mb-1">
-                      {(totalSaved * 6).toFixed(1)}kg
+                      {calculations.reduce((t, c) => t + Number(c?.CO2Reduction || 0), 0).toFixed(1)}kg
                     </h3>
                     <p className="text-gray-600 m-0">CO₂ Reduction</p>
                   </div>
@@ -292,6 +307,7 @@ function ScrapEstimatorPage() {
                       id="original-length"
                       className="w-full px-4 py-3 border border-gray-300 rounded text-base"
                       placeholder="Enter original fabric length"
+                      min="0"
                       step="0.1"
                       value={originalLength}
                       onChange={handleOriginalLength}
@@ -305,6 +321,7 @@ function ScrapEstimatorPage() {
                       id="used-length"
                       className="w-full px-4 py-3 border border-gray-300 rounded text-base"
                       placeholder="Enter used fabric length"
+                      min="0"
                       step="0.1"
                       value={usedLength}
                       onChange={handleUsedLength}
