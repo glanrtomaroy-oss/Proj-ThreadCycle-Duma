@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { supabase } from "../util/supabase";
-// Auth context provides: current session, role, and auth helpers (sign in/out/up)
+// Auth context provides current session, role, and auth helpers (sign in/out/up)
 
 export const AuthContext = createContext();
 
@@ -72,7 +72,7 @@ export const AuthContextProvider = ({ children }) => {
     return null;
   };
 
-  // Sign in and resolve role; returns both success and role for routing
+  // Sign in and resolve role, returns both success and role for routing
   const signInUser = async (email, password) => {
     try {
       const { data, error } = await supabase.auth.signInWithPassword({
@@ -102,7 +102,7 @@ export const AuthContextProvider = ({ children }) => {
     }
   };
 
-  // Sign out and clear local state; also remove cached Supabase token
+  // Sign out and clear local state and also remove cached Supabase token
   const signOut = async () => {
     try {
       const { error } = await supabase.auth.signOut();
@@ -132,7 +132,7 @@ export const AuthContextProvider = ({ children }) => {
   };
 
 
-  // On mount: get current session and subscribe to auth state changes
+  // Get current session and subscribe to auth state changes
   useEffect(() => {
     const init = async () => {
       try {
