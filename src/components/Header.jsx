@@ -5,7 +5,6 @@ const Header = () => {
   const { userRole, loading } = UserAuth();
   console.log("Current user role:", userRole);
   console.log("Loading state:", loading);
-  // const [user, setUser] = useState("");
 
   return (
     <header className="bg-[#2C6E49] shadow-lg sticky top-0 z-50">
