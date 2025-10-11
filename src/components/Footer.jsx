@@ -12,7 +12,7 @@ const Footer = () => {
           title="Back to top"
           className="inline-flex items-center justify-center w-9 h-9 rounded-full border border-white/30 bg-white/10 hover:bg-white/20 shadow-sm text-lg leading-none cursor-pointer hover:text-white/90 select-none"
         >
-          ↑
+          ↑ // Arrow symbol for the back to top
         </a>
         <p className="text-center text-sm text-white/90 flex-1 m-0">&copy; 2025 ThreadCycle Duma. All rights reserved.</p>
       </div>
