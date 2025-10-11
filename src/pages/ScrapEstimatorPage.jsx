@@ -78,7 +78,6 @@ function ScrapEstimatorPage() {
   };
 
   // Persist a project row in Supabase for this user
-  // Persist a project row in Supabase for this user
   const insertProject = async (fabricSaved, factorKgPerM) => {
     try {
       setLoadings(true);
