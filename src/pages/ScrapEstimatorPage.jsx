@@ -324,7 +324,7 @@ function ScrapEstimatorPage() {
             {/* Recent Calculations */}
             <div className="bg-white rounded-lg p-8 shadow-lg max-h-116 flex flex-col">
               <div className="flex justify-between items-center mb-5 flex-shrink-0 flex-wrap gap-4">
-                <h2 className="text-gray-800 text-xl font-bold">Recent Calculations ({filteredCalculations.length})</h2>
+                <h2 className="text-gray-800 text-xl font-bold">Recent Calculations</h2>
 
                 {/* Search Bar */}
                 <div className="flex items-center">
