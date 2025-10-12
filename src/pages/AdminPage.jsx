@@ -308,7 +308,7 @@ function AdminPage() {
                     />
                   </div>
 
-                  {/* Image URL */}
+                  {/* Image Upload */}
                   <div>
                     <label className="block mb-2 text-gray-800 font-medium">Upload Image</label>
                     <input
