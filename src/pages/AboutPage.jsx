@@ -49,17 +49,17 @@ function AboutPage() {
               <div className="bg-white border border-[#2C6E49]/10 rounded-2xl text-center p-6 shadow-sm hover:shadow-md transition-shadow">
                 <img src="member1.png" alt="Glan R. Tomaroy" className="w-28 h-28 object-cover rounded-full mx-auto mb-4 ring-2 ring-[#2C6E49]/20" />
                 <h3 className="text-gray-800 font-semibold">Glan R. Tomaroy</h3>
-                <p className="text-[#2C6E49] font-medium">Co-Founder & Developer</p>
+                <p className="text-[#2C6E49] font-medium">Developers</p>
               </div>
               <div className="bg-white border border-[#2C6E49]/10 rounded-2xl text-center p-6 shadow-sm hover:shadow-md transition-shadow">
                 <img src="member2.jpg" alt="Voughn John Zoe N. Villalon" className="w-28 h-28 object-cover rounded-full mx-auto mb-4 ring-2 ring-[#2C6E49]/20" />
                 <h3 className="text-gray-800 font-semibold">Voughn John Zoe N. Villalon</h3>
-                <p className="text-[#2C6E49] font-medium">Co-Founder & Sustainability Expert</p>
+                <p className="text-[#2C6E49] font-medium">Developers</p>
               </div>
               <div className="bg-white border border-[#2C6E49]/10 rounded-2xl text-center p-6 shadow-sm hover:shadow-md transition-shadow">
                 <img src="member3.jpg" alt="Kate Valerie Katada" className="w-28 h-28 object-cover rounded-full mx-auto mb-4 ring-2 ring-[#2C6E49]/20" />
                 <h3 className="text-gray-800 font-semibold">Kate Valerie Katada</h3>
-                <p className="text-[#2C6E49] font-medium">Co-Founder & Secretary</p>
+                <p className="text-[#2C6E49] font-medium">Documentation</p>
               </div>
             </div>
           </div>
