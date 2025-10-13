@@ -240,7 +240,7 @@ function AdminPage() {
     // clear previous file input
     if (fileInputRef.current) fileInputRef.current.value = '';
 
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo({ top: 200, behavior: 'smooth' });
   };
 
 
