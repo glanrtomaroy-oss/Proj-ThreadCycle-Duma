@@ -414,7 +414,7 @@ function AdminPage() {
                   type="submit"
                   className="px-6 py-3 rounded-md text-sm font-medium transition-all bg-[#2C6E49] text-white hover:bg-[#25573A]"
                 >
-                  {editingShop ? 'Update Shop' : 'Add Shop'}
+                  {editingShop ? 'Edit Shop' : 'Add Shop'}
                 </button>
                 {editingShop && (
                   <button
