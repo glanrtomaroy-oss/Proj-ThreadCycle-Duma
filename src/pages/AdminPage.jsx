@@ -552,10 +552,36 @@ const cancelDeleteComment = () => setPendingDeleteComment(null);
   </div>
 )}
 
+{/* 🟢 SHOP DELETE CONFIRMATION */}
+{pendingDeleteShop && (
+  <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50">
+    <div className="bg-white border border-gray-300 rounded-xl shadow-2xl w-full max-w-md p-8 text-center">
+      <h2 className="text-2xl font-bold text-gray-800 mb-4">Confirm Deletion</h2>
+      <p className="text-gray-600 mb-6">
+        Are you sure you want to delete this thrift shop? This action cannot be undone.
+      </p>
+      <div className="flex justify-center gap-4">
+        <button
+          onClick={confirmDeleteShop}
+          className="px-6 py-3 bg-[#2C6E49] text-white rounded-md hover:bg-[#25573A] transition-all"
+        >
+          Yes, Delete
+        </button>
+        <button
+          onClick={cancelDeleteShop}
+          className="px-6 py-3 border-2 border-[#2C6E49] text-[#2C6E49] rounded-md hover:bg-[#2C6E49] hover:text-white transition-all"
+        >
+          Cancel
+        </button>
+      </div>
+    </div>
+  </div>
+)}
+
 {/* 🟢 COMMENT DELETE CONFIRMATION */}
 {pendingDeleteComment && (
-  <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
-    <div className="bg-white rounded-xl shadow-2xl w-full max-w-md p-8 text-center">
+  <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50">
+    <div className="bg-white border border-gray-300 rounded-xl shadow-2xl w-full max-w-md p-8 text-center">
       <h2 className="text-2xl font-bold text-gray-800 mb-4">Confirm Deletion</h2>
       <p className="text-gray-600 mb-6">
         Are you sure you want to delete this comment? This cannot be undone.
@@ -577,6 +603,7 @@ const cancelDeleteComment = () => setPendingDeleteComment(null);
     </div>
   </div>
 )}
+
     </div>
   );
 }
