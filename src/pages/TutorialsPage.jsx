@@ -74,7 +74,7 @@ function TutorialsPage({ user }) {
     },
     {
       id: 8,
-      category: "upcycling",
+      category: "upcycle",
       difficulty: "intermediate",
       youtubeId: "utlfzLl0oq4", // 40 Ways to Elevate your Old T-shirts! | DIY clothes remake upcycle thrift flip
       title: "40 Ways to Elevate your Old T-shirts! | DIY clothes remake upcycle thrift flip",
