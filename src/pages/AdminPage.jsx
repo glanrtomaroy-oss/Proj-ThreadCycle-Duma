@@ -169,60 +169,57 @@ function AdminPage() {
   };
 
 
-  // Delete shop by ShopID
-  const handleDeleteShop = async (shopId) => {
-    if (!window.confirm("Are you sure you want to delete this shop?")) return;
-   
-    try {
-      const { error } = await supabase
-        .from("THRIFT SHOP")
-        .delete()
-        .eq('ShopID', shopId);
+  // ✅ State for modal confirmation
+const [pendingDeleteShop, setPendingDeleteShop] = useState(null);
+const [pendingDeleteComment, setPendingDeleteComment] = useState(null);
 
-      if (error) throw error;
-      toast.success("Successfully Deleted Shop!");
-      fetchShops(); // Refresh the list
-    } catch (err) {
-      toast.error("Error deleting shop:", err.message);
-      alert("Error deleting shop: " + err.message);
-    }
-  };
+// --- SHOP DELETION ---
+const handleDeleteShop = (shopId) => {
+  setPendingDeleteShop(shopId); // 🔹 triggers the modal
+};
 
-  // Comment moderation - delete comment by ComID
-  const handleDeleteComment = async (commentId) => {
-    if (!window.confirm("Are you sure you want to delete this comment?")) return;
-   
-    try {
-      const { error } = await supabase
-        .from("COMMENT")
-        .delete()
-        .eq('ComID', commentId);
+const confirmDeleteShop = async () => {
+  try {
+    const { error } = await supabase
+      .from("THRIFT SHOP")
+      .delete()
+      .eq("ShopID", pendingDeleteShop);
 
-      if (error) throw error;
-      toast.success("Successfully Deleted Comment!");
-      fetchComments(); // Refresh the list
-    } catch (err) {
-      toast.error("Error deleting comment:", err.message);
-      alert("Error deleting comment: " + err.message);
-    }
-  };
+    if (error) throw error;
+    toast.success("Successfully Deleted Shop!");
+    fetchShops();
+  } catch (err) {
+    toast.error("Error deleting shop: " + err.message);
+  } finally {
+    setPendingDeleteShop(null);
+  }
+};
 
-  // Comment moderation - update comment status (e.g., approved/hidden)
-  const handleUpdateCommentStatus = async (commentId, status) => {
-    try {
-      const { error } = await supabase
-        .from("COMMENT")
-        .update({ Status: status })
-        .eq('ComID', commentId);
+const cancelDeleteShop = () => setPendingDeleteShop(null);
 
-      if (error) throw error;
-     
-      fetchComments(); // Refresh the list
-    } catch (err) {
-      toast.error("Error updating comment status:", err.message);
-      alert("Error updating comment status: " + err.message);
-    }
-  };
+// --- COMMENT DELETION ---
+const handleDeleteComment = (commentId) => {
+  setPendingDeleteComment(commentId); // 🔹 triggers the modal
+};
+
+const confirmDeleteComment = async () => {
+  try {
+    const { error } = await supabase
+      .from("COMMENT")
+      .delete()
+      .eq("ComID", pendingDeleteComment);
+
+    if (error) throw error;
+    toast.success("Successfully Deleted Comment!");
+    fetchComments();
+  } catch (err) {
+    toast.error("Error deleting comment: " + err.message);
+  } finally {
+    setPendingDeleteComment(null);
+  }
+};
+
+const cancelDeleteComment = () => setPendingDeleteComment(null);
 
   // Set editing shop: prefill form with selected shop fields
   const handleEditShop = (shop) => {
@@ -528,6 +525,58 @@ function AdminPage() {
           </div>
         )}
       </div>
+
+      {/* 🟢 SHOP DELETE CONFIRMATION */}
+{pendingDeleteShop && (
+  <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
+    <div className="bg-white rounded-xl shadow-2xl w-full max-w-md p-8 text-center">
+      <h2 className="text-2xl font-bold text-gray-800 mb-4">Confirm Deletion</h2>
+      <p className="text-gray-600 mb-6">
+        Are you sure you want to delete this thrift shop? This action cannot be undone.
+      </p>
+      <div className="flex justify-center gap-4">
+        <button
+          onClick={confirmDeleteShop}
+          className="px-6 py-3 bg-[#2C6E49] text-white rounded-md hover:bg-[#25573A] transition-all"
+        >
+          Yes, Delete
+        </button>
+        <button
+          onClick={cancelDeleteShop}
+          className="px-6 py-3 border-2 border-[#2C6E49] text-[#2C6E49] rounded-md hover:bg-[#2C6E49] hover:text-white transition-all"
+        >
+          Cancel
+        </button>
+      </div>
+    </div>
+  </div>
+)}
+
+{/* 🟢 COMMENT DELETE CONFIRMATION */}
+{pendingDeleteComment && (
+  <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
+    <div className="bg-white rounded-xl shadow-2xl w-full max-w-md p-8 text-center">
+      <h2 className="text-2xl font-bold text-gray-800 mb-4">Confirm Deletion</h2>
+      <p className="text-gray-600 mb-6">
+        Are you sure you want to delete this comment? This cannot be undone.
+      </p>
+      <div className="flex justify-center gap-4">
+        <button
+          onClick={confirmDeleteComment}
+          className="px-6 py-3 bg-[#2C6E49] text-white rounded-md hover:bg-[#25573A] transition-all"
+        >
+          Yes, Delete
+        </button>
+        <button
+          onClick={cancelDeleteComment}
+          className="px-6 py-3 border-2 border-[#2C6E49] text-[#2C6E49] rounded-md hover:bg-[#2C6E49] hover:text-white transition-all"
+        >
+          Cancel
+        </button>
+      </div>
+    </div>
+  </div>
+)}
     </div>
   );
 }
