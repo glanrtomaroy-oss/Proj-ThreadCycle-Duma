@@ -1,5 +1,5 @@
-import { NavLink, Link } from 'react-router-dom';
-import { UserAuth } from '../context/AuthContext';
+import { NavLink, Link } from "react-router-dom";
+import { UserAuth } from "../context/AuthContext";
 import { useState, useEffect } from "react";
 import { supabase } from "../util/supabase";
 import toast from "react-hot-toast";
@@ -7,10 +7,6 @@ import toast from "react-hot-toast";
 const Header = () => {
   const { userRole, loading, session } = UserAuth();
   const [username, setUsername] = useState("");
-  const [profile, setProfile] = useState(null);
-  console.log("Current user role:", userRole);
-  console.log("Loading state:", loading);
-  console.log("User info:", user);
 
   // 🧠 Fetch username from either ADMIN or CUSTOMER table
   useEffect(() => {
@@ -65,7 +61,7 @@ const Header = () => {
   console.log("Header → Role:", userRole);
   console.log("Header → Username:", username);
   console.log("Header → Session:", session);
-  
+
   return (
     <header className="bg-[#2C6E49] shadow-lg sticky top-0 z-50">
       <div className="w-full max-w-6xl mx-auto px-4">
@@ -79,7 +75,9 @@ const Header = () => {
                 className="w-full h-full object-contain rounded-full"
               />
             </div>
-            <span className="text-2xl font-bold text-[#85b027]">ThreadCycle</span>
+            <span className="text-2xl font-bold text-[#85b027]">
+              ThreadCycle
+            </span>
           </Link>
 
           {/* NAVIGATION LINKS */}
@@ -155,6 +153,7 @@ const Header = () => {
               </NavLink>
             </li>
 
+            {/* ✅ Show Admin Page link only if admin */}
             {!loading && userRole === "admin" && (
               <li className="ml-6">
                 <NavLink
@@ -172,9 +171,9 @@ const Header = () => {
             )}
           </ul>
 
-          {/* PROFILE / LOGIN BUTTON */}
+          {/* ✅ PROFILE / LOGIN BUTTON */}
           <div className="flex items-center">
-            {!loading && (userRole === "customer" || userRole === "admin") ? (
+            {session?.user ? (
               <NavLink
                 to="/profile"
                 className="bg-[#4C956C] hover:bg-[#3B7D57] text-white font-bold px-6 py-3 rounded-lg cursor-pointer transition-all duration-300 tracking-wide text-sm shadow-lg hover:shadow-xl hover:scale-105 transform flex items-center"
@@ -186,7 +185,7 @@ const Header = () => {
                 to="/login"
                 className="bg-[#4C956C] hover:bg-[#3B7D57] text-white font-bold px-6 py-3 rounded-lg cursor-pointer transition-all duration-300 tracking-wide text-sm shadow-lg hover:shadow-xl hover:scale-105 transform flex items-center"
               >
-                Login
+                {displayName}
               </NavLink>
             )}
           </div>
