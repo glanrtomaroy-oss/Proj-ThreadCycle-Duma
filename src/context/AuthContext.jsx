@@ -42,35 +42,56 @@ export const AuthContextProvider = ({ children }) => {
 
   // Determine whether a user is a customer or admin by probing tables
   const fetchUserRole = async (userId) => {
-    if (!userId) return null;
-  
-    // Check CUSTOMER
-    const { data: customer } = await supabase
+  if (!userId) return null;
+
+  try {
+    // ✅ First, check CUSTOMER table
+    const { data: customer, error: customerError } = await supabase
       .from("CUSTOMER")
-      .select("CustID")
+      .select("Username, Customer_uid")
       .eq("Customer_uid", userId)
       .maybeSingle();
-  
+
+    if (customerError) {
+      console.error("Error fetching CUSTOMER role:", customerError);
+    }
+
     if (customer) {
+      console.log("✅ Found CUSTOMER:", customer);
       setUserRole("customer");
+      setUsername(customer.Username || "User");
       return "customer";
     }
-  
-    // Check ADMIN
-    const { data: admin } = await supabase
+
+    // ✅ Then, check ADMIN table
+    const { data: admin, error: adminError } = await supabase
       .from("ADMIN")
-      .select("AdminID")
+      .select("Username, Admin_uid")
       .eq("Admin_uid", userId)
       .maybeSingle();
-  
+
+    if (adminError) {
+      console.error("Error fetching ADMIN role:", adminError);
+    }
+
     if (admin) {
+      console.log("✅ Found ADMIN:", admin);
       setUserRole("admin");
+      setUsername(admin.Username || "Admin");
       return "admin";
     }
-  
+
+    console.log("⚠️ No matching role found for this user ID:", userId);
     setUserRole(null);
+    setUsername("");
     return null;
-  };
+  } catch (err) {
+    console.error("Unexpected error in fetchUserRole:", err);
+    setUserRole(null);
+    setUsername("");
+    return null;
+  }
+};
 
   // Sign in and resolve role, returns both success and role for routing
   const signInUser = async (email, password) => {
