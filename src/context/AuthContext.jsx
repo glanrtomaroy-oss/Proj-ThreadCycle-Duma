@@ -9,9 +9,55 @@ export const AuthContextProvider = ({ children }) => {
   const [session, setSession] = useState(null);
   const [username, setUsername] = useState(""); // 🟢 Store username
 
-  // 🟢 Fetch role and username
-  const fetchUserRole = async (userId) => {
-    if (!userId) return null;
+ const fetchUserRole = async (userId) => {
+  if (!userId) {
+    console.log("⚠️ No userId provided to fetchUserRole");
+    return null;
+  }
+
+  console.log("🔍 Fetching role for:", userId);
+
+  // Check CUSTOMER table
+  const { data: customer, error: customerError } = await supabase
+    .from("CUSTOMER")
+    .select("CustID, Username")
+    .eq("Customer_uid", userId)
+    .maybeSingle();
+
+  if (customerError) {
+    console.error("❌ Error fetching customer:", customerError.message);
+  }
+
+  if (customer) {
+    console.log("✅ Found customer:", customer);
+    setUserRole("customer");
+    setUsername(customer.Username || "User");
+    return "customer";
+  }
+
+  // Check ADMIN table
+  const { data: admin, error: adminError } = await supabase
+    .from("ADMIN")
+    .select("AdminID")
+    .eq("Admin_uid", userId)
+    .maybeSingle();
+
+  if (adminError) {
+    console.error("❌ Error fetching admin:", adminError.message);
+  }
+
+  if (admin) {
+    console.log("✅ Found admin:", admin);
+    setUserRole("admin");
+    setUsername("Admin");
+    return "admin";
+  }
+
+  console.log("⚠️ No role found for this user.");
+  setUserRole(null);
+  setUsername("");
+  return null;
+};
 
     // Check CUSTOMER table
     const { data: customer } = await supabase
