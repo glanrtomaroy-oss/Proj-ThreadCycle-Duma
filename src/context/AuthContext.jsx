@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { supabase } from "../util/supabase";
+// Auth context provides current session, role, and auth helpers (sign in/out/up)
 
 export const AuthContext = createContext();
 
@@ -7,90 +8,8 @@ export const AuthContextProvider = ({ children }) => {
   const [userRole, setUserRole] = useState(null);
   const [loading, setLoading] = useState(true);
   const [session, setSession] = useState(null);
-  const [username, setUsername] = useState(""); // 🟢 Store username
 
- const fetchUserRole = async (userId) => {
-  if (!userId) {
-    console.log("⚠️ No userId provided to fetchUserRole");
-    return null;
-  }
-
-  console.log("🔍 Fetching role for:", userId);
-
-  // Check CUSTOMER table
-  const { data: customer, error: customerError } = await supabase
-    .from("CUSTOMER")
-    .select("CustID, Username")
-    .eq("Customer_uid", userId)
-    .maybeSingle();
-
-  if (customerError) {
-    console.error("❌ Error fetching customer:", customerError.message);
-  }
-
-  if (customer) {
-    console.log("✅ Found customer:", customer);
-    setUserRole("customer");
-    setUsername(customer.Username || "User");
-    return "customer";
-  }
-
-  // Check ADMIN table
-  const { data: admin, error: adminError } = await supabase
-    .from("ADMIN")
-    .select("AdminID")
-    .eq("Admin_uid", userId)
-    .maybeSingle();
-
-  if (adminError) {
-    console.error("❌ Error fetching admin:", adminError.message);
-  }
-
-  if (admin) {
-    console.log("✅ Found admin:", admin);
-    setUserRole("admin");
-    setUsername("Admin");
-    return "admin";
-  }
-
-  console.log("⚠️ No role found for this user.");
-  setUserRole(null);
-  setUsername("");
-  return null;
-};
-
-    // Check CUSTOMER table
-    const { data: customer } = await supabase
-      .from("CUSTOMER")
-      .select("CustID, Username")
-      .eq("Customer_uid", userId)
-      .maybeSingle();
-
-    if (customer) {
-      setUserRole("customer");
-      setUsername(customer.Username || "User");
-      return "customer";
-    }
-
-    // Check ADMIN table
-    const { data: admin } = await supabase
-      .from("ADMIN")
-      .select("AdminID")
-      .eq("Admin_uid", userId)
-      .maybeSingle();
-
-    if (admin) {
-      setUserRole("admin");
-      setUsername("Admin");
-      return "admin";
-    }
-
-    setUserRole(null);
-    setUsername("");
-    return null;
-  };
-
-  // Sign up user with Supabase auth, then create CUSTOMER record
+  // Sign up user with Supabase auth, then create a CUSTOMER record
   const signUpNewUser = async (username, email, password) => {
     const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
       email,
@@ -117,87 +36,104 @@ export const AuthContextProvider = ({ children }) => {
     }
 
     setUserRole("customer");
-    setUsername(username);
     setLoading(false);
     return { success: true, data: signUpData, userRole: "customer" };
   };
 
-  // Sign in and resolve role
+  // Determine whether a user is a customer or admin by probing tables
+  const fetchUserRole = async (userId) => {
+    if (!userId) return null;
+  
+    // Check CUSTOMER
+    const { data: customer } = await supabase
+      .from("CUSTOMER")
+      .select("CustID")
+      .eq("Customer_uid", userId)
+      .maybeSingle();
+  
+    if (customer) {
+      setUserRole("customer");
+      return "customer";
+    }
+  
+    // Check ADMIN
+    const { data: admin } = await supabase
+      .from("ADMIN")
+      .select("AdminID")
+      .eq("Admin_uid", userId)
+      .maybeSingle();
+  
+    if (admin) {
+      setUserRole("admin");
+      return "admin";
+    }
+  
+    setUserRole(null);
+    return null;
+  };
+
+  // Sign in and resolve role, returns both success and role for routing
   const signInUser = async (email, password) => {
     try {
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
-
+  
       if (error) {
         return { success: false, error: error.message };
       }
-
+  
       if (data.user) {
+        // Wait for the role to be fetched
         const role = await fetchUserRole(data.user.id);
-        if (!role) return { success: false, error: "No role found for this user" };
+  
+        if (!role) {
+          return { success: false, error: "No role found for this user" };
+        }
 
         setUserRole(role);
         return { success: true, data, role };
       }
-
+  
       return { success: false, error: "No user found" };
     } catch (error) {
       return { success: false, error: "Unexpected error" };
     }
   };
 
-  // Sign out
+  // Sign out and clear local state and also remove cached Supabase token
   const signOut = async () => {
     try {
       const { error } = await supabase.auth.signOut();
+
       setUserRole(null);
       setSession(null);
-      setUsername("");
 
       if (error) {
         console.error("Supabase sign-out error:", error.message);
       }
 
-      const tokenKey =
-        "sb-" + supabase.supabaseUrl.split("//")[1].split(".")[0] + "-auth-token";
-      localStorage.removeItem(tokenKey);
-    } catch (err) {
-      console.error("Unexpected sign-out error:", err);
+      // Fallback clear
+      try {
+        const tokenKey =
+          "sb-" + supabase.supabaseUrl.split("//")[1].split(".")[0] + "-auth-token";
+        localStorage.removeItem(tokenKey);
+      } catch (localStorageError) {
+        console.warn("Error clearing localStorage token:", localStorageError);
+      }
+
+      console.log("User signed out successfully.");
+    } catch (unexpectedError) {
+      setUserRole(null);
+      setSession(null);
+      console.error("Unexpected sign-out error:", unexpectedError);
     }
   };
 
-  // 🟢 Subscribe to username changes (real-time updates)
-  const subscribeToUserUpdates = (userId) => {
-    if (!userId) return;
 
-    const channel = supabase
-      .channel("customer-updates")
-      .on(
-        "postgres_changes",
-        {
-          event: "*", // listen to all events (INSERT, UPDATE, DELETE)
-          schema: "public",
-          table: "CUSTOMER",
-          filter: `Customer_uid=eq.${userId}`,
-        },
-        (payload) => {
-          console.log("🔁 CUSTOMER table change:", payload);
-          if (payload.new?.Username) {
-            setUsername(payload.new.Username);
-          }
-        }
-      )
-      .subscribe();
-
-    return channel;
-  };
-
-  // Get session + listen for changes
+  // Get current session and subscribe to auth state changes
   useEffect(() => {
-    let subscription;
-
     const init = async () => {
       try {
         const { data: { session } } = await supabase.auth.getSession();
@@ -206,7 +142,6 @@ export const AuthContextProvider = ({ children }) => {
 
         if (session?.user) {
           await fetchUserRole(session.user.id);
-          subscription = subscribeToUserUpdates(session.user.id); // 🟢 Subscribe to changes
         } else {
           setUserRole(null);
         }
@@ -221,21 +156,17 @@ export const AuthContextProvider = ({ children }) => {
       async (event, session) => {
         setSession(session);
         if (session?.user) {
-          await fetchUserRole(session.user.id);
-          subscription = subscribeToUserUpdates(session.user.id);
+          fetchUserRole(session.user.id);
         } else {
           setUserRole(null);
-          setUsername("");
         }
       }
     );
 
-    return () => {
-      listener?.subscription?.unsubscribe();
-      if (subscription) supabase.removeChannel(subscription);
-    };
+    return () => listener?.subscription?.unsubscribe();
   }, []);
 
+  // Expose auth state and helpers to the app
   return (
     <AuthContext.Provider
       value={{
@@ -244,7 +175,6 @@ export const AuthContextProvider = ({ children }) => {
         signUpNewUser,
         signOut,
         userRole,
-        username,
         loading,
       }}
     >
@@ -253,5 +183,23 @@ export const AuthContextProvider = ({ children }) => {
   );
 };
 
-export const UserAuth = () => useContext(AuthContext);
+export const UserAuth = () => {
+  const context = useContext(AuthContext);
+
+  if (context === undefined) {
+    return {
+      session: null,
+      userRole: null,
+      loading: true,
+      signInUser: () =>
+        Promise.resolve({ success: false, error: "Context not available." }),
+      signUpNewUser: () =>
+        Promise.resolve({ success: false, error: "Context not available." }),
+      signOut: () => Promise.resolve(),
+    };
+  }
+
+  return context;
+};
+
 export default AuthContext;
