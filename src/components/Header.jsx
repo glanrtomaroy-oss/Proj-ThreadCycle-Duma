@@ -12,7 +12,7 @@ const Header = () => {
   console.log("Loading state:", loading);
   console.log("User info:", user);
 
-  // 🧠 Fetch the user's username depending on their role and table
+  // 🧠 Fetch username from either ADMIN or CUSTOMER table
   useEffect(() => {
     const fetchUsername = async () => {
       try {
@@ -48,20 +48,23 @@ const Header = () => {
         setUsername(data?.Username || "");
       } catch (err) {
         console.error("Unexpected error fetching username:", err);
+        toast.error("Error fetching user profile.");
       }
     };
 
     if (!loading) fetchUsername();
   }, [session, userRole, loading]);
 
-  // 🟢 Decide what to display on the Profile button
-  const displayName = !loading
+  // 🟢 Button text logic
+  const displayName = loading
+    ? "Loading..."
+    : session?.user
     ? username || (userRole === "admin" ? "Admin" : "Profile")
-    : "Profile";
+    : "Guest";
 
-  console.log("Header → userRole:", userRole);
-  console.log("Header → username:", username);
-  console.log("Header → session:", session);
+  console.log("Header → Role:", userRole);
+  console.log("Header → Username:", username);
+  console.log("Header → Session:", session);
   
   return (
     <header className="bg-[#2C6E49] shadow-lg sticky top-0 z-50">
