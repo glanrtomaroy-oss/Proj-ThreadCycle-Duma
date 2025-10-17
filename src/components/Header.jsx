@@ -1,19 +1,77 @@
 import { NavLink, Link } from 'react-router-dom';
 import { UserAuth } from '../context/AuthContext';
+import { useState, useEffect } from "react";
+import { supabase } from "../util/supabase";
+import toast from "react-hot-toast";
 
 const Header = () => {
-  const { userRole, loading, user } = UserAuth();
+  const { userRole, loading, session } = UserAuth();
+  const [username, setUsername] = useState("");
+  const [profile, setProfile] = useState(null);
   console.log("Current user role:", userRole);
   console.log("Loading state:", loading);
   console.log("User info:", user);
 
+  // Fetch profile data for the current user based on role
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        if (!session?.user) return;
+  
+        let tableName = "";
+        let userIdColumn = "";
+  
+        switch (userRole) {
+          case "customer":
+            tableName = "CUSTOMER";
+            userIdColumn = "Customer_uid";
+            break;
+          case "admin":
+            tableName = "ADMIN";
+            userIdColumn = "Admin_uid";
+            break;
+          default:
+            return; // no role yet
+        }
+  
+        const { data, error } = await supabase
+          .from(tableName)
+          .select("*")
+          .eq(userIdColumn, session.user.id)
+          .single();
+  
+        if (error || !data) {
+          console.error("Profile fetch error:", error);
+          toast.error("Profile information could not be retrieved.");
+        } else {
+          setUsername(data.Username || "");
+          setProfile(data);
+        }
+      } catch (err) {
+        console.error("Unexpected error:", err);
+        toast.error("Unexpected error while fetching profile.");
+      }
+    };
+  
+    if (!loading && userRole) {
+      fetchProfile();
+    }
+  }, [session, userRole, loading]);
+
+  
   // 🟢 Determine what to display on the button
   const displayName = !loading
     ? userRole === "admin"
-      ? "Admin"
-      : user?.username || user?.email?.split("@")[0] || "Profile"
+      ? username || "Admin"
+      : username || "Profile"
     : "Profile";
-
+  
+  // const displayName = !loading
+  //   ? userRole === "admin"
+  //     ? "Admin"
+  //     : user?.username || user?.email?.split("@")[0] || "Profile"
+  //   : "Profile";
+  
   return (
     <header className="bg-[#2C6E49] shadow-lg sticky top-0 z-50">
       <div className="w-full max-w-6xl mx-auto px-4">
