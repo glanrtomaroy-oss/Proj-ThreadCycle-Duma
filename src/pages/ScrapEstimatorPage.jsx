@@ -11,6 +11,8 @@ function ScrapEstimatorPage() {
   const [calculations, setCalculations] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [loadings, setLoadings] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [selectedProjId, setSelectedProjId] = useState(null);
   const { session, loading } = UserAuth();
   const isLoggedIn = !!session?.user;
 
@@ -162,33 +164,29 @@ function ScrapEstimatorPage() {
   };
 
 
-  // Delete calculation
-  const deleteCalculation = async (projId) => {
-    if (!projId) return;
-  
-    if (!window.confirm("Are you sure you want to delete this calculation?")) return;
-  
-    try {
-      setLoadings(true);
-  
-      // Delete from Supabase
-      const { error } = await supabase
-        .from('PROJECT')
-        .delete()
-        .eq('ProjID', projId); // use the correct primary key
-  
-      if (error) throw error;
-  
-      // Update local state
-      setCalculations(calculations.filter(calc => calc.ProjID !== projId));
-      toast.success("Calculation deleted successfully!");
-    } catch (error) {
-      toast.error("Failed to delete calculation:", error.message);
-      toast.error("Failed to delete calculation.");
-    } finally {
-      setLoadings(false);
-    }
-  };
+  const deleteCalculation = async () => {
+  if (!selectedProjId) return;
+
+  try {
+    setLoadings(true);
+
+    const { error } = await supabase
+      .from('PROJECT')
+      .delete()
+      .eq('ProjID', selectedProjId);
+
+    if (error) throw error;
+
+    setCalculations(calculations.filter(calc => calc.ProjID !== selectedProjId));
+    toast.success("Calculation deleted successfully!");
+  } catch (error) {
+    toast.error("Failed to delete calculation.");
+  } finally {
+    setLoadings(false);
+    setShowDeleteModal(false);
+    setSelectedProjId(null);
+  }
+};
 
   // Filter calculations based on search term
   const filteredCalculations = calculations.filter((calc) =>
@@ -413,7 +411,10 @@ function ScrapEstimatorPage() {
                           <div className="flex gap-1">
                             <button
                               className="bg-none text-red-500 border border-red-500 px-3 py-1 rounded-md cursor-pointer text-sm font-medium transition-all hover:bg-red-500 hover:text-white hover:-translate-y-0.5 mt-2 ml-1"
-                              onClick={() => deleteCalculation(calc.ProjID)}
+                              onClick={() => {
+                                setSelectedProjId(calc.ProjID);
+                                setShowDeleteModal(true);
+                              }}
                               title="Delete calculation"
                             > Delete
                             </button>
@@ -428,6 +429,36 @@ function ScrapEstimatorPage() {
           </div>
         </div>
       </section>
+
+      {showDeleteModal && (
+  <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
+    <div className="bg-white p-6 rounded-2xl shadow-xl w-80 text-center transform transition-all">
+      <h3 className="text-lg font-semibold text-gray-800 mb-3">
+        Confirm Deletion
+      </h3>
+      <p className="text-gray-600 mb-5">
+        Are you sure you want to delete this calculation?
+      </p>
+      <div className="flex justify-center gap-4">
+        <button
+          onClick={deleteCalculation}
+          className="bg-[#4C956C] hover:bg-[#3B7D57] text-white px-5 py-2 rounded-lg font-medium transition"
+        >
+          Yes, Delete
+        </button>
+        <button
+          onClick={() => {
+            setShowDeleteModal(false);
+            setSelectedProjId(null);
+          }}
+          className="bg-gray-300 hover:bg-gray-400 text-gray-800 px-5 py-2 rounded-lg font-medium transition"
+        >
+          Cancel
+        </button>
+      </div>
+    </div>
+  </div>
+)}
     </>
   );
 }
