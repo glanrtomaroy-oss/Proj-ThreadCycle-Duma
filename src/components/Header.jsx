@@ -56,7 +56,7 @@ const Header = () => {
     ? "Loading..."
     : session?.user
     ? username || (userRole === "admin" ? "Admin" : "Profile")
-    : "Guest";
+    : "Login";
 
   console.log("Header → Role:", userRole);
   console.log("Header → Username:", username);
