@@ -430,18 +430,18 @@ function ScrapEstimatorPage() {
         </div>
       </section>
 
-      {/* 🟢 PROJECT DELETE CONFIRMATION */}
+{/* 🟢 PROJECT DELETE CONFIRMATION */}
 {showDeleteModal && (
-  <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50">
-    <div className="bg-white border border-gray-300 rounded-xl shadow-2xl w-full max-w-md p-8 text-center">
-      <h2 className="text-2xl font-bold text-gray-800 mb-4">Confirm Deletion</h2>
-      <p className="text-gray-600 mb-6">
+  <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 pointer-events-auto">
+    <div className="bg-white border border-gray-300 rounded-xl shadow-2xl w-full max-w-md p-6 text-center">
+      <h2 className="text-2xl font-bold text-gray-800 mb-3">Confirm Deletion</h2>
+      <p className="text-gray-600 mb-5">
         Are you sure you want to delete this calculation? This action cannot be undone.
       </p>
       <div className="flex justify-center gap-4">
         <button
           onClick={deleteCalculation}
-          className="px-6 py-3 bg-[#2C6E49] text-white rounded-md hover:bg-[#25573A] transition-all"
+          className="px-5 py-2 bg-[#2C6E49] text-white rounded-md hover:bg-[#25573A] transition-all"
         >
           Yes, Delete
         </button>
@@ -450,7 +450,7 @@ function ScrapEstimatorPage() {
             setShowDeleteModal(false);
             setSelectedProjId(null);
           }}
-          className="px-6 py-3 border-2 border-[#2C6E49] text-[#2C6E49] rounded-md hover:bg-[#2C6E49] hover:text-white transition-all"
+          className="px-5 py-2 border-2 border-[#2C6E49] text-[#2C6E49] rounded-md hover:bg-[#2C6E49] hover:text-white transition-all"
         >
           Cancel
         </button>
