@@ -247,7 +247,7 @@ function ScrapEstimatorPage() {
         <div className="w-full max-w-6xl mx-auto px-4">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-10">
 
-      {/* How Calculation Works - Info Box */}
+            {/* How Calculation Works - Info Box */}
             <div className="bg-white rounded-lg p-6 shadow-lg border border-gray-200 lg:col-span-2">
               <div className="flex items-start gap-3 mb-3">
                 <div className="w-12 h-12 bg-[#4C956C] rounded-full flex items-center justify-center text-white text-xl">
