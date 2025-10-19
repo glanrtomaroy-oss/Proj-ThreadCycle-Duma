@@ -297,8 +297,8 @@ function ScrapEstimatorPage() {
                   <h4 className="text-gray-800 font-semibold mb-2">Formula</h4>
                   <ul className="list-disc pl-5 text-gray-700 text-sm space-y-1">
                     <li>Fabric Saved (m) = Original Length − Used Length</li>
-                    <li>Emission Factor (kg/m) = chosen by fabric type; default shown below</li>
                     <li>CO₂ Reduction (kg) = Fabric Saved × Emission Factor</li>
+                    <li>Emission Factor (kg/m) = chosen by fabric type; default shown below</li>
                   </ul>
                   <div className="mt-3 text-xs text-gray-600">
                     Default emission factor when type is unknown: <span className="font-semibold">{EMISSION_FACTOR_KG_PER_M_DEFAULT} kg/m</span>
@@ -314,10 +314,6 @@ function ScrapEstimatorPage() {
                         <span className="font-medium text-gray-900">{factor}</span>
                       </div>
                     ))}
-                    <div className="flex items-center justify-between border border-dashed border-gray-300 rounded px-3 py-2 text-sm">
-                      <span className="text-gray-600">default</span>
-                      <span className="font-medium text-gray-900">{EMISSION_FACTOR_KG_PER_M_DEFAULT}</span>
-                    </div>
                   </div>
                 </div>
               </div>
