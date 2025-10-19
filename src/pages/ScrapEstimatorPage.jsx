@@ -280,6 +280,55 @@ function ScrapEstimatorPage() {
               </div>
             </div>
 
+            {/* How Calculation Works - Info Box */}
+            <div className="bg-white rounded-lg p-6 shadow-lg border border-gray-200 lg:col-span-2">
+              <div className="flex items-start gap-3 mb-3">
+                <div className="w-9 h-9 rounded-full bg-[#4C956C]/10 text-[#2C6E49] flex items-center justify-center">
+                  <i className="fas fa-info"></i>
+                </div>
+                <div>
+                  <h3 className="text-lg font-bold text-gray-800">How the calculation works</h3>
+                  <p className="text-gray-700 text-sm m-0">We estimate CO₂ reduction from the fabric you save and a fabric-specific emission factor.</p>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div>
+                  <h4 className="text-gray-800 font-semibold mb-2">Formula</h4>
+                  <ul className="list-disc pl-5 text-gray-700 text-sm space-y-1">
+                    <li>Fabric Saved (m) = Original Length − Used Length</li>
+                    <li>Emission Factor (kg/m) = chosen by fabric type; default shown below</li>
+                    <li>CO₂ Reduction (kg) = Fabric Saved × Emission Factor</li>
+                  </ul>
+                  <div className="mt-3 text-xs text-gray-600">
+                    Default emission factor when type is unknown: <span className="font-semibold">{EMISSION_FACTOR_KG_PER_M_DEFAULT} kg/m</span>
+                  </div>
+                </div>
+
+                <div>
+                  <h4 className="text-gray-800 font-semibold mb-2">Emission factors (kg CO₂ per meter)</h4>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                    {Object.entries(FABRIC_EMISSION_FACTORS_KG_PER_M).map(([name, factor]) => (
+                      <div key={name} className="flex items-center justify-between bg-gray-50 border border-gray-200 rounded px-3 py-2 text-sm">
+                        <span className="capitalize text-gray-700">{name}</span>
+                        <span className="font-medium text-gray-900">{factor}</span>
+                      </div>
+                    ))}
+                    <div className="flex items-center justify-between border border-dashed border-gray-300 rounded px-3 py-2 text-sm">
+                      <span className="text-gray-600">default</span>
+                      <span className="font-medium text-gray-900">{EMISSION_FACTOR_KG_PER_M_DEFAULT}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <pre className="mt-5 bg-gray-900 text-gray-100 rounded-md p-4 overflow-auto text-xs">
+<code>{`// Emission factors (kg CO₂ per meter saved)
+const EMISSION_FACTOR_KG_PER_M_DEFAULT = ${EMISSION_FACTOR_KG_PER_M_DEFAULT};
+const FABRIC_EMISSION_FACTORS_KG_PER_M = ${JSON.stringify(FABRIC_EMISSION_FACTORS_KG_PER_M, null, 2)};`}</code>
+              </pre>
+            </div>
+
             {/* Calculator Form */}
             <div className="bg-white rounded-lg p-8 shadow-lg">
               <div>
