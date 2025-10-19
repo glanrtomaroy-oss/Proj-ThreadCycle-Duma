@@ -321,12 +321,6 @@ function ScrapEstimatorPage() {
                   </div>
                 </div>
               </div>
-
-              <pre className="mt-5 bg-gray-900 text-gray-100 rounded-md p-4 overflow-auto text-xs">
-<code>{`// Emission factors (kg CO₂ per meter saved)
-const EMISSION_FACTOR_KG_PER_M_DEFAULT = ${EMISSION_FACTOR_KG_PER_M_DEFAULT};
-const FABRIC_EMISSION_FACTORS_KG_PER_M = ${JSON.stringify(FABRIC_EMISSION_FACTORS_KG_PER_M, null, 2)};`}</code>
-              </pre>
             </div>
 
             {/* Calculator Form */}
