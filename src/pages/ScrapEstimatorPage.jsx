@@ -283,7 +283,7 @@ function ScrapEstimatorPage() {
             {/* How Calculation Works - Info Box */}
             <div className="bg-white rounded-lg p-6 shadow-lg border border-gray-200 lg:col-span-2">
               <div className="flex items-start gap-3 mb-3">
-                <div className="w-9 h-9 bg-[#4C956C] rounded-full flex items-center justify-center text-white text-xl">
+                <div className="w-12 h-12 bg-[#4C956C] rounded-full flex items-center justify-center text-white text-xl">
                   <i className="fas fa-info"></i>
                 </div>
                 <div>
