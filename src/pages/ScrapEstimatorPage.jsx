@@ -283,11 +283,11 @@ function ScrapEstimatorPage() {
             {/* How Calculation Works - Info Box */}
             <div className="bg-white rounded-lg p-6 shadow-lg border border-gray-200 lg:col-span-2">
               <div className="flex items-start gap-3 mb-3">
-                <div className="w-9 h-9 rounded-full bg-[#4C956C]/10 text-[#2C6E49] flex items-center justify-center">
+                <div className="w-9 h-9 bg-[#4C956C] rounded-full flex items-center justify-center text-white text-xl">
                   <i className="fas fa-info"></i>
                 </div>
                 <div>
-                  <h3 className="text-lg font-bold text-gray-800">How the calculation works</h3>
+                  <h3 className="text-lg font-bold text-gray-800">How the calculation works?</h3>
                   <p className="text-gray-700 text-sm m-0">We estimate CO₂ reduction from the fabric you save and a fabric-specific emission factor.</p>
                 </div>
               </div>
