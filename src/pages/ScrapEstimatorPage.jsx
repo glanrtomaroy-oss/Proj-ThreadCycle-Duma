@@ -247,40 +247,7 @@ function ScrapEstimatorPage() {
         <div className="w-full max-w-6xl mx-auto px-4">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-10">
 
-            {/* Dashboard Stats */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 lg:col-span-2">
-              <div className="bg-white rounded-lg p-5 shadow-lg flex items-center gap-4">
-                <div className="w-12 h-12 bg-[#4C956C] rounded-full flex items-center justify-center text-white text-xl">
-                  <i className="fas fa-ruler-combined"></i>
-                </div>
-                <div>
-                  <h3 className="text-3xl font-bold text-gray-800 mb-1">{calculations.length}</h3>
-                  <p className="text-gray-600 m-0">Projects Tracked</p>
-                </div>
-              </div>
-              <div className="bg-white rounded-lg p-5 shadow-lg flex items-center gap-4">
-                <div className="w-12 h-12 bg-[#4C956C] rounded-full flex items-center justify-center text-white text-xl">
-                  <i className="fas fa-leaf"></i>
-                </div>
-                <div>
-                  <h3 className="text-3xl font-bold text-gray-800 mb-1">{totalSaved.toFixed(2)}m</h3>
-                  <p className="text-gray-600 m-0">Total Fabric Saved</p>
-                </div>
-              </div>
-              <div className="bg-white rounded-lg p-5 shadow-lg flex items-center gap-4">
-                <div className="w-12 h-12 bg-[#4C956C] rounded-full flex items-center justify-center text-white text-xl">
-                  <i className="fas fa-co2"></i>
-                </div>
-                  <div>
-                    <h3 className="text-3xl font-bold text-gray-800 mb-1">
-                      {calculations.reduce((t, c) => t + Number(c?.CO2Reduction || 0), 0).toFixed(1)}kg
-                    </h3>
-                    <p className="text-gray-600 m-0">CO₂ Reduction</p>
-                  </div>
-              </div>
-            </div>
-
-            {/* How Calculation Works - Info Box */}
+      {/* How Calculation Works - Info Box */}
             <div className="bg-white rounded-lg p-6 shadow-lg border border-gray-200 lg:col-span-2">
               <div className="flex items-start gap-3 mb-3">
                 <div className="w-12 h-12 bg-[#4C956C] rounded-full flex items-center justify-center text-white text-xl">
@@ -316,6 +283,40 @@ function ScrapEstimatorPage() {
                     ))}
                   </div>
                 </div>
+              </div>
+            </div>
+
+
+            {/* Dashboard Stats */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 lg:col-span-2">
+              <div className="bg-white rounded-lg p-5 shadow-lg flex items-center gap-4">
+                <div className="w-12 h-12 bg-[#4C956C] rounded-full flex items-center justify-center text-white text-xl">
+                  <i className="fas fa-ruler-combined"></i>
+                </div>
+                <div>
+                  <h3 className="text-3xl font-bold text-gray-800 mb-1">{calculations.length}</h3>
+                  <p className="text-gray-600 m-0">Projects Tracked</p>
+                </div>
+              </div>
+              <div className="bg-white rounded-lg p-5 shadow-lg flex items-center gap-4">
+                <div className="w-12 h-12 bg-[#4C956C] rounded-full flex items-center justify-center text-white text-xl">
+                  <i className="fas fa-leaf"></i>
+                </div>
+                <div>
+                  <h3 className="text-3xl font-bold text-gray-800 mb-1">{totalSaved.toFixed(2)}m</h3>
+                  <p className="text-gray-600 m-0">Total Fabric Saved</p>
+                </div>
+              </div>
+              <div className="bg-white rounded-lg p-5 shadow-lg flex items-center gap-4">
+                <div className="w-12 h-12 bg-[#4C956C] rounded-full flex items-center justify-center text-white text-xl">
+                  <i className="fas fa-co2"></i>
+                </div>
+                  <div>
+                    <h3 className="text-3xl font-bold text-gray-800 mb-1">
+                      {calculations.reduce((t, c) => t + Number(c?.CO2Reduction || 0), 0).toFixed(1)}kg
+                    </h3>
+                    <p className="text-gray-600 m-0">CO₂ Reduction</p>
+                  </div>
               </div>
             </div>
 
