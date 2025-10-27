@@ -12,6 +12,7 @@ function ThriftMapPage() {
   const [shops, setShops] = useState([]);
   const [comments, setComments] = useState({});
   const [draftComments, setDraftComments] = useState({});
+  // For filtering the map as well as the shop listing cards
   const [activeCategory, setActiveCategory] = useState("all");
   const [activePrice, setActivePrice] = useState("all");
 
@@ -48,25 +49,26 @@ function ThriftMapPage() {
     return "all";
   };
 
-  // Check if a shop passes the active category and price filters
+  // Check checks if a shop matches the selected filters in category and price range
   const isShopInActiveFilters = (shop) => {
-    // Category can be a comma-separated list, e.g., "clothing,shoes"
+    // Category can be a comma-separated list, like "clothing, shoes"
     const shopCategories = String(shop.Category || "")
       .toLowerCase()
-      .split(/[,/|]/)
+      .split(/[,/|]/) // Splits the shop’s category string into an array 
       .map((c) => c.trim())
       .filter(Boolean);
 
+    // and checks if it matches
     const categoryMatch =
       activeCategory === "all" || shopCategories.includes(activeCategory);
 
+    // to normalize price strings like "₱100–250" into buckets like "100-250"
     const priceMatch =
       activePrice === "all" || getPriceBucket(shop.PriceRange) === activePrice;
 
     return categoryMatch && priceMatch;
   };
 
-  // Fetch thrift shops
   // Fetch thrift shops to render list and map markers
   const fetchShops = async () => {
     try {
@@ -81,8 +83,7 @@ function ThriftMapPage() {
     }
   };
 
-  // Fetch comments with Username (joined from CUSTOMER) and CreationDate
-  // Fetch comments for all shops, grouped by ShopID
+  // Fetch comments with Username (joined from CUSTOMER) and CreationDate for all shops, grouped by ShopID
   const fetchComments = async () => {
     try {
       const { data, error } = await supabase
@@ -186,13 +187,13 @@ function ThriftMapPage() {
     });
   }, [mapboxToken]);
 
-  // Filtered shops for both UI and map markers
+  // Filtered list of shops for both UI and map markers
   const filteredShops = useMemo(
-    () => shops.filter(isShopInActiveFilters),
+    () => shops.filter(isShopInActiveFilters), // shares the same filter logic for shop cards and map
     [shops, activeCategory, activePrice]
   );
 
-  // Add/refresh markers whenever filtered shops change
+  // Add/Updates markers whenever filtered shops change to adjust the map view to fit the new markers
   useEffect(() => {
     const map = mapRef.current;
     if (!map) return;
@@ -246,7 +247,7 @@ function ThriftMapPage() {
     }
   }, [filteredShops]);
 
-  // Focus map on a shop and open its popup inline
+  // Focus map on a shop and open its pop-up inline
   const focusShopOnMap = (shop) => {
     const map = mapRef.current;
     if (!map) return;
