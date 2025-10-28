@@ -57,7 +57,7 @@ function AdminPage() {
   
     try {
       if (!newShop.Image) {
-        alert("Please upload an image");
+        toast.alert("Please upload an image");
         return;
       }
   
