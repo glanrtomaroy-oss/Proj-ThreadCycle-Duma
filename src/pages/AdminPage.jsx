@@ -108,7 +108,7 @@ function AdminPage() {
       toast.success("Successfully Added Shop!");
       fetchShops();
     } catch (err) {
-      toast.error("Error adding shop.", err.message);
+      toast.error("Error adding shop. Ensure all fields are filled." + err.message);
     }
   };
   // Update existing shop: optionally upload new image, then update row
@@ -142,7 +142,7 @@ function AdminPage() {
           StoreHours: newShop.hours,
           PriceRange: newShop.priceRange,
           Category: newShop.itemTypes.join(','),
-          Image: imageUrl, // ✅ always use the final URL (either old or new)
+          Image: imageUrl, // always use the final URL (either old or new)
         })
         .eq("ShopID", editingShop.ShopID);
   
@@ -168,7 +168,7 @@ function AdminPage() {
   };
 
 
-  // ✅ State for modal confirmation
+  // State for modal confirmation
 const [pendingDeleteShop, setPendingDeleteShop] = useState(null);
 const [pendingDeleteComment, setPendingDeleteComment] = useState(null);
 
@@ -525,7 +525,7 @@ const cancelDeleteComment = () => setPendingDeleteComment(null);
         )}
       </div>
 
-{/* 🟢 SHOP DELETE CONFIRMATION */}
+{/* SHOP DELETE CONFIRMATION */}
 {pendingDeleteShop && (
   <div className="fixed inset-0 flex items-center justify-center z-50">
     <div className="bg-white border border-gray-300 rounded-xl shadow-2xl w-full max-w-md p-8 text-center">
@@ -551,7 +551,7 @@ const cancelDeleteComment = () => setPendingDeleteComment(null);
   </div>
 )}
 
-{/* 🟢 COMMENT DELETE CONFIRMATION */}
+{/* COMMENT DELETE CONFIRMATION */}
 {pendingDeleteComment && (
   <div className="fixed inset-0 flex items-center justify-center z-50">
     <div className="bg-white border border-gray-300 rounded-xl shadow-2xl w-full max-w-md p-8 text-center">
