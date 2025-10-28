@@ -108,7 +108,7 @@ function AdminPage() {
       toast.success("Successfully Added Shop!");
       fetchShops();
     } catch (err) {
-      toast.error("Error adding shop. Ensure all fields are filled.", err.message);
+      toast.error("Error adding shop. All fields must be filled.", err.message);
     }
   };
   // Update existing shop: optionally upload new image, then update row
