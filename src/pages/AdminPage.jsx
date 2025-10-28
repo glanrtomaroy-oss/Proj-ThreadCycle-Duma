@@ -57,7 +57,7 @@ function AdminPage() {
   
     try {
       if (!newShop.Image) {
-        toast.alert("Please upload an image");
+        toast.error("Please upload an image", err.message);
         return;
       }
   
@@ -108,8 +108,7 @@ function AdminPage() {
       toast.success("Successfully Added Shop!");
       fetchShops();
     } catch (err) {
-      toast.error("Error adding shop:", err.message);
-      alert("Error adding shop: " + err.message);
+      toast.error("Error adding shop.", err.message);
     }
   };
   // Update existing shop: optionally upload new image, then update row
