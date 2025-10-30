@@ -142,66 +142,93 @@ const SignupPage = () => {
               />
             </div>
 
-            <div className="mb-5">
+            <div className="mb-4">
               <label htmlFor="password" className="block mb-2 text-gray-800 font-medium text-sm">Password</label>
               <div className='relative'>
-              <input
-                type={showPassword ? "text" : "password"}
-                id="password"
-                name="password"
-                value={password}
-                onChange={handlePasswordChange}
-                className={"w-full px-4 py-3 border-2 border-[#4C956C]/40 rounded-lg text-base transition-colors focus:outline-none focus:shadow-sm box-border"}
-                placeholder="Enter your password"
-                required
-              />
-              <button
-                type="button"
-                className="absolute inset-y-0 right-0 pr-3 flex items-center text-[#AF524D]/60 hover:text-[#AF524D] transition-colors"
-                onClick={() => setShowPassword(!showPassword)}
-              >
-              {showPassword ? (
-                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="black">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.878 9.878L3 3m6.878 6.878L21 21" />
-                </svg>
-                ) : (
-                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="black">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                </svg>
-                )}
+                <input
+                  type={showPassword ? "text" : "password"}
+                  id="password"
+                  name="password"
+                  value={password}
+                  onChange={handlePasswordChange}
+                  className={"w-full px-4 py-3 border-2 border-[#4C956C]/40 rounded-lg text-base transition-colors focus:outline-none focus:shadow-sm box-border"}
+                  placeholder="Create a strong password"
+                  required
+                />
+                <button
+                  type="button"
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-[#AF524D]/60 hover:text-[#AF524D] transition-colors"
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                {showPassword ? (
+                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="black">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.878 9.878L3 3m6.878 6.878L21 21" />
+                  </svg>
+                  ) : (
+                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="black">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                  </svg>
+                  )}
                 </button>
+              </div>
+              <div className="mt-2">
+                <p className="text-xs text-gray-500">
+                  Password must contain:
+                </p>
+                <ul className="text-xs text-gray-500 mt-1 grid grid-cols-2 gap-1">
+                  <li className="flex items-center">
+                    <span className="mr-1">•</span>
+                    At least 8 characters
+                  </li>
+                  <li className="flex items-center">
+                    <span className="mr-1">•</span>
+                    One uppercase letter
+                  </li>
+                  <li className="flex items-center">
+                    <span className="mr-1">•</span>
+                    One lowercase letter
+                  </li>
+                  <li className="flex items-center">
+                    <span className="mr-1">•</span>
+                    One number
+                  </li>
+                  <li className="flex items-center col-span-2">
+                    <span className="mr-1">•</span>
+                    One special character (!@#$%^&*(), etc.)
+                  </li>
+                </ul>
               </div>
             </div>
 
             <div className="mb-5">
               <label htmlFor="confirmPassword" className="block mb-2 text-gray-800 font-medium text-sm">Confirm Password</label>
               <div className='relative'>
-              <input
-                type={showConfirmPassword ? "text" : "password"}
-                id="confirmPassword"
-                name="confirmPassword"
-                value={confirmPassword}
-                onChange={handleConfirmPasswordChange}
-                className={"w-full px-4 py-3 border-2 border-[#4C956C]/40 rounded-lg text-base transition-colors focus:outline-none focus:shadow-sm box-border"}
-                placeholder="Confirm your password"
-                required
-              />
-              <button
-                type="button"
-                className="absolute inset-y-0 right-0 pr-3 flex items-center text-[#AF524D]/60 hover:text-[#AF524D] transition-colors"
-                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-              >
-              {showConfirmPassword ? (
-                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="black">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.878 9.878L3 3m6.878 6.878L21 21" />
-                </svg>
-                ) : (
-                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="black">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                </svg>
-                )}
+                <input
+                  type={showConfirmPassword ? "text" : "password"}
+                  id="confirmPassword"
+                  name="confirmPassword"
+                  value={confirmPassword}
+                  onChange={handleConfirmPasswordChange}
+                  className={"w-full px-4 py-3 border-2 border-[#4C956C]/40 rounded-lg text-base transition-colors focus:outline-none focus:shadow-sm box-border"}
+                  placeholder="Re-enter your password"
+                  required
+                />
+                <button
+                  type="button"
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-[#AF524D]/60 hover:text-[#AF524D] transition-colors"
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                >
+                {showConfirmPassword ? (
+                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="black">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.878 9.878L3 3m6.878 6.878L21 21" />
+                  </svg>
+                  ) : (
+                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="black">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                  </svg>
+                  )}
                 </button>
               </div>
             </div>
