@@ -174,30 +174,8 @@ const SignupPage = () => {
               </div>
               <div className="mt-2">
                 <p className="text-xs text-gray-500">
-                  Password must contain:
+                  Must be at least 8 characters with uppercase, lowercase, number, and special character.
                 </p>
-                <ul className="text-xs text-gray-500 mt-1 grid grid-cols-2 gap-1">
-                  <li className="flex items-center">
-                    <span className="mr-1">•</span>
-                    At least 8 characters
-                  </li>
-                  <li className="flex items-center">
-                    <span className="mr-1">•</span>
-                    One uppercase letter
-                  </li>
-                  <li className="flex items-center">
-                    <span className="mr-1">•</span>
-                    One lowercase letter
-                  </li>
-                  <li className="flex items-center">
-                    <span className="mr-1">•</span>
-                    One number
-                  </li>
-                  <li className="flex items-center col-span-2">
-                    <span className="mr-1">•</span>
-                    One special character (!@#$%^&*(), etc.)
-                  </li>
-                </ul>
               </div>
             </div>
 
